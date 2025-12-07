@@ -14,7 +14,7 @@ public final class UserFactory {
 
     }
 
-    private static User createUser(UserInput userInput) {
+    public static User createUser(UserInput userInput) {
         String username = userInput.getUsername();
         String email = userInput.getEmail();
         Role role = Role.getRoleByName(userInput.getRole());
@@ -23,7 +23,7 @@ public final class UserFactory {
             case MANAGER -> new Manager(username, email, userInput.getHireDate(),
                     userInput.getSubordinates());
             case DEVELOPER -> new Developer(username, email, userInput.getHireDate(),
-                    ExpertiseArea.getExpertiseAreaByName(userInput.getExpertiseArea()),
+                    ExpertiseArea.fromString(userInput.getExpertiseArea()),
                     Seniority.getSeniorityByName(userInput.getSeniority()));
             default -> new Reporter(username, email);
         };

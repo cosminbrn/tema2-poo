@@ -1,6 +1,7 @@
 package main.tickets;
 
 import lombok.Getter;
+import main.globals.TicketType;
 import main.tickets.enums.BusinessPriority;
 import main.globals.ExpertiseArea;
 import main.tickets.enums.Status;
@@ -11,7 +12,8 @@ import main.tickets.enums.Status;
 @Getter
 public abstract class Ticket {
     private final int id;
-    private final String type;
+    private final TicketType type;
+    private final String title;
     private final BusinessPriority businessPriority;
     private final Status status;
     private final ExpertiseArea expertiseArea;
@@ -23,6 +25,7 @@ public abstract class Ticket {
     protected Ticket(Builder<?> builder) {
         this.id = builder.id;
         this.type = builder.type;
+        this.title = builder.title;
         this.businessPriority = builder.businessPriority;
         this.status = builder.status;
         this.expertiseArea = builder.expertiseArea;
@@ -32,7 +35,8 @@ public abstract class Ticket {
 
     public abstract static class Builder<T extends Builder<T>> {
         private int id;
-        private String type;
+        private TicketType type;
+        private String title;
         private BusinessPriority businessPriority;
         private Status status;
         private ExpertiseArea expertiseArea;
@@ -44,8 +48,13 @@ public abstract class Ticket {
             return self();
         }
 
-        public T setType(String type) {
+        public T setType(TicketType type) {
             this.type = type;
+            return self();
+        }
+
+        public T setTitle(String title) {
+            this.title = title;
             return self();
         }
 

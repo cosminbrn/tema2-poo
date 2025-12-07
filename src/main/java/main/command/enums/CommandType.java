@@ -1,0 +1,31 @@
+package main.command.enums;
+
+/**
+ * Enum representing different command types.
+ */
+public enum CommandType {
+    CREATE_MILESTONE("createMilestone"),
+    REPORT_TICKET("reportTicket"),
+    VIEW_TICKETS("viewTickets"),
+    LOST_INVESTORS("lostInvestors");
+
+    public final String name;
+
+    CommandType(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Converts a string to its corresponding CommandType enum value.
+     * @param commandType the command type as a string
+     * @return the corresponding CommandType enum value, or null if not found
+     */
+    public static CommandType fromString(String commandType) {
+        for (CommandType type : CommandType.values()) {
+            if (type.name.equalsIgnoreCase(commandType)) {
+                return type;
+            }
+        }
+        return null;
+    }
+}
