@@ -1,5 +1,7 @@
 package main.command.enums;
 
+import lombok.Getter;
+
 /**
  * Enum representing different command types.
  */
@@ -9,6 +11,7 @@ public enum CommandType {
     VIEW_TICKETS("viewTickets"),
     LOST_INVESTORS("lostInvestors");
 
+    @Getter
     public final String name;
 
     CommandType(String name) {

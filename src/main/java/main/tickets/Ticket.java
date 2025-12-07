@@ -18,6 +18,7 @@ public abstract class Ticket {
     private final Status status;
     private final ExpertiseArea expertiseArea;
     private final String reportedBy;
+    private final String createdAt;
 
     // Optional fields
     private final String description;
@@ -31,6 +32,7 @@ public abstract class Ticket {
         this.expertiseArea = builder.expertiseArea;
         this.reportedBy = builder.reportedBy;
         this.description = builder.description;
+        this.createdAt = builder.createdAt;
     }
 
     public abstract static class Builder<T extends Builder<T>> {
@@ -42,6 +44,7 @@ public abstract class Ticket {
         private ExpertiseArea expertiseArea;
         private String reportedBy;
         private String description = "";
+        private String createdAt;
 
         public T setId(int id) {
             this.id = id;
@@ -80,6 +83,11 @@ public abstract class Ticket {
 
         public T setDescription(String description) {
             this.description = description;
+            return self();
+        }
+
+        public T setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
             return self();
         }
 

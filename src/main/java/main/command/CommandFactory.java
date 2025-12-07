@@ -14,9 +14,9 @@ public class CommandFactory {
         CommandType type = CommandType.fromString(commandInput.getCommand());
         return switch (type) {
             //case CREATE_MILESTONE -> new CreateMilestoneCommand(commandInput);
-            case REPORT_TICKET -> new ReportTicketCommand(commandInput, output);
-            case VIEW_TICKETS -> new ViewTicketsCommand(commandInput, output);
-            case LOST_INVESTORS -> new LostInvestorsCommand(commandInput, output);
+            case REPORT_TICKET -> new ReportTicketCommand();
+            case VIEW_TICKETS -> new ViewTicketsCommand();
+            case LOST_INVESTORS -> new LostInvestorsCommand();
         };
     }
 }

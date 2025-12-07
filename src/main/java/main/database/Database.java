@@ -1,5 +1,6 @@
 package main.database;
 
+import lombok.Getter;
 import main.fileio.CommandInput;
 import main.fileio.UserInput;
 import main.tickets.Ticket;
@@ -19,6 +20,7 @@ public class Database {
     private int nextTicketID = 0;
 
     private List<User> users;
+    @Getter
     private List<Ticket> tickets;
     //private List<Milestone> milestones;
 
@@ -57,5 +59,14 @@ public class Database {
 
     public int getNextTicketID() {
         return nextTicketID++;
+    }
+
+    public User getUserByUsername(String username) {
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
     }
 }

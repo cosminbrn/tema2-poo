@@ -20,9 +20,6 @@ import static main.globals.WorkflowStage.TESTING;
 import static main.tickets.enums.Status.OPEN;
 
 public class ReportTicketCommand extends Command {
-    public ReportTicketCommand(CommandInput commandInput, ArrayNode output) {
-        super(commandInput, output);
-    }
 
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
@@ -49,6 +46,7 @@ public class ReportTicketCommand extends Command {
                     .setExpertiseArea(ExpertiseArea.fromString(params.getExpertiseArea()))
                     .setDescription(params.getDescription())
                     .setReportedBy(params.getReportedBy())
+                    .setCreatedAt(commandInput.getTimestamp())
                     .setExpectedBehavior(params.getExpectedBehavior())
                     .setActualBehavior(params.getActualBehavior())
                     .setFrequency(Frequency.fromString(params.getFrequency()))
@@ -67,6 +65,7 @@ public class ReportTicketCommand extends Command {
                     .setExpertiseArea(ExpertiseArea.fromString(params.getExpertiseArea()))
                     .setDescription(params.getDescription())
                     .setReportedBy(params.getReportedBy())
+                    .setCreatedAt(commandInput.getTimestamp())
                     .setUiElementId(params.getUiElementId())
                     .setBusinessValue(BusinessValue.fromString(params.getBusinessValue()))
                     .setUsabilityScore(params.getUsabilityScore())
@@ -82,6 +81,7 @@ public class ReportTicketCommand extends Command {
                     .setExpertiseArea(ExpertiseArea.fromString(params.getExpertiseArea()))
                     .setDescription(params.getDescription())
                     .setReportedBy(params.getReportedBy())
+                    .setCreatedAt(commandInput.getTimestamp())
                     .setBusinessValue(BusinessValue.fromString(params.getBusinessValue()))
                     .setCustomerDemand(CustomerDemand.fromString(params.getCustomerDemand()))
                     .build();

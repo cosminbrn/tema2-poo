@@ -11,9 +11,6 @@ import static main.App.MAPPER;
 public abstract class Command {
     protected ObjectNode node = MAPPER.createObjectNode();
 
-    protected Command(final CommandInput commandInput, final ArrayNode output) {
-    }
-
     public abstract void execute(CommandInput commandInput, ArrayNode output);
 
     public void addErrorOutput(final CommandInput input, final ArrayNode output, final ErrorMessages type) {
