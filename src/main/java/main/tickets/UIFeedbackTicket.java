@@ -1,0 +1,67 @@
+package main.tickets;
+
+import main.tickets.enums.BusinessValue;
+
+public class UIFeedbackTicket extends Ticket {
+    private final String uiElementId;
+    private final BusinessValue businessValue;
+    private final int usabilityScore;
+
+    // Optional fields
+    private final String screenshotUrl;
+    private final String suggestedFix;
+
+    protected UIFeedbackTicket(UIFeedbackTicketBuilder builder) {
+        super(builder);
+        this.uiElementId = builder.uiElementId;
+        this.businessValue = builder.businessValue;
+        this.usabilityScore = builder.usabilityScore;
+        this.screenshotUrl = builder.screenshotUrl;
+        this.suggestedFix = builder.suggestedFix;
+    }
+
+    public static class UIFeedbackTicketBuilder extends Ticket.Builder<UIFeedbackTicketBuilder> {
+        private String uiElementId;
+        private BusinessValue businessValue;
+        private int usabilityScore;
+
+        // Optional fields
+        private String screenshotUrl = "";
+        private String suggestedFix = "";
+
+        public UIFeedbackTicketBuilder setUiElementId(String uiElementId) {
+            this.uiElementId = uiElementId;
+            return this;
+        }
+
+        public UIFeedbackTicketBuilder setBusinessValue(BusinessValue businessValue) {
+            this.businessValue = businessValue;
+            return this;
+        }
+
+        public UIFeedbackTicketBuilder setUsabilityScore(int usabilityScore) {
+            this.usabilityScore = usabilityScore;
+            return this;
+        }
+
+        public UIFeedbackTicketBuilder setScreenshotUrl(String screenshotUrl) {
+            this.screenshotUrl = screenshotUrl;
+            return this;
+        }
+
+        public UIFeedbackTicketBuilder setSuggestedFix(String suggestedFix) {
+            this.suggestedFix = suggestedFix;
+            return this;
+        }
+
+        @Override
+        protected UIFeedbackTicketBuilder self() {
+            return this;
+        }
+
+        @Override
+        public UIFeedbackTicket build() {
+            return new UIFeedbackTicket(this);
+        }
+    }
+}

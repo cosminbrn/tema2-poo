@@ -25,9 +25,6 @@ public final class InputLoader {
     public InputLoader(final String filePath, final String usersPath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        // Read commands file as a tree and support both formats:
-        // 1) { "commands": [ ... ] }
-        // 2) [ ... ]
         JsonNode commandRootNode = mapper.readTree(new File(filePath));
         if (commandRootNode.isArray()) {
             CommandInput[] arr = mapper.treeToValue(commandRootNode, CommandInput[].class);
@@ -37,7 +34,6 @@ public final class InputLoader {
             this.commands = new ArrayList<>(commandRoot.commands);
         }
 
-        // Read users file similarly: accept either { "users": [...] } or [...]
         JsonNode userRootNode = mapper.readTree(new File(usersPath));
         if (userRootNode.isArray()) {
             UserInput[] arr = mapper.treeToValue(userRootNode, UserInput[].class);
@@ -48,7 +44,6 @@ public final class InputLoader {
         }
     }
 
-    // Helper class for root deserialization
     @Data
     @NoArgsConstructor
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
