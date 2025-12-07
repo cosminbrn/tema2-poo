@@ -2,6 +2,7 @@ package main.engine;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.Getter;
+import lombok.Setter;
 import main.command.Command;
 import main.command.CommandFactory;
 import main.database.Database;
@@ -17,7 +18,8 @@ import static main.globals.WorkflowStage.*;
 public class Engine {
     private static Engine instance = null;
 
-    @Getter
+
+    @Getter @Setter
     private static WorkflowStage currentStage;
     private static String currentStageStartDate;
 
@@ -72,5 +74,9 @@ public class Engine {
                 currentStage = DEVELOPMENT;
             }
         }
+    }
+
+    public void setCurrentState(WorkflowStage workflowStage) {
+        currentStage = workflowStage;
     }
 }

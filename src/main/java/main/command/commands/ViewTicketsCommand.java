@@ -16,7 +16,7 @@ import java.util.List;
 import static main.App.MAPPER;
 import static main.command.enums.CommandType.VIEW_TICKETS;
 
-public class ViewTicketCommand extends Command {
+public class ViewTicketsCommand extends Command {
     List<Ticket> tickets;
 
     @Override
