@@ -16,6 +16,7 @@ import main.tickets.UIFeedbackTicket;
 import main.tickets.enums.*;
 
 import static main.globals.TicketType.*;
+import static main.globals.WorkflowStage.TESTING;
 import static main.tickets.enums.Status.OPEN;
 
 public class ReportTicketCommand extends Command {
@@ -26,12 +27,16 @@ public class ReportTicketCommand extends Command {
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
-        Engine engine = Engine.getInstance();
         ParamsInput params = commandInput.getParams();
         TicketType type = TicketType.valueOf(params.getType());
 
+        if (Engine.getCurrentStage() != TESTING) {
+            addErrorOutput(commandInput, output, ErrorMessages.REPORT_ONLY_DURING_TESTING);
+        }
+
         if (type == BUG && commandInput.getParams().getReportedBy().isEmpty()) {
             addErrorOutput(commandInput, output, ErrorMessages.ANONYMOUS_REPORTING_ONLY_FOR_BUGS);
+            return;
         }
 
         if (type == BUG) {
