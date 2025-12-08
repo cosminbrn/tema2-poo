@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import main.engine.Engine;
 import main.fileio.InputLoader;
 
 import java.io.File;
@@ -46,15 +47,9 @@ public class App {
 
         // TODO 3: create objectnodes for output, add them to outputs list.
 
-        // --- Begin: test helper to dump loaded nodes into outputs ---
-        // Create an ObjectNode that contains both users and commands as arrays
-        ObjectNode dumpNode = MAPPER.createObjectNode();
-        // Convert the loaded users and commands into JSON tree nodes and attach
-        dumpNode.set("users", MAPPER.valueToTree(inputLoader.getUsers()));
-        dumpNode.set("commands", MAPPER.valueToTree(inputLoader.getCommands()));
-        // Add this node to the outputs array so it will be written to outputPath
-        outputs.add(dumpNode);
-        // --- End: test helper ---
+       Engine.reset();
+       Engine.init();
+       Engine.run(inputLoader, outputs);
 
 
         // DO NOT CHANGE THIS SECTION IN ANY WAY

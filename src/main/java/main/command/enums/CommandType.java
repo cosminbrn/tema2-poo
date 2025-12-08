@@ -9,7 +9,11 @@ public enum CommandType {
     CREATE_MILESTONE("createMilestone"),
     REPORT_TICKET("reportTicket"),
     VIEW_TICKETS("viewTickets"),
-    LOST_INVESTORS("lostInvestors");
+    LOST_INVESTORS("lostInvestors"),
+    VIEW_MILESTONES("viewMilestones"),
+    ASSIGN_TICKET("assignTicket"),
+    VIEW_ASSIGNED_TICKETS("viewAssignedTickets"),
+    UNDO_ASSIGNED_TICKET("undoAssignedTicket");
 
     @Getter
     public final String name;

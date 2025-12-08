@@ -21,7 +21,9 @@ public class Engine {
 
     @Getter @Setter
     private static WorkflowStage currentStage;
-    private static String currentStageStartDate;
+    private static LocalDate currentStageStartDate;
+    private static LocalDate currentDay;
+    private static int commandInputIndex;
 
     private Engine() {
         // Private constructor to prevent instantiation
@@ -30,7 +32,8 @@ public class Engine {
     public static Engine getInstance() {
         if (instance == null) {
             instance = new Engine();
-            instance.currentStage = DONE;
+            currentStage = DONE;
+            commandInputIndex = 0;
         }
         return instance;
     }
@@ -43,35 +46,64 @@ public class Engine {
         instance = null;
     }
 
+    public static void init() {
+        getInstance();
+        Database.init();
+    }
+
+
     /**
-     * TODO:
-     * @param input
-     * @param output
+     * Method to run the engine with the given input and output. It runs on a day-by-day basis, updating the database every iteration.
+     * @param input The input loader containing the command inputs.
+     * @param output The output array node to store the results.
      */
     public static void run(InputLoader input, ArrayNode output) {
         Database db = Database.getInstance();
         db.loadUsers(input.getUserInputs());
-        for (CommandInput commandInput : input.getCommandInputs()) {
-            updateStage(commandInput);
-            Command command = CommandFactory.createCommand(commandInput, output);
-            command.execute(commandInput, output);
+        currentStage = TESTING;
+        CommandInput commandInput = getNextCommandInput(input);
+        currentDay = LocalDate.parse(commandInput.getTimestamp());
+        currentStageStartDate = currentDay;
+        while (currentStage != BANKRUPT) {
+            updateStage();
+            db.updateDatabase(currentDay);
+            while (LocalDate.parse(commandInput.getTimestamp()).isEqual(currentDay)) {
+                Command command = CommandFactory.createCommand(commandInput, output);
+                command.execute(commandInput, output);
+                if (commandInputIndex < input.getCommandInputs().size()) {
+                    commandInput = getNextCommandInput(input);
+                } else {
+                    currentStage = BANKRUPT;
+                    break;
+                }
+            }
+            currentDay = currentDay.plusDays(1);
         }
     }
 
     /**
-     * Method to update the current workflow stage based on the command input timestamp.
-     * @param commandInput The command input containing the timestamp.
+     * Method to get the next command input from the database.
+     * @return The next command input.
      */
-    private static void updateStage(CommandInput commandInput) {
-        if (currentStage == DONE) {
-            currentStageStartDate = commandInput.getTimestamp();
-        } else if (currentStage == TESTING) {
-            LocalDate now = LocalDate.parse(currentStageStartDate);
-            LocalDate due = LocalDate.parse(commandInput.getTimestamp());
+    private static CommandInput getNextCommandInput(InputLoader input) {
+        CommandInput commandInput = input.getCommandInputs().get(commandInputIndex);
+        commandInputIndex++;
+        return commandInput;
+    }
 
-            int daysBetween = (int) ChronoUnit.DAYS.between(now, due) + 1;
+    /**
+     * Method to update the current workflow stage based on the command input timestamp.
+     */
+    private static void updateStage() {
+        if (currentStage == TESTING) {
+            if (currentStageStartDate == null) {
+                currentStageStartDate = currentDay;
+                return;
+            }
+            long daysBetween = ChronoUnit.DAYS.between(currentStageStartDate, currentDay) + 1;
             if (daysBetween > TESTING_STAGE_DURATION.getDefaultDuration()) {
                 currentStage = DEVELOPMENT;
+                currentStageStartDate = currentDay;
             }
         }
     }

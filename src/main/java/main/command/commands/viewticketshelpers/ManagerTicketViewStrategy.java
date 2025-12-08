@@ -7,7 +7,7 @@ import main.users.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManagerViewStrategy implements TicketFilteringStrategy {
+public class ManagerTicketViewStrategy implements TicketFilteringStrategy {
     @Override
     public List<Ticket> getTickets(User user) {
         return new ArrayList<>(Database.getInstance().getTickets());

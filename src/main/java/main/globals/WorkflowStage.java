@@ -7,6 +7,7 @@ public enum WorkflowStage {
     DEVELOPMENT,
     VERIFICATION,
     DONE,
+    BANKRUPT,
 
     TESTING_STAGE_DURATION(12);
 

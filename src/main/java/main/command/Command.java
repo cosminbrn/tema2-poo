@@ -13,11 +13,11 @@ public abstract class Command {
 
     public abstract void execute(CommandInput commandInput, ArrayNode output);
 
-    public void addErrorOutput(final CommandInput input, final ArrayNode output, final ErrorMessages type) {
+    public void addErrorOutput(final CommandInput input, final ArrayNode output, final String errorMessage) {
         node.put("command", input.getCommand());
         node.put("username", input.getUsername());
         node.put("timestamp", input.getTimestamp());
-        node.put("error", type.getErrorMessage());
+        node.put("error", errorMessage);
         output.add(node);
     }
 }

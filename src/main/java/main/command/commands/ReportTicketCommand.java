@@ -14,9 +14,11 @@ import main.tickets.FeatureRequestTicket;
 import main.tickets.Ticket;
 import main.tickets.UIFeedbackTicket;
 import main.tickets.enums.*;
+import main.users.User;
 
 import static main.globals.TicketType.*;
 import static main.globals.WorkflowStage.TESTING;
+import static main.tickets.enums.BusinessPriority.LOW;
 import static main.tickets.enums.Status.OPEN;
 
 public class ReportTicketCommand extends Command {
@@ -27,26 +29,39 @@ public class ReportTicketCommand extends Command {
         ParamsInput params = commandInput.getParams();
         TicketType type = TicketType.valueOf(params.getType());
 
-        if (Engine.getCurrentStage() != TESTING) {
-            addErrorOutput(commandInput, output, ErrorMessages.REPORT_ONLY_DURING_TESTING);
-        }
-
-        if (type == BUG && commandInput.getParams().getReportedBy().isEmpty()) {
-            addErrorOutput(commandInput, output, ErrorMessages.ANONYMOUS_REPORTING_ONLY_FOR_BUGS);
+        if (type != BUG && commandInput.getParams().getReportedBy().isEmpty()) {
+            addErrorOutput(commandInput, output, ErrorMessages.ANONYMOUS_REPORTING_ONLY_FOR_BUGS.getErrorMessage());
             return;
         }
 
+        if (Engine.getCurrentStage() != TESTING) {
+            addErrorOutput(commandInput, output, ErrorMessages.REPORT_ONLY_DURING_TESTING.getErrorMessage());
+            return;
+        }
+
+        User currentUser = db.getUserByUsername(commandInput.getUsername());
+        if (currentUser == null) {
+            addErrorOutput(commandInput, output, String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(), commandInput.getUsername()));
+            return;
+        }
+
+
+
         if (type == BUG) {
+            BusinessPriority bp = BusinessPriority.fromString(params.getBusinessPriority());
+            if (params.getReportedBy().isEmpty()) {
+                bp = LOW;
+            }
             Ticket ticket = new BugTicket.BugBuilder()
                     .setId(db.getNextTicketID())
                     .setType(BUG)
                     .setTitle(params.getTitle())
-                    .setBusinessPriority(BusinessPriority.fromString(params.getBusinessPriority()))
+                    .setBusinessPriority(bp)
                     .setStatus(OPEN)
+                    .setCreatedAt(commandInput.getTimestamp())
                     .setExpertiseArea(ExpertiseArea.fromString(params.getExpertiseArea()))
                     .setDescription(params.getDescription())
                     .setReportedBy(params.getReportedBy())
-                    .setCreatedAt(commandInput.getTimestamp())
                     .setExpectedBehavior(params.getExpectedBehavior())
                     .setActualBehavior(params.getActualBehavior())
                     .setFrequency(Frequency.fromString(params.getFrequency()))
@@ -75,6 +90,8 @@ public class ReportTicketCommand extends Command {
             db.addTicket(ticket);
         } else if (type == FEATURE_REQUEST) {
             Ticket ticket = new FeatureRequestTicket.FeatureRequestBuilder()
+                    .setId(db.getNextTicketID())
+                    .setType(FEATURE_REQUEST)
                     .setTitle(params.getTitle())
                     .setBusinessPriority(BusinessPriority.fromString(params.getBusinessPriority()))
                     .setStatus(OPEN)

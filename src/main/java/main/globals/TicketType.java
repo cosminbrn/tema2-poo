@@ -1,12 +1,21 @@
 package main.globals;
 
+import lombok.Getter;
+
 /**
  * Enum representing different types of tickets.
  */
 public enum TicketType {
-    BUG,
-    FEATURE_REQUEST,
-    UI_FEEDBACK;
+    BUG("BUG"),
+    FEATURE_REQUEST("FEATURE_REQUEST"),
+    UI_FEEDBACK("UI_FEEDBACK"),;
+
+    @Getter
+    public final String typeName;
+
+    TicketType(String typeName) {
+        this.typeName = typeName;
+    }
 
     /**
      * Gets the TicketType enum constant by its name, ignoring case.
@@ -21,4 +30,9 @@ public enum TicketType {
         }
         return null;
     }
+
+    public static String toString(final TicketType type) {
+        return type.name();
+    }
+
 }
