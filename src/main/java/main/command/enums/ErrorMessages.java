@@ -16,6 +16,7 @@ public enum ErrorMessages {
     MILESTONE_BLOCKED("Cannot assign ticket %d from blocked milestone %s."),
     TICKET_NOT_IN_PROGRESS("Only IN_PROGRESS tickets can be unassigned."),
     TICKET_NOT_ASSIGNED_TO_DEVELOPER("Ticket %d is not assigned to the developer %s."),
+    TICKET_NOT_ASSIGNED_TO_DEVELOPER_WITHOUT_THE("Ticket %d is not assigned to developer %s."),
     COMMENTS_NOT_ALLOWED_ON_ANONYMOUS_TICKETS("Comments are not allowed on anonymous tickets."),
     REPORTER_TICKET_IS_CLOSED("Reporters cannot comment on CLOSED tickets."),
     NOT_10_CHARACTERS_LONG("Comment must be at least 10 characters long."),

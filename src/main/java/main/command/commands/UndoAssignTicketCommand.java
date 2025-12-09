@@ -7,10 +7,13 @@ import main.database.Database;
 import main.fileio.CommandInput;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
+import main.tickets.enums.ActionType;
 import main.users.Developer;
 import main.users.enums.Role;
 
 import static main.command.enums.ErrorMessages.TICKET_NOT_IN_PROGRESS;
+import static main.tickets.enums.ActionType.DE_ASSIGNED;
+import static main.tickets.enums.ActionType.STATUS_CHANGED;
 import static main.tickets.enums.Status.IN_PROGRESS;
 import static main.tickets.enums.Status.OPEN;
 import static main.users.enums.Role.DEVELOPER;
@@ -43,6 +46,10 @@ public class UndoAssignTicketCommand extends Command {
         ticket.setAssignedTo("");
         ticket.setAssignedAt("");
         ticket.setStatus(OPEN);
+
+
+        ticket.addAction(DE_ASSIGNED, commandInput.getUsername(), commandInput.getTimestamp());
+        ticket.addAction(STATUS_CHANGED, commandInput.getUsername(), commandInput.getTimestamp(), IN_PROGRESS, OPEN);
 
         Milestone milestone = db.getMilestoneByName(ticket.getAssignedMilestone());
         if (milestone != null) {

@@ -7,12 +7,15 @@ import main.database.Database;
 import main.fileio.CommandInput;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
+import main.tickets.enums.ActionType;
+import main.users.Manager;
 import main.users.enums.Role;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static main.tickets.enums.ActionType.ADDED_TO_MILESTONE;
 import static main.users.enums.Role.MANAGER;
 
 public class CreateMilestoneCommand extends Command {
@@ -40,6 +43,7 @@ public class CreateMilestoneCommand extends Command {
             }
         }
 
+        Manager manager = (Manager) db.getUserByUsername(commandInput.getUsername());
         Milestone milestone = new Milestone.Builder()
                 .setName(commandInput.getName())
                 .setCreatedBy(commandInput.getUsername())
@@ -50,6 +54,7 @@ public class CreateMilestoneCommand extends Command {
                 .setAssignedDevs(commandInput.getAssignedDevs())
                 .build();
 
+        manager.addCreatedMilestone(milestone);
         String[] assignedDevs = milestone.getAssignedDevs();
         for (String dev : assignedDevs) {
             milestone.getRepartition().putIfAbsent(dev, new ArrayList<>());
@@ -65,6 +70,7 @@ public class CreateMilestoneCommand extends Command {
         for (int ticket : milestone.getTickets()) {
             Ticket t = db.getTicketById(ticket);
             t.setAssignedMilestone(milestone.getName());
+            t.addAction(ADDED_TO_MILESTONE, commandInput.getUsername(), commandInput.getTimestamp(), milestone.getName());
         }
 
         db.addMilestone(milestone);

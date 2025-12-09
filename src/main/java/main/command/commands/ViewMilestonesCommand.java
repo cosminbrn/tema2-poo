@@ -44,6 +44,7 @@ public class ViewMilestonesCommand extends Command {
         milestones.sort(Comparator.comparing(Milestone::getDueDate).thenComparing(Milestone::getName));
         ArrayNode milestonesArray = MAPPER.createArrayNode();
         for (Milestone milestone : milestones) {
+            milestone.updateMilestone(LocalDate.parse(input.getTimestamp()));
             ObjectNode milestoneNode = MAPPER.createObjectNode();
 
             milestoneNode.put("name", milestone.getName());

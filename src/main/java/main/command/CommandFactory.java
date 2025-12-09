@@ -26,6 +26,7 @@ public class CommandFactory {
             case UNDO_ADD_COMMENT -> new UndoAddCommentCommand();
             case CHANGE_STATUS -> new ChangeStatusCommand();
             case UNDO_CHANGE_STATUS -> new UndoChangeStatusCommand();
+            case VIEW_TICKET_HISTORY -> new ViewTicketHistoryCommand();
             default -> null;
         };
     }

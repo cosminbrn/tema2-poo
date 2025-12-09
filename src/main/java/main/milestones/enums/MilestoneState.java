@@ -4,7 +4,8 @@ import lombok.Getter;
 
 public enum MilestoneState {
     ACTIVE("ACTIVE"),
-    CLOSED("CLOSED");
+    CLOSED("CLOSED"),
+    COMPLETED("COMPLETED");
 
     @Getter
     private final String state;

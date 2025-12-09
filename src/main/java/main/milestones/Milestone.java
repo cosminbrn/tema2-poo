@@ -3,12 +3,14 @@ package main.milestones;
 import lombok.Getter;
 import main.database.Database;
 import main.milestones.enums.MilestoneState;
+import main.tickets.Ticket;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static main.milestones.enums.MilestoneState.ACTIVE;
+import static main.milestones.enums.MilestoneState.COMPLETED;
 import static main.tickets.enums.BusinessPriority.CRITICAL;
 
 @Getter
@@ -17,14 +19,16 @@ public class Milestone {
     private final String[] blockingFor;
     private final LocalDate dueDate;
     private final LocalDate createdAt;
-    private final int[] tickets;
+    private final List<Integer> tickets;
     private final String[] assignedDevs;
     private final String createdBy;
 
     private MilestoneState status = ACTIVE;
     private boolean isBlocked;
-    private int[] openTickets;
-    private int[] closedTickets;
+    @Getter
+    private List<Integer> openTickets;
+    @Getter
+    private List<Integer> closedTickets;
     private double completionPercentage;
     private Map<String, List<Integer>> repartition;
 
@@ -37,8 +41,8 @@ public class Milestone {
         this.assignedDevs = builder.assignedDevs;
         this.createdBy = builder.createdBy;
         this.isBlocked = false;
-        this.openTickets = builder.tickets;
-        this.closedTickets = new int[0];
+        this.openTickets = new ArrayList<>(builder.tickets);
+        this.closedTickets = new ArrayList<>();
         this.completionPercentage = 0.0;
         this.repartition = new LinkedHashMap<>();
     }
@@ -48,7 +52,7 @@ public class Milestone {
         private String[] blockingFor;
         private LocalDate dueDate;
         private LocalDate createdAt;
-        private int[] tickets;
+        private List<Integer> tickets = new ArrayList<>();
         private String[] assignedDevs;
         private String createdBy;
 
@@ -73,7 +77,11 @@ public class Milestone {
         }
 
         public Builder setTickets(int[] tickets) {
-            this.tickets = tickets;
+            List<Integer> ticketList = new ArrayList<>();
+            for (int ticket : tickets) {
+                ticketList.add(ticket);
+            }
+            this.tickets = ticketList;
             return this;
         }
 
@@ -95,6 +103,10 @@ public class Milestone {
     public void updateMilestone(LocalDate currentDate) {
         if (isBlocked) {
             return;
+        }
+
+        if (calculateCompletionPercentage() == 1.0) {
+            this.status = COMPLETED;
         }
 
         if (currentDate.isAfter(this.dueDate)) {
@@ -148,8 +160,28 @@ public class Milestone {
     }
 
     public double calculateCompletionPercentage() {
-        double n = (double) closedTickets.length / (double) openTickets.length;
-        this.completionPercentage = (n * 100.0) * 100;
+        if (closedTickets.isEmpty()) {
+            this.completionPercentage = 0.0;
+            return completionPercentage;
+        }
+
+        double n = (double) closedTickets.size() / (double) tickets.size();
+        this.completionPercentage = (double) Math.round(n * 100.0) / 100;
         return this.completionPercentage;
+    }
+
+    private void removeTicketFromOpenTickets(int ticketId) {
+        openTickets.removeIf(id -> id == ticketId);
+    }
+
+    private void addTicketToClosedTickets(int ticketId) {
+        closedTickets.add(ticketId);
+    }
+
+    public void closeTicket(Ticket ticket) {
+        int ticketId = ticket.getId();
+        removeTicketFromOpenTickets(ticketId);
+        addTicketToClosedTickets(ticketId);
+        calculateCompletionPercentage();
     }
 }

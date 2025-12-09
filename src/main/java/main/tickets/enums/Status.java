@@ -14,4 +14,13 @@ public enum Status {
     Status(String statusName) {
         this.statusName = statusName;
     }
+
+    public static Status fromString(String statusStr) {
+        for (Status status : Status.values()) {
+            if (status.statusName.equalsIgnoreCase(statusStr)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant for status: " + statusStr);
+    }
 }

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -29,9 +30,11 @@ public final class InputLoader {
         if (commandRootNode.isArray()) {
             CommandInput[] arr = mapper.treeToValue(commandRootNode, CommandInput[].class);
             this.commandInputs = new ArrayList<>(Arrays.asList(arr));
+            this.commandInputs.sort(Comparator.comparing(CommandInput::getTimestamp));
         } else {
             CommandRoot commandRoot = mapper.treeToValue(commandRootNode, CommandRoot.class);
             this.commandInputs = new ArrayList<>(commandRoot.commands);
+            this.commandInputs.sort(Comparator.comparing(CommandInput::getTimestamp));
         }
 
         JsonNode userRootNode = mapper.readTree(new File(usersPath));

@@ -4,12 +4,18 @@ import lombok.Getter;
 import main.fileio.UserInput;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
+import main.tickets.enums.ActionType;
+import main.tickets.enums.BusinessPriority;
+import main.users.Developer;
 import main.users.User;
 import main.users.UserFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static main.tickets.enums.ActionType.REMOVED_FROM_DEV;
+import static main.tickets.enums.Status.OPEN;
 
 /**
  * Singleton class representing the database.
@@ -90,8 +96,19 @@ public class Database {
 
     public List<Ticket> getTicketsByIds(int[] ticketIds) {
         List<Ticket> result = new ArrayList<>();
-        for (int id : ticketIds) {
-            Ticket ticket = getTicketById(id);
+        for (int ticketId : ticketIds) {
+            Ticket ticket = getTicketById(ticketId);
+            if (ticket != null) {
+                result.add(ticket);
+            }
+        }
+        return result;
+    }
+
+    public List<Ticket> getTicketsByIds(List<Integer> ticketIds) {
+        List<Ticket> result = new ArrayList<>();
+        for (Integer ticketId : ticketIds) {
+            Ticket ticket = getTicketById(ticketId);
             if (ticket != null) {
                 result.add(ticket);
             }
@@ -117,8 +134,20 @@ public class Database {
         }
     }
 
+    public void checkTicketPriorities(LocalDate currentDay) {
+        for (Ticket ticket : tickets) {
+            BusinessPriority businessPriority = ticket.getBusinessPriority();
+            Developer developer = (Developer) getUserByUsername(ticket.getAssignedTo());
+            if (developer != null && !developer.hasAccess(businessPriority)) {
+                ticket.setStatus(OPEN);
+                ticket.addAction(REMOVED_FROM_DEV, "system", currentDay.toString(), developer.getUsername());
+            }
+        }
+    }
+
     public void updateDatabase(LocalDate currentDay) {
         updateMilestones(currentDay);
+        checkTicketPriorities(currentDay);
     }
 
     public List<Milestone> getMilestonesByDeveloper(String developerUsername) {

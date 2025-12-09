@@ -3,6 +3,8 @@ package main.tickets;
 import lombok.Getter;
 import lombok.Setter;
 import main.globals.TicketType;
+import main.tickets.actions.*;
+import main.tickets.enums.ActionType;
 import main.tickets.enums.BusinessPriority;
 import main.globals.ExpertiseArea;
 import main.tickets.enums.Status;
@@ -10,6 +12,7 @@ import main.tickets.enums.Status;
 import java.util.ArrayList;
 import java.util.List;
 
+import static main.tickets.enums.ActionType.*;
 import static main.tickets.enums.BusinessPriority.*;
 
 /**
@@ -33,6 +36,8 @@ public abstract class Ticket {
     @Setter
     private String assignedTo;
     private final List<Comment> comments;
+    @Getter
+    private final List<Action> actions;
     private final ExpertiseArea expertiseArea;
 
     // Optional fields
@@ -54,6 +59,7 @@ public abstract class Ticket {
         this.assignedTo = builder.assignedTo;
         this.reportedBy = builder.reportedBy;
         this.comments = builder.comments;
+        this.actions = builder.actions;
         this.expertiseArea = builder.expertiseArea;
         this.description = builder.description;
     }
@@ -61,6 +67,30 @@ public abstract class Ticket {
     public record Comment(String author, String comment, String timestamp) {
 
     }
+
+    public static class ActionFactory {
+        /**
+         * Static Factory Method to Create Actions based on their type.
+         * @param type The type of action to create.
+         * @param args The String args. They go as follows:
+         *             args[0] = by
+         *             args[1] = timestamp
+         *             args[2] = from
+         *             args[3] = to
+         *             args[4] = milestone
+         * @return The created Action object.
+         */
+        public static Action createAction(ActionType type, String... args) {
+            return switch(type) {
+                case ASSIGNED -> new AssignAction(args[0], args[1]);
+                case DE_ASSIGNED -> new DeassignAction(args[0], args[1]);
+                case STATUS_CHANGED -> new StatusChangeAction(args[0], args[1], Status.fromString(args[2]), Status.fromString(args[3]));
+                case ADDED_TO_MILESTONE -> new AddToMilestoneAction(args[0], args[1], args[4]);
+                case REMOVED_FROM_DEV -> new RemoveFromDevAction(args[0], args[1], args[2]);
+            };
+        }
+    }
+
 
     public abstract static class Builder<T extends Builder<T>> {
         private int id;
@@ -76,6 +106,7 @@ public abstract class Ticket {
         private String assignedAt = "";
         private String solvedAt = "";
         private List<Comment> comments = new ArrayList<>();
+        private List<Action> actions = new ArrayList<>();
 
         public T setAssignedAt(String assignedAt) {
             this.assignedAt = assignedAt;
@@ -175,7 +206,7 @@ public abstract class Ticket {
         }
     }
 
-    public void updateStatus() {
+    public Status updateStatus() {
         if (this.status == Status.OPEN) {
             this.status = Status.IN_PROGRESS;
         } else if (this.status == Status.IN_PROGRESS) {
@@ -183,13 +214,43 @@ public abstract class Ticket {
         } else if (this.status == Status.RESOLVED) {
             this.status = Status.CLOSED;
         }
+        return this.status;
     }
 
-    public void undoStatus() {
+    public Status undoStatus() {
         if (this.status == Status.CLOSED) {
             this.status = Status.RESOLVED;
         } else if (this.status == Status.RESOLVED) {
             this.status = Status.IN_PROGRESS;
+        }
+        return this.status;
+    }
+
+    private <T> void executeAddAction(ActionType actionType, String by, String timestamp,
+                              T from, Status to, String milestone) {
+
+        String fromStr = from != null ? from.toString() : "";
+        String toStr = to != null ? to.toString() : "";
+
+        Action action = ActionFactory.createAction(actionType, by, timestamp, fromStr, toStr, milestone);
+        this.actions.add(action);
+    }
+
+    public void addAction(ActionType actionType, String by, String timestamp) {
+        executeAddAction(actionType, by, timestamp, null, null, "");
+    }
+
+    public void addAction(ActionType actionType, String by, String timestamp, Status from, Status to) {
+        executeAddAction(actionType, by, timestamp, from, to, "");
+    }
+
+    public void addAction(ActionType actionType, String by, String timestamp, String arg) {
+        if (actionType == REMOVED_FROM_DEV) {
+            executeAddAction(actionType, by, timestamp, arg, null, "");
+        } else if (actionType == ADDED_TO_MILESTONE) {
+            executeAddAction(actionType, by, timestamp, null, null, arg);
+        } else {
+            throw new IllegalArgumentException(actionType.toString());
         }
     }
 

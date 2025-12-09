@@ -16,6 +16,8 @@ import main.users.enums.Seniority;
 
 import static main.command.enums.ErrorMessages.*;
 import static main.globals.ExpertiseArea.*;
+import static main.tickets.enums.ActionType.ASSIGNED;
+import static main.tickets.enums.ActionType.STATUS_CHANGED;
 import static main.tickets.enums.BusinessPriority.*;
 import static main.tickets.enums.Status.IN_PROGRESS;
 import static main.tickets.enums.Status.OPEN;
@@ -74,8 +76,16 @@ public class AssignTicketCommand extends Command {
         ticket.setAssignedAt(commandInput.getTimestamp());
         ticket.setStatus(IN_PROGRESS);
 
+
+        ticket.addAction(ASSIGNED, commandInput.getUsername(), commandInput.getTimestamp());
+        ticket.addAction(STATUS_CHANGED, commandInput.getUsername(), commandInput.getTimestamp(), OPEN, IN_PROGRESS);
+
+
+
         Milestone milestone = db.getMilestoneByName(milestoneName);
         milestone.getRepartition().get(developer.getUsername()).add(ticket.getId());
+
+
 
         developer.addAssignedTicket(ticket);
     }
