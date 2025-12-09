@@ -10,7 +10,7 @@ import main.tickets.Ticket;
 import main.users.enums.Role;
 
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static main.users.enums.Role.MANAGER;
@@ -52,7 +52,7 @@ public class CreateMilestoneCommand extends Command {
 
         String[] assignedDevs = milestone.getAssignedDevs();
         for (String dev : assignedDevs) {
-            milestone.getRepartition().putIfAbsent(dev, new String[0]);
+            milestone.getRepartition().putIfAbsent(dev, new ArrayList<>());
         }
 
         for (String milestoneName : milestone.getBlockingFor()) {
@@ -63,7 +63,7 @@ public class CreateMilestoneCommand extends Command {
         }
 
         for (int ticket : milestone.getTickets()) {
-            Ticket t = db.getTicketByID(ticket);
+            Ticket t = db.getTicketById(ticket);
             t.setAssignedMilestone(milestone.getName());
         }
 

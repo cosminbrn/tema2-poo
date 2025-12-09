@@ -3,10 +3,14 @@ package main.command.commands.viewticketshelpers;
 import main.database.Database;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
+import main.tickets.enums.Status;
 import main.users.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
+
+import static main.tickets.enums.Status.OPEN;
 
 public class DeveloperTicketViewStrategy implements TicketFilteringStrategy{
     @Override
@@ -16,9 +20,13 @@ public class DeveloperTicketViewStrategy implements TicketFilteringStrategy{
         Database db = Database.getInstance();
         List<Milestone> developerMilestones = Database.getInstance().getMilestonesByDeveloper(user.getUsername());
         for (Milestone milestone : developerMilestones) {
-           result.addAll(db.getTicketsByIds(milestone.getOpenTickets()));
+           for (Ticket ticket : db.getTicketsByIds(milestone.getOpenTickets())) {
+                if (ticket.getStatus() == OPEN) {
+                     result.add(ticket);
+                }
+           }
         }
-
+        result.sort(Comparator.comparing(Ticket::getCreatedAt, Comparator.reverseOrder()).thenComparingInt(Ticket::getId));
         return result;
     }
 }

@@ -26,7 +26,7 @@ public class Milestone {
     private int[] openTickets;
     private int[] closedTickets;
     private double completionPercentage;
-    private Map<String, String[]> repartition;
+    private Map<String, List<Integer>> repartition;
 
     private Milestone(Builder builder) {
         this.name = builder.name;
@@ -112,14 +112,14 @@ public class Milestone {
     public void updateTicketPriorities() {
         Database db = Database.getInstance();
         for (int ticket : tickets) {
-            db.getTicketByID(ticket).updatePriority();
+            db.getTicketById(ticket).updatePriority();
         }
     }
 
     public void setTicketPrioritiesToCritical() {
         Database db = Database.getInstance();
         for (int ticket : tickets) {
-            db.getTicketByID(ticket).setBusinessPriority(CRITICAL);
+            db.getTicketById(ticket).setBusinessPriority(CRITICAL);
         }
     }
 

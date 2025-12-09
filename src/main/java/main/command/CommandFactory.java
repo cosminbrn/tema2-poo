@@ -20,6 +20,12 @@ public class CommandFactory {
             case VIEW_TICKETS -> new ViewTicketsCommand();
             case LOST_INVESTORS -> new LostInvestorsCommand();
             case VIEW_MILESTONES -> new ViewMilestonesCommand();
+            case ASSIGN_TICKET ->  new AssignTicketCommand();
+            case UNDO_ASSIGN_TICKET -> new UndoAssignTicketCommand();
+            case VIEW_ASSIGNED_TICKETS -> new ViewAssignedTicketsCommand();
+            case ADD_COMMENT ->  new AddCommentCommand();
+            case UNDO_ADD_COMMENT -> new UndoAddCommentCommand();
+            default -> null;
         };
     }
 }

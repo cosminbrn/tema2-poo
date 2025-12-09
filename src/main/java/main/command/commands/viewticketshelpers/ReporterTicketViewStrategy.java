@@ -5,6 +5,7 @@ import main.tickets.Ticket;
 import main.users.User;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 /**
  * Strategy interface for filtering tickets based on reporter.
@@ -18,6 +19,7 @@ public class ReporterTicketViewStrategy implements TicketFilteringStrategy {
                 result.add(ticket);
             }
         }
+        result.sort(Comparator.comparing(Ticket::getCreatedAt, Comparator.reverseOrder()).thenComparingInt(Ticket::getId));
         return result;
     }
 }

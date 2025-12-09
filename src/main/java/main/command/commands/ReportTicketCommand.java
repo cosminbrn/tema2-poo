@@ -45,15 +45,13 @@ public class ReportTicketCommand extends Command {
             return;
         }
 
-
-
         if (type == BUG) {
             BusinessPriority bp = BusinessPriority.fromString(params.getBusinessPriority());
             if (params.getReportedBy().isEmpty()) {
                 bp = LOW;
             }
             Ticket ticket = new BugTicket.BugBuilder()
-                    .setId(db.getNextTicketID())
+                    .setId(db.getNextTicketId())
                     .setType(BUG)
                     .setTitle(params.getTitle())
                     .setBusinessPriority(bp)
@@ -72,7 +70,7 @@ public class ReportTicketCommand extends Command {
             db.addTicket(ticket);
         } else if (type == UI_FEEDBACK) {
             Ticket ticket = new UIFeedbackTicket.UIFeedbackTicketBuilder()
-                    .setId(db.getNextTicketID())
+                    .setId(db.getNextTicketId())
                     .setType(UI_FEEDBACK)
                     .setTitle(params.getTitle())
                     .setBusinessPriority(BusinessPriority.fromString(params.getBusinessPriority()))
@@ -90,7 +88,7 @@ public class ReportTicketCommand extends Command {
             db.addTicket(ticket);
         } else if (type == FEATURE_REQUEST) {
             Ticket ticket = new FeatureRequestTicket.FeatureRequestBuilder()
-                    .setId(db.getNextTicketID())
+                    .setId(db.getNextTicketId())
                     .setType(FEATURE_REQUEST)
                     .setTitle(params.getTitle())
                     .setBusinessPriority(BusinessPriority.fromString(params.getBusinessPriority()))

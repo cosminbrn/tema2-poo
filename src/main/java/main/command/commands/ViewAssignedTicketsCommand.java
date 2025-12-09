@@ -3,43 +3,35 @@ package main.command.commands;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import main.command.Command;
-import main.command.commands.viewticketshelpers.DeveloperTicketViewStrategy;
-import main.command.commands.viewticketshelpers.ManagerTicketViewStrategy;
-import main.command.commands.viewticketshelpers.ReporterTicketViewStrategy;
-import main.command.commands.viewticketshelpers.TicketFilteringStrategy;
-import main.command.enums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
 import main.tickets.Ticket;
-import main.users.User;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import static main.App.MAPPER;
-import static main.command.enums.CommandType.VIEW_TICKETS;
+import static main.command.enums.CommandType.VIEW_ASSIGNED_TICKETS;
 
-public class ViewTicketsCommand extends Command {
-    Database db = Database.getInstance();
-
+public class ViewAssignedTicketsCommand extends Command {
     @Override
     public void execute(CommandInput input, ArrayNode output) {
+        Database db = Database.getInstance();
+        List<Ticket> tickets = new ArrayList<>();
 
-        User user = db.getUserByUsername(input.getUsername());
-
-        if (db.getUserByUsername(input.getUsername()) == null) {
-            addErrorOutput(input, output, String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(), input.getUsername()));
-            return;
+        for (Ticket ticket : db.getTickets()) {
+            if (ticket.getAssignedTo().equals(input.getUsername())) {
+                tickets.add(ticket);
+            }
         }
 
-        TicketFilteringStrategy strategy = switch (user.getRole()) {
-            case REPORTER -> new ReporterTicketViewStrategy();
-            case DEVELOPER -> new DeveloperTicketViewStrategy();
-            case MANAGER -> new ManagerTicketViewStrategy();
-        };
-        List<Ticket> tickets = strategy.getTickets(user);
-        tickets.sort(Comparator.comparing(Ticket::getCreatedAt).thenComparingInt(Ticket::getId));
-        ArrayNode ticketsArray = MAPPER.createArrayNode();
+
+        tickets.sort(Comparator.comparing(Ticket::getBusinessPriority, Comparator.reverseOrder())
+                .thenComparing(Ticket::getCreatedAt)
+                .thenComparingInt(Ticket::getId));
+
+        ArrayNode assignedTicketsArray = MAPPER.createArrayNode();
         for (Ticket ticket : tickets) {
             ObjectNode ticketNode = MAPPER.createObjectNode();
 
@@ -50,8 +42,6 @@ public class ViewTicketsCommand extends Command {
             ticketNode.put("status", ticket.getStatus().getStatusName());
             ticketNode.put("createdAt", ticket.getCreatedAt());
             ticketNode.put("assignedAt", ticket.getAssignedAt());
-            ticketNode.put("solvedAt", ticket.getSolvedAt());
-            ticketNode.put("assignedTo", ticket.getAssignedTo());
             ticketNode.put("reportedBy", ticket.getReportedBy());
 
             ArrayNode commentsArray = MAPPER.createArrayNode();
@@ -64,16 +54,16 @@ public class ViewTicketsCommand extends Command {
             }
             ticketNode.set("comments", commentsArray);
 
-            ticketsArray.add(ticketNode);
+            assignedTicketsArray.add(ticketNode);
         }
-        addOutput(input, output, ticketsArray);
+        addOutput(input, output, assignedTicketsArray);
     }
 
-    public void addOutput(CommandInput input, ArrayNode output, ArrayNode tickets) {
-        node.put("command", VIEW_TICKETS.getName());
+    public void addOutput(CommandInput input, ArrayNode output, ArrayNode assignedTicketsArray) {
+        node.put("command", VIEW_ASSIGNED_TICKETS.getName());
         node.put("username", input.getUsername());
         node.put("timestamp", input.getTimestamp());
-        node.set("tickets", tickets);
+        node.set("assignedTickets", assignedTicketsArray);
         output.add(node);
     }
 }

@@ -53,10 +53,10 @@ public class ViewMilestonesCommand extends Command {
             milestoneNode.put("completionPercentage", milestone.calculateCompletionPercentage());
 
             ArrayNode repartitionsNode = MAPPER.createArrayNode();
-            for (Map.Entry repartitionEntry : milestone.getRepartition().entrySet()) {
+            for (Map.Entry<String, List<Integer>> repartitionEntry : milestone.getRepartition().entrySet()) {
                 ObjectNode repartitionNode = MAPPER.createObjectNode();
-                String dev = (String) repartitionEntry.getKey();
-                String[] tickets = (String[]) repartitionEntry.getValue();
+                String dev = repartitionEntry.getKey();
+                List<Integer> tickets = repartitionEntry.getValue();
                 repartitionNode.put("developer", dev);
                 repartitionNode.set("assignedTickets", MAPPER.valueToTree(tickets));
                 repartitionsNode.add(repartitionNode);

@@ -13,7 +13,9 @@ public enum CommandType {
     VIEW_MILESTONES("viewMilestones"),
     ASSIGN_TICKET("assignTicket"),
     VIEW_ASSIGNED_TICKETS("viewAssignedTickets"),
-    UNDO_ASSIGNED_TICKET("undoAssignedTicket");
+    UNDO_ASSIGN_TICKET("undoAssignTicket"),
+    ADD_COMMENT("addComment"),
+    UNDO_ADD_COMMENT("undoAddComment");
 
     @Getter
     public final String name;

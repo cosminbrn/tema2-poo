@@ -1,7 +1,6 @@
 package main.database;
 
 import lombok.Getter;
-import main.fileio.CommandInput;
 import main.fileio.UserInput;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
@@ -67,7 +66,7 @@ public class Database {
         }
     }
 
-    public int getNextTicketID() {
+    public int getNextTicketId() {
         return nextTicketID++;
     }
 
@@ -80,7 +79,7 @@ public class Database {
         return null;
     }
 
-    public Ticket getTicketByID(int ticketID) {
+    public Ticket getTicketById(int ticketID) {
         for (Ticket ticket : tickets) {
             if (ticket.getId() == ticketID) {
                 return ticket;
@@ -92,7 +91,7 @@ public class Database {
     public List<Ticket> getTicketsByIds(int[] ticketIds) {
         List<Ticket> result = new ArrayList<>();
         for (int id : ticketIds) {
-            Ticket ticket = getTicketByID(id);
+            Ticket ticket = getTicketById(id);
             if (ticket != null) {
                 result.add(ticket);
             }

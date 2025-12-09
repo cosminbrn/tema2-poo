@@ -7,6 +7,9 @@ import main.tickets.enums.BusinessPriority;
 import main.globals.ExpertiseArea;
 import main.tickets.enums.Status;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static main.tickets.enums.BusinessPriority.*;
 
 /**
@@ -19,13 +22,17 @@ public abstract class Ticket {
     private final String title;
     @Setter
     private BusinessPriority businessPriority;
-    private final Status status;
+    @Setter
+    private Status status;
     private final String createdAt;
-    private final String assignedAt;
+    @Setter
+    private String assignedAt;
     private final String reportedBy;
-    private final String solvedAt;
-    private final String assignedTo;
-    private final String[] comments;
+    @Setter
+    private String solvedAt;
+    @Setter
+    private String assignedTo;
+    private final List<Comment> comments;
     private final ExpertiseArea expertiseArea;
 
     // Optional fields
@@ -51,6 +58,10 @@ public abstract class Ticket {
         this.description = builder.description;
     }
 
+    public record Comment(String author, String comment, String timestamp) {
+
+    }
+
     public abstract static class Builder<T extends Builder<T>> {
         private int id;
         private TicketType type;
@@ -64,7 +75,7 @@ public abstract class Ticket {
         private String assignedTo = "";
         private String assignedAt = "";
         private String solvedAt = "";
-        private String[] comments = new String[0];
+        private List<Comment> comments = new ArrayList<>();
 
         public T setAssignedAt(String assignedAt) {
             this.assignedAt = assignedAt;
@@ -73,11 +84,6 @@ public abstract class Ticket {
 
         public T setSolvedAt(String solvedAt) {
             this.solvedAt = solvedAt;
-            return self();
-        }
-
-        public T setComments(String[] comments) {
-            this.comments = comments;
             return self();
         }
 
@@ -143,6 +149,29 @@ public abstract class Ticket {
             this.businessPriority = HIGH;
         } else if (this.businessPriority == HIGH) {
             this.businessPriority = CRITICAL;
+        }
+    }
+
+    public void addComment(String username, String comment, String timestamp) {
+        this.comments.add(new Comment(username, comment, timestamp));
+    }
+
+    public List<Comment> getCommentsByUser(String username) {
+        List<Comment> userComments = new ArrayList<>();
+        for (Comment comment : this.comments) {
+            if (comment.author().equalsIgnoreCase(username)) {
+                userComments.add(comment);
+            }
+        }
+        return userComments;
+    }
+
+    public void removeLastCommentByUser(String username) {
+        for (int i = comments.size() - 1; i >= 0; i--) {
+            if (comments.get(i).author().equalsIgnoreCase(username)) {
+                comments.remove(i);
+                break;
+            }
         }
     }
 }
