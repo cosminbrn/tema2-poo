@@ -15,7 +15,10 @@ public enum CommandType {
     VIEW_ASSIGNED_TICKETS("viewAssignedTickets"),
     UNDO_ASSIGN_TICKET("undoAssignTicket"),
     ADD_COMMENT("addComment"),
-    UNDO_ADD_COMMENT("undoAddComment");
+    UNDO_ADD_COMMENT("undoAddComment"),
+    CHANGE_STATUS("changeStatus"),
+    UNDO_CHANGE_STATUS("undoChangeStatus"),
+    VIEW_TICKET_HISTORY("viewTicketHistory");
 
     @Getter
     public final String name;

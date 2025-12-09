@@ -64,4 +64,32 @@ public class UIFeedbackTicket extends Ticket {
             return new UIFeedbackTicket(this);
         }
     }
+
+    @Override
+    public Ticket deepCopy() {
+        UIFeedbackTicketBuilder b = new UIFeedbackTicketBuilder();
+        UIFeedbackTicket copy = b.setId(getId()).setType(getType())
+                .setTitle(getTitle())
+                .setBusinessPriority(getBusinessPriority())
+                .setStatus(getStatus())
+                .setCreatedAt(getCreatedAt())
+                .setAssignedAt(getAssignedAt())
+                .setSolvedAt(getSolvedAt())
+                .setAssignedTo(getAssignedTo())
+                .setReportedBy(getReportedBy())
+                .setDescription(getDescription() == null ? "" : getDescription())
+                .setUiElementId(this.uiElementId)
+                .setBusinessValue(this.businessValue)
+                .setUsabilityScore(this.usabilityScore)
+                .setScreenshotUrl(this.screenshotUrl)
+                .setSuggestedFix(this.suggestedFix).build();
+
+        if (getComments() != null) {
+            for (Comment c : getComments()) {
+                copy.addComment(c.author(), c.comment(), c.timestamp());
+            }
+        }
+
+        return copy;
+    }
 }

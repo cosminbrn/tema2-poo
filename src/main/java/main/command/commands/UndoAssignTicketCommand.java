@@ -50,5 +50,6 @@ public class UndoAssignTicketCommand extends Command {
         }
 
         developer.removeTicketFromAssigned(ticket);
+        developer.addPreviouslyAssignedTicket(ticket.deepCopy());
     }
 }

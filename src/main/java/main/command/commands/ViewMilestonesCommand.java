@@ -3,9 +3,10 @@ package main.command.commands;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import main.command.Command;
-import main.command.commands.viewmilestoneshelpers.DeveloperMilestoneViewStrategy;
-import main.command.commands.viewmilestoneshelpers.ManagerMilestoneViewStrategy;
-import main.command.commands.viewmilestoneshelpers.MilestoneFilteringStrategy;
+import main.command.commands.viewmilestonesstrategy.DeveloperMilestoneViewStrategy;
+import main.command.commands.viewmilestonesstrategy.ManagerMilestoneViewStrategy;
+import main.command.commands.viewmilestonesstrategy.MilestoneFilteringStrategy;
+import main.command.enums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
 import main.milestones.Milestone;
@@ -19,11 +20,19 @@ import java.util.Map;
 import static main.App.MAPPER;
 
 public class ViewMilestonesCommand extends Command {
-    Database db = Database.getInstance();
+
 
     @Override
     public void execute(CommandInput input, ArrayNode output) {
+        Database db = Database.getInstance();
+
+        if (db.getUserByUsername(input.getUsername()) == null) {
+            addErrorOutput(input, output, String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(), input.getUsername()));
+            return;
+        }
+
         User user = db.getUserByUsername(input.getUsername());
+
 
         MilestoneFilteringStrategy strategy = switch (user.getRole()) {
             case DEVELOPER -> new DeveloperMilestoneViewStrategy();

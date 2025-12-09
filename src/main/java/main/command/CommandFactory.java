@@ -14,7 +14,6 @@ public class CommandFactory {
         CommandType type = CommandType.fromString(commandInput.getCommand());
         assert type != null;
         return switch (type) {
-            //case CREATE_MILESTONE -> new CreateMilestoneCommand(commandInput);
             case CREATE_MILESTONE -> new CreateMilestoneCommand();
             case REPORT_TICKET -> new ReportTicketCommand();
             case VIEW_TICKETS -> new ViewTicketsCommand();
@@ -25,6 +24,8 @@ public class CommandFactory {
             case VIEW_ASSIGNED_TICKETS -> new ViewAssignedTicketsCommand();
             case ADD_COMMENT ->  new AddCommentCommand();
             case UNDO_ADD_COMMENT -> new UndoAddCommentCommand();
+            case CHANGE_STATUS -> new ChangeStatusCommand();
+            case UNDO_CHANGE_STATUS -> new UndoChangeStatusCommand();
             default -> null;
         };
     }

@@ -1,4 +1,4 @@
-package main.command.commands.viewticketshelpers;
+package main.command.commands.viewticketsstrategy;
 
 import main.tickets.Ticket;
 import main.users.User;

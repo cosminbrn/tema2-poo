@@ -1,9 +1,8 @@
-package main.command.commands.viewticketshelpers;
+package main.command.commands.viewticketsstrategy;
 
 import main.database.Database;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
-import main.tickets.enums.Status;
 import main.users.User;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package main.command.commands.viewticketshelpers;
+package main.command.commands.viewticketsstrategy;
 
 import main.database.Database;
 import main.tickets.Ticket;
@@ -7,13 +7,18 @@ import main.users.User;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-public class ManagerTicketViewStrategy implements TicketFilteringStrategy {
+/**
+ * Strategy interface for filtering tickets based on reporter.
+ */
+public class ReporterTicketViewStrategy implements TicketFilteringStrategy {
     @Override
     public List<Ticket> getTickets(User user) {
-        Database db = Database.getInstance();
         List<Ticket> result = new ArrayList<>();
-        result = db.getTickets();
+        for (Ticket ticket : Database.getInstance().getTickets()) {
+            if (ticket.getReportedBy().equals(user.getUsername())) {
+                result.add(ticket);
+            }
+        }
         result.sort(Comparator.comparing(Ticket::getCreatedAt, Comparator.reverseOrder()).thenComparingInt(Ticket::getId));
         return result;
     }

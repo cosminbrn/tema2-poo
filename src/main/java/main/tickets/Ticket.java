@@ -174,4 +174,29 @@ public abstract class Ticket {
             }
         }
     }
+
+    public void updateStatus() {
+        if (this.status == Status.OPEN) {
+            this.status = Status.IN_PROGRESS;
+        } else if (this.status == Status.IN_PROGRESS) {
+            this.status = Status.RESOLVED;
+        } else if (this.status == Status.RESOLVED) {
+            this.status = Status.CLOSED;
+        }
+    }
+
+    public void undoStatus() {
+        if (this.status == Status.CLOSED) {
+            this.status = Status.RESOLVED;
+        } else if (this.status == Status.RESOLVED) {
+            this.status = Status.IN_PROGRESS;
+        }
+    }
+
+    /**
+     * Creates a deep copy of the ticket.
+     * @return A new Ticket object that is a deep copy of the current ticket.
+     */
+    public abstract Ticket deepCopy();
 }
+

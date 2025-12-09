@@ -77,4 +77,33 @@ public class BugTicket extends Ticket {
             return new BugTicket(this);
         }
     }
+
+    @Override
+    public Ticket deepCopy() {
+        BugBuilder b = new BugBuilder();
+        BugTicket copy = b.setId(getId()).setType(getType())
+                .setTitle(getTitle())
+                .setBusinessPriority(getBusinessPriority())
+                .setStatus(getStatus())
+                .setCreatedAt(getCreatedAt())
+                .setAssignedAt(getAssignedAt())
+                .setSolvedAt(getSolvedAt())
+                .setAssignedTo(getAssignedTo())
+                .setReportedBy(getReportedBy())
+                .setDescription(getDescription() == null ? "" : getDescription())
+                .setExpectedBehavior(this.expectedBehavior)
+                .setActualBehavior(this.actualBehavior)
+                .setFrequency(this.frequency)
+                .setSeverity(this.severity)
+                .setEnvironment(this.environment)
+                .setErrorCode(this.errorCode).build();
+
+        if (getComments() != null) {
+            for (Comment c : getComments()) {
+                copy.addComment(c.author(), c.comment(), c.timestamp());
+            }
+        }
+
+        return copy;
+    }
 }

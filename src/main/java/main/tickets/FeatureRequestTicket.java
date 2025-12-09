@@ -37,4 +37,29 @@ public class FeatureRequestTicket extends Ticket {
             return new FeatureRequestTicket(this);
         }
     }
+
+    @Override
+    public Ticket deepCopy() {
+        FeatureRequestBuilder b = new FeatureRequestBuilder();
+        FeatureRequestTicket copy = b.setId(getId()).setType(getType())
+                .setTitle(getTitle())
+                .setBusinessPriority(getBusinessPriority())
+                .setStatus(getStatus())
+                .setCreatedAt(getCreatedAt())
+                .setAssignedAt(getAssignedAt())
+                .setSolvedAt(getSolvedAt())
+                .setAssignedTo(getAssignedTo())
+                .setReportedBy(getReportedBy())
+                .setDescription(getDescription())
+                .setBusinessValue(this.businessValue)
+                .setCustomerDemand(this.customerDemand).build();
+
+        if (getComments() != null) {
+            for (Comment c : getComments()) {
+                copy.addComment(c.author(), c.comment(), c.timestamp());
+            }
+        }
+
+        return copy;
+    }
 }

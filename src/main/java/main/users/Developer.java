@@ -24,6 +24,7 @@ public final class Developer extends User {
     private final Seniority seniority;
 
     private final List<Ticket> assignedTickets = new ArrayList<>();
+    private final List<Ticket> previouslyAssignedTickets = new ArrayList<>();
 
     public Developer(final String name, final String email, final String hireDate,
                          final ExpertiseArea expertiseArea, final Seniority seniority) {
@@ -87,5 +88,9 @@ public final class Developer extends User {
 
     public void removeTicketFromAssigned(final Ticket ticket) {
         this.assignedTickets.remove(ticket);
+    }
+
+    public void addPreviouslyAssignedTicket(final Ticket ticket) {
+        this.previouslyAssignedTickets.add(ticket);
     }
 }

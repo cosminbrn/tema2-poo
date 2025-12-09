@@ -1,4 +1,4 @@
-package main.command.commands.viewmilestoneshelpers;
+package main.command.commands.viewmilestonesstrategy;
 
 import main.database.Database;
 import main.milestones.Milestone;
