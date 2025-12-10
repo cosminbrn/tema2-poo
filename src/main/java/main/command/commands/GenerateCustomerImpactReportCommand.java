@@ -45,10 +45,10 @@ public class GenerateCustomerImpactReportCommand extends Command {
         List<UIFeedbackTicket> uiFeedbackTickets = new ArrayList<>();
 
         for (Ticket ticket : validTickets) {
-            switch (ticket.getType().getTypeName()) {
-                case "BugTicket" -> bugTickets.add((BugTicket) ticket);
-                case "FeatureRequestTicket" -> featureTickets.add((FeatureRequestTicket) ticket);
-                case "UIFeedbackTicket" -> uiFeedbackTickets.add((UIFeedbackTicket) ticket);
+            switch (ticket.getType()) {
+                case BUG -> bugTickets.add((BugTicket) ticket);
+                case FEATURE_REQUEST -> featureTickets.add((FeatureRequestTicket) ticket);
+                case UI_FEEDBACK -> uiFeedbackTickets.add((UIFeedbackTicket) ticket);
             }
         }
 

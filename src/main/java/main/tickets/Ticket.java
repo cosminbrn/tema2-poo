@@ -215,10 +215,13 @@ public abstract class Ticket {
             this.status = Status.IN_PROGRESS;
         } else if (this.status == Status.IN_PROGRESS) {
             this.status = Status.RESOLVED;
+            this.solvedAt = currentDay;
         } else if (this.status == Status.RESOLVED) {
             Database db = Database.getInstance();
             this.status = Status.CLOSED;
-            this.solvedAt = currentDay;
+            if (this.assignedTo.isEmpty()) {
+                this.solvedAt = currentDay;
+            }
             ((Developer) db.getUserByUsername(this.assignedTo)).addClosedTicket(this);
         }
         return this.status;

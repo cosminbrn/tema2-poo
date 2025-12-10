@@ -21,6 +21,7 @@ import java.util.List;
 
 import static main.App.MAPPER;
 import static main.command.enums.CommandType.GENERATE_RESOLUTION_EFFICIENCY_REPORT;
+import static main.globals.TicketType.BUG;
 
 public class GenerateResolutionEfficiencyReportCommand extends Command {
     @Override
@@ -46,10 +47,10 @@ public class GenerateResolutionEfficiencyReportCommand extends Command {
         List<UIFeedbackTicket> uiFeedbackTickets = new ArrayList<>();
 
         for (Ticket ticket : validTickets) {
-            switch (ticket.getType().getTypeName()) {
-                case "BugTicket" -> bugTickets.add((BugTicket) ticket);
-                case "FeatureRequestTicket" -> featureTickets.add((FeatureRequestTicket) ticket);
-                case "UIFeedbackTicket" -> uiFeedbackTickets.add((UIFeedbackTicket) ticket);
+            switch (ticket.getType()) {
+                case BUG -> bugTickets.add((BugTicket) ticket);
+                case FEATURE_REQUEST -> featureTickets.add((FeatureRequestTicket) ticket);
+                case UI_FEEDBACK -> uiFeedbackTickets.add((UIFeedbackTicket) ticket);
             }
         }
 

@@ -23,7 +23,8 @@ public enum CommandType {
     GENERATE_PERFORMANCE_REPORT("generatePerformanceReport"),
     GENERATE_RESOLUTION_EFFICIENCY_REPORT("generateResolutionEfficiencyReport"),
     GENERATE_CUSTOMER_IMPACT_REPORT("generateCustomerImpactReport"),
-    GENERATE_TICKET_RISK_REPORT("generateTicketRiskReport");
+    GENERATE_TICKET_RISK_REPORT("generateTicketRiskReport"),
+    APP_STABILITY_REPORT("appStabilityReport");
 
     @Getter
     public final String name;

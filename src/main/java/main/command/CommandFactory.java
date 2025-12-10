@@ -31,6 +31,7 @@ public class CommandFactory {
             case GENERATE_RESOLUTION_EFFICIENCY_REPORT -> new GenerateResolutionEfficiencyReportCommand();
             case GENERATE_CUSTOMER_IMPACT_REPORT -> new GenerateCustomerImpactReportCommand();
             case GENERATE_TICKET_RISK_REPORT -> new GenerateTicketRiskReportCommand();
+            case APP_STABILITY_REPORT -> new AppStabilityReportCommand();
             default -> null;
         };
     }

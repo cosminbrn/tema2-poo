@@ -13,6 +13,7 @@ import main.command.commands.riskstrategy.RiskScore;
 import main.command.enums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
+import main.globals.Stability;
 import main.tickets.BugTicket;
 import main.tickets.FeatureRequestTicket;
 import main.tickets.Ticket;
@@ -24,8 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static main.App.MAPPER;
+import static main.command.commands.riskstrategy.RiskScore.NEGLIGIBLE;
+import static main.command.commands.riskstrategy.RiskScore.SIGNIFICANT;
+import static main.globals.Stability.*;
 
-public class GenerateTicketRiskReportCommand extends Command {
+public class AppStabilityReportCommand extends Command {
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
@@ -57,13 +61,13 @@ public class GenerateTicketRiskReportCommand extends Command {
         }
 
         ObjectNode report = MAPPER.createObjectNode();
-        report.put("totalTickets", validTickets.size());
+        report.put("totalOpenTickets", validTickets.size());
 
         ObjectNode ticketsByType = MAPPER.createObjectNode();
         ticketsByType.put("BUG", bugTickets.size());
         ticketsByType.put("FEATURE_REQUEST", featureTickets.size());
         ticketsByType.put("UI_FEEDBACK", uiFeedbackTickets.size());
-        report.set("ticketsByType", ticketsByType);
+        report.set("openTicketsByType", ticketsByType);
 
         int lowCount = 0, mediumCount = 0, highCount = 0, criticalCount = 0;
         for (Ticket ticket : validTickets) {
@@ -80,18 +84,69 @@ public class GenerateTicketRiskReportCommand extends Command {
         ticketsByPriority.put("MEDIUM", mediumCount);
         ticketsByPriority.put("HIGH", highCount);
         ticketsByPriority.put("CRITICAL", criticalCount);
-        report.set("ticketsByPriority", ticketsByPriority);
+        report.set("openTicketsByPriority", ticketsByPriority);
 
-        BugTicketsRiskStrategy bugStrategy = new BugTicketsRiskStrategy();
-        FeatureRequestTicketsRiskStrategy featureStrategy = new FeatureRequestTicketsRiskStrategy();
-        FeedbackTicketsRiskStrategy uiFeedBackStrategy = new FeedbackTicketsRiskStrategy();
+        BugTicketsRiskStrategy bugRiskStrategy = new BugTicketsRiskStrategy();
+        FeatureRequestTicketsRiskStrategy featureRiskStrategy = new FeatureRequestTicketsRiskStrategy();
+        FeedbackTicketsRiskStrategy uiFeedBackRiskStrategy = new FeedbackTicketsRiskStrategy();
+
+        List<RiskScore> riskScores = new ArrayList<>();
+        riskScores.add(RiskScore.fromInt((int) bugRiskStrategy.calculateImpact(bugTickets)));
+        riskScores.add(RiskScore.fromInt((int) featureRiskStrategy.calculateImpact(featureTickets)));
+        riskScores.add(RiskScore.fromInt((int) uiFeedBackRiskStrategy.calculateImpact(uiFeedbackTickets)));
+
 
         ObjectNode riskByType = MAPPER.createObjectNode();
-        riskByType.put("BUG", RiskScore.fromInt((int) bugStrategy.calculateImpact(bugTickets)).getName());
-        riskByType.put("FEATURE_REQUEST", RiskScore.fromInt((int)featureStrategy.calculateImpact(featureTickets)).getName());
-        riskByType.put("UI_FEEDBACK", RiskScore.fromInt((int)uiFeedBackStrategy.calculateImpact(uiFeedbackTickets)).getName());
+        riskByType.put("BUG", riskScores.get(0).getName());
+        riskByType.put("FEATURE_REQUEST", riskScores.get(1).getName());
+        riskByType.put("UI_FEEDBACK", riskScores.get(2).getName());
         report.set("riskByType", riskByType);
 
+        BugTicketsImpactStrategy bugStrategy = new BugTicketsImpactStrategy();
+        FeatureRequestTicketsImpactStrategy featureStrategy = new FeatureRequestTicketsImpactStrategy();
+        FeedbackTicketsImpactStrategy uiFeedBackStrategy = new FeedbackTicketsImpactStrategy();
+
+        List<Double> impacts = new ArrayList<>();
+        impacts.add(bugStrategy.calculateImpact(bugTickets));
+        impacts.add(featureStrategy.calculateImpact(featureTickets));
+        impacts.add(uiFeedBackStrategy.calculateImpact(uiFeedbackTickets));
+
+        ObjectNode customerImpactByType = MAPPER.createObjectNode();
+        customerImpactByType.put("BUG", impacts.get(0));
+        customerImpactByType.put("FEATURE_REQUEST", impacts.get(1));
+        customerImpactByType.put("UI_FEEDBACK", impacts.get(2));
+        report.set("impactByType", customerImpactByType);
+
+        Stability stability = PARTIALLY_STABLE;
+        if (db.getOpenInProgressTickets().isEmpty()) {
+            stability = STABLE;
+        } else {
+            int ok = 1;
+            for (RiskScore score : riskScores) {
+                if (score != NEGLIGIBLE) {
+                    ok = 0;
+                    break;
+                }
+            }
+            for (Double impact : impacts) {
+                if (impact >= 50.0) {
+                    ok = 0;
+                    break;
+                }
+            }
+
+            if (ok == 1) {
+                stability = STABLE;
+            } else {
+                for (RiskScore score : riskScores) {
+                    if (score == SIGNIFICANT) {
+                        stability = UNSTABLE;
+                        break;
+                    }
+                }
+            }
+        }
+        report.put("appStability", stability.getName());
         addOutput(commandInput, output, report);
     }
 

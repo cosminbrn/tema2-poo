@@ -10,6 +10,7 @@ public interface EfficiencyStrategy {
     }
 
     default double calculateAverageImpact(List<Double> scores) {
-        return scores.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        double res = scores.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        return Math.round(res * 100.0) / 100.0;
     }
 }
