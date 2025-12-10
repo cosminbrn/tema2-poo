@@ -14,7 +14,10 @@ public class KeywordsSpecification implements Specification<Ticket> {
 
     @Override
     public boolean isSatisfiedBy(Ticket ticket) {
-        String content = ticket.getTitle().toLowerCase() + ticket.getDescription().toLowerCase();
+        String content = ticket.getTitle().toLowerCase();
+        if (ticket.getDescription() != null) {
+            content = content + ticket.getDescription().toLowerCase();
+        }
         for (String keywords : keywords) {
             if (content.contains(keywords.toLowerCase())) {
                 return true;

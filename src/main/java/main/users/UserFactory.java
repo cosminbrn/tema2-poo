@@ -32,7 +32,7 @@ public final class UserFactory {
                     userInput.getSubordinates());
             case DEVELOPER -> new Developer(username, email, userInput.getHireDate(),
                     ExpertiseArea.fromString(userInput.getExpertiseArea()),
-                    Seniority.getSeniorityByName(userInput.getSeniority()));
+                    Seniority.fromString(userInput.getSeniority()));
             default -> new Reporter(username, email);
         };
     }

@@ -188,12 +188,12 @@ public final class Milestone implements Observable {
         }
 
         if (calculateCompletionPercentage() == 1.0) {
+            Database db = Database.getInstance();
             this.status = COMPLETED;
             for (String milestoneToUnlock : blockingFor) {
-                Database db = Database.getInstance();
                 Milestone blockedMilestone = db.getMilestoneByName(milestoneToUnlock);
                 if (blockedMilestone != null && blockedMilestone.isBlocked()) {
-                    blockedMilestone.unblockMilestone(currentDate);
+                    blockedMilestone.unblockMilestone(currentDate, db.getTicketById(this.closedTickets.getLast()));
 
                 }
             }
@@ -251,15 +251,16 @@ public final class Milestone implements Observable {
 
     /**
      * Unblock this milestone and notify observers.
-     * @param currentDate current date used to determine overdue state
+     * @param currentDate current date used to determine overdue stat
+     * @param lastClosedTicket last closed ticket in the deblocking milestone
      */
-    public void unblockMilestone(final LocalDate currentDate) {
+    public void unblockMilestone(final LocalDate currentDate, Ticket lastClosedTicket) {
         if (currentDate.isAfter(this.dueDate)) {
             setTicketPrioritiesToCritical();
             notifyObservers(String.format(MILESTONE_UNLOCKED_OVERDUE.getMessage(), this.name));
         } else {
             notifyObservers(String.format(MILESTONE_OPENED.getMessage(),
-                    this.name, closedTickets.getLast()));
+                    this.name, lastClosedTicket));
         }
         this.isBlocked = false;
     }

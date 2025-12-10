@@ -12,6 +12,7 @@ import main.command.commands.generate.efficiency.GenerateResolutionEfficiencyRep
 import main.command.commands.generate.risk.GenerateTicketRiskReportCommand;
 import main.command.commands.LostInvestorsCommand;
 import main.command.commands.ReportTicketCommand;
+import main.command.commands.search.SearchCommand;
 import main.command.commands.undo.UndoAddCommentCommand;
 import main.command.commands.undo.UndoAssignTicketCommand;
 import main.command.commands.undo.UndoChangeStatusCommand;
@@ -70,6 +71,7 @@ public final class CommandFactory {
             case GENERATE_CUSTOMER_IMPACT_REPORT -> new GenerateCustomerImpactReportCommand();
             case GENERATE_TICKET_RISK_REPORT -> new GenerateTicketRiskReportCommand();
             case APP_STABILITY_REPORT -> new AppStabilityReportCommand();
+            case SEARCH -> new SearchCommand();
             default -> null;
         };
     }

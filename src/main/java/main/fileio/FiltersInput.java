@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -16,7 +18,7 @@ public final class FiltersInput {
     private String businessPriority;
     private String type;
     private String createdAfter;
-    private String[] keywords;
+    private List<String> keywords;
     private String createdBefore;
     private boolean availableForAssignment;
 }

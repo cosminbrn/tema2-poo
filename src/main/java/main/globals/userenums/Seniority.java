@@ -19,7 +19,7 @@ public enum Seniority {
      * @param name the name of the seniority level
      * @return the corresponding Seniority, or null if not found
      */
-    public static Seniority getSeniorityByName(final String name) {
+    public static Seniority fromString(final String name) {
         for (Seniority seniority : Seniority.values()) {
             if (seniority.name().equalsIgnoreCase(name)) {
                 return seniority;

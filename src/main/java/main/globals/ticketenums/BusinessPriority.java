@@ -29,6 +29,6 @@ public enum BusinessPriority {
                 return priority;
             }
         }
-        throw new IllegalArgumentException("No enum constant for value: " + value);
+        return null;
     }
 }

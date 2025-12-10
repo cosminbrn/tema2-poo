@@ -72,6 +72,7 @@ public class GeneratePerformanceReportCommand extends Command {
             if (!devTickets.isEmpty()) {
                 performanceScore = strategy.calculatePerformanceScore(dev,
                         commandInput.getTimestamp());
+                dev.setPerformanceScore(performanceScore);
             }
 
             double averageResolutionTime =

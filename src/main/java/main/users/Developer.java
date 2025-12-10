@@ -1,7 +1,9 @@
 package main.users;
 
 import lombok.Getter;
+import lombok.Setter;
 import main.database.Database;
+import main.globals.ticketenums.Status;
 import main.globals.userenums.ExpertiseArea;
 import main.globals.Observer;
 import main.milestones.Milestone;
@@ -9,6 +11,7 @@ import main.tickets.Ticket;
 import main.globals.ticketenums.BusinessPriority;
 import main.globals.userenums.Seniority;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,9 @@ public final class Developer extends User implements Observer {
     private final List<Ticket> previouslyAssignedTickets = new ArrayList<>();
     private final List<Ticket> closedTickets = new ArrayList<>();
     private final List<String> notifications = new ArrayList<>();
+
+    @Getter @Setter
+    private double performanceScore;
 
     public Developer(final String name, final String email, final String hireDate,
                          final ExpertiseArea expertiseArea, final Seniority seniority) {
@@ -179,5 +185,28 @@ public final class Developer extends User implements Observer {
      */
     public void clearNotifications() {
         this.notifications.clear();
+    }
+
+    /**
+     * Gets the milestones assigned to the developer.
+     * @return list of milestones assigned to the developer
+     */
+    public List<Milestone> getAssignedMilestones() {
+        return Database.getInstance().getMilestonesByDeveloper(this.getUsername());
+    }
+
+    public List<Ticket> getOpenTicketsFromAssignedMilestones() {
+        Database db = Database.getInstance();
+        List<Milestone> milestones = getAssignedMilestones();
+        List<Ticket> result = new ArrayList<>();
+        for (Milestone milestone : milestones) {
+            List<Ticket> seeminglyOpenTickets = db.getTicketsByIds(milestone.getTickets());
+            for (Ticket ticket : seeminglyOpenTickets) {
+                if (ticket.getStatus() == Status.OPEN) {
+                    result.add(ticket);
+                }
+            }
+        }
+        return result;
     }
 }
