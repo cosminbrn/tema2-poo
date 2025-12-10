@@ -1,10 +1,19 @@
 package main.tickets.enums;
 
+import lombok.Getter;
+
 public enum Frequency {
-    RARE,
-    OCCASIONAL,
-    FREQUENT,
-    ALWAYS;
+    RARE(1),
+    OCCASIONAL(2),
+    FREQUENT(3),
+    ALWAYS(4);
+
+    @Getter
+    private final int value;
+
+    Frequency(int value) {
+        this.value = value;
+    }
 
     public static Frequency fromString(String value) {
         for (Frequency frequency : Frequency.values()) {

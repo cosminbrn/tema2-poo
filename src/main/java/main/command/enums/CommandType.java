@@ -18,7 +18,12 @@ public enum CommandType {
     UNDO_ADD_COMMENT("undoAddComment"),
     CHANGE_STATUS("changeStatus"),
     UNDO_CHANGE_STATUS("undoChangeStatus"),
-    VIEW_TICKET_HISTORY("viewTicketHistory");
+    VIEW_TICKET_HISTORY("viewTicketHistory"),
+    VIEW_NOTIFICATIONS("viewNotifications"),
+    GENERATE_PERFORMANCE_REPORT("generatePerformanceReport"),
+    GENERATE_RESOLUTION_EFFICIENCY_REPORT("generateResolutionEfficiencyReport"),
+    GENERATE_CUSTOMER_IMPACT_REPORT("generateCustomerImpactReport"),
+    GENERATE_TICKET_RISK_REPORT("generateTicketRiskReport");
 
     @Getter
     public final String name;

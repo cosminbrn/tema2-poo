@@ -1,10 +1,13 @@
 package main.tickets;
 
+import lombok.Getter;
 import main.tickets.enums.BusinessValue;
 
 public class UIFeedbackTicket extends Ticket {
     private final String uiElementId;
+    @Getter
     private final BusinessValue businessValue;
+    @Getter
     private final int usabilityScore;
 
     // Optional fields

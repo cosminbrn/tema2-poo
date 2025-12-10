@@ -2,6 +2,8 @@ package main.milestones;
 
 import lombok.Getter;
 import main.database.Database;
+import main.globals.Observable;
+import main.globals.Observer;
 import main.milestones.enums.MilestoneState;
 import main.tickets.Ticket;
 
@@ -9,12 +11,13 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static main.milestones.enums.MilestoneMessage.*;
 import static main.milestones.enums.MilestoneState.ACTIVE;
 import static main.milestones.enums.MilestoneState.COMPLETED;
 import static main.tickets.enums.BusinessPriority.CRITICAL;
 
 @Getter
-public class Milestone {
+public class Milestone implements Observable {
     private final String name;
     private final String[] blockingFor;
     private final LocalDate dueDate;
@@ -32,6 +35,8 @@ public class Milestone {
     private double completionPercentage;
     private Map<String, List<Integer>> repartition;
 
+    private final List<Observer> observers = new ArrayList<>();
+
     private Milestone(Builder builder) {
         this.name = builder.name;
         this.blockingFor = builder.blockingFor;
@@ -45,6 +50,24 @@ public class Milestone {
         this.closedTickets = new ArrayList<>();
         this.completionPercentage = 0.0;
         this.repartition = new LinkedHashMap<>();
+    }
+
+    // Observer logic
+    @Override
+    public void addObserver(Observer observer) {
+        this.observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        this.observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(String notification) {
+        for (Observer observer : observers) {
+            observer.update(notification);
+        }
     }
 
     public static class Builder {
@@ -107,15 +130,22 @@ public class Milestone {
 
         if (calculateCompletionPercentage() == 1.0) {
             this.status = COMPLETED;
+            for (String milestoneToUnlock : blockingFor) {
+                Database db = Database.getInstance();
+                Milestone blockedMilestone = db.getMilestoneByName(milestoneToUnlock);
+                if (blockedMilestone != null && blockedMilestone.isBlocked()) {
+                    blockedMilestone.unblockMilestone();
+                    blockedMilestone.notifyObservers(String.format(MILESTONE_OPENED.getMessage(), blockedMilestone.getName(), closedTickets.getLast()));
+                }
+            }
         }
 
         if (currentDate.isAfter(this.dueDate)) {
             setTicketPrioritiesToCritical();
-            // TODO: send notification to assigned devs
+            notifyObservers(String.format(MILESTONE_UNLOCKED_OVERDUE.getMessage(), this.name));
         } else if (((int) ChronoUnit.DAYS.between(currentDate, dueDate) + 1) <= 2) {
             setTicketPrioritiesToCritical();
-            // TODO: send special notification to assigned devs
-
+            notifyObservers(String.format(MILESTONE_ALMOST_DUE.getMessage(), this.name));
         } else if (((int) ChronoUnit.DAYS.between(currentDate, dueDate) + 1) % 3 == 0) {
             updateTicketPriorities();
         }

@@ -44,7 +44,7 @@ public class ChangeStatusCommand extends Command {
         }
 
         // Adds action while also updating the status
-        ticket.addAction(STATUS_CHANGED, commandInput.getUsername(), commandInput.getTimestamp(), ticket.getStatus(), ticket.updateStatus());
+        ticket.addAction(STATUS_CHANGED, commandInput.getUsername(), commandInput.getTimestamp(), ticket.getStatus(), ticket.updateStatus(commandInput.getTimestamp()));
 
         if (ticket.getStatus() == CLOSED) {
             Milestone ticketMilestone = db.getMilestoneByName(ticket.getAssignedMilestone());

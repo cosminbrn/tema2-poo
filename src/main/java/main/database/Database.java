@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static main.tickets.enums.ActionType.REMOVED_FROM_DEV;
-import static main.tickets.enums.Status.OPEN;
+import static main.tickets.enums.Status.*;
 
 /**
  * Singleton class representing the database.
@@ -143,6 +143,26 @@ public class Database {
                 ticket.addAction(REMOVED_FROM_DEV, "system", currentDay.toString(), developer.getUsername());
             }
         }
+    }
+
+    public List<Ticket> getClosedResolvedTickets() {
+        List<Ticket> result = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            if (ticket.getStatus() == RESOLVED || ticket.getStatus() == CLOSED) {
+                result.add(ticket);
+            }
+        }
+        return result;
+    }
+
+    public List<Ticket> getOpenInProgressTickets() {
+        List<Ticket> result = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            if (ticket.getStatus() == OPEN || ticket.getStatus() == IN_PROGRESS) {
+                result.add(ticket);
+            }
+        }
+        return result;
     }
 
     public void updateDatabase(LocalDate currentDay) {

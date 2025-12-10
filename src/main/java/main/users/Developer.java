@@ -3,6 +3,7 @@ package main.users;
 import lombok.Getter;
 import main.database.Database;
 import main.globals.ExpertiseArea;
+import main.globals.Observer;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
 import main.tickets.enums.BusinessPriority;
@@ -18,13 +19,15 @@ import static main.users.enums.Role.DEVELOPER;
  * Class representing a developer user.
  */
 @Getter
-public final class Developer extends User {
+public final class Developer extends User implements Observer {
     private final String hireDate;
     private final ExpertiseArea expertiseArea;
     private final Seniority seniority;
 
     private final List<Ticket> assignedTickets = new ArrayList<>();
     private final List<Ticket> previouslyAssignedTickets = new ArrayList<>();
+    private final List<Ticket> closedTickets = new ArrayList<>();
+    private final List<String> notifications = new ArrayList<>();
 
     public Developer(final String name, final String email, final String hireDate,
                          final ExpertiseArea expertiseArea, final Seniority seniority) {
@@ -86,11 +89,37 @@ public final class Developer extends User {
         return null;
     }
 
+    public void addClosedTicket(final Ticket ticket) {
+        this.closedTickets.add(ticket);
+    }
+
     public void removeTicketFromAssigned(final Ticket ticket) {
         this.assignedTickets.remove(ticket);
     }
 
     public void addPreviouslyAssignedTicket(final Ticket ticket) {
         this.previouslyAssignedTickets.add(ticket);
+    }
+
+    public List<Ticket> getClosedTicketsFromLastMonth(final String currentDay) {
+        List<Ticket> result = new ArrayList<>();
+        int currentMonth = Integer.parseInt(currentDay.split("-")[1]);
+        for (Ticket ticket : this.closedTickets) {
+            int ticketMonth = Integer.parseInt(ticket.getSolvedAt().split("-")[1]);
+            if (ticketMonth == currentMonth - 1) {
+                result.add(ticket);
+            }
+        }
+        return result;
+    }
+
+
+    @Override
+    public void update(String notification) {
+        this.notifications.add(notification);
+    }
+
+    public void clearNotifications() {
+        this.notifications.clear();
     }
 }

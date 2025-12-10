@@ -1,6 +1,7 @@
 package main.users;
 
 import lombok.Getter;
+import main.database.Database;
 import main.milestones.Milestone;
 
 import java.util.ArrayList;
@@ -26,5 +27,17 @@ public final class Manager extends User {
 
     public void addCreatedMilestone(final Milestone milestone) {
         this.createdMilestones.add(milestone);
+    }
+
+    public List<Developer> getSubordinateDevelopers() {
+        Database db = Database.getInstance();
+        List<Developer> subordinateUsers = new ArrayList<>();
+        for (String username : subordinates) {
+            Developer user = (Developer) db.getUserByUsername(username);
+            if (user != null) {
+                subordinateUsers.add(user);
+            }
+        }
+        return subordinateUsers;
     }
 }

@@ -2,13 +2,17 @@ package main.tickets;
 
 import lombok.Getter;
 import lombok.Setter;
+import main.database.Database;
 import main.globals.TicketType;
 import main.tickets.actions.*;
 import main.tickets.enums.ActionType;
 import main.tickets.enums.BusinessPriority;
 import main.globals.ExpertiseArea;
 import main.tickets.enums.Status;
+import main.users.Developer;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,13 +210,16 @@ public abstract class Ticket {
         }
     }
 
-    public Status updateStatus() {
+    public Status updateStatus(String currentDay) {
         if (this.status == Status.OPEN) {
             this.status = Status.IN_PROGRESS;
         } else if (this.status == Status.IN_PROGRESS) {
             this.status = Status.RESOLVED;
         } else if (this.status == Status.RESOLVED) {
+            Database db = Database.getInstance();
             this.status = Status.CLOSED;
+            this.solvedAt = currentDay;
+            ((Developer) db.getUserByUsername(this.assignedTo)).addClosedTicket(this);
         }
         return this.status;
     }
@@ -220,6 +227,7 @@ public abstract class Ticket {
     public Status undoStatus() {
         if (this.status == Status.CLOSED) {
             this.status = Status.RESOLVED;
+            this.solvedAt = "";
         } else if (this.status == Status.RESOLVED) {
             this.status = Status.IN_PROGRESS;
         }
@@ -252,6 +260,10 @@ public abstract class Ticket {
         } else {
             throw new IllegalArgumentException(actionType.toString());
         }
+    }
+
+    public int getResolutionTime() {
+        return 1 + (int) ChronoUnit.DAYS.between(LocalDate.parse(this.getAssignedAt()), LocalDate.parse(this.getSolvedAt()));
     }
 
     /**

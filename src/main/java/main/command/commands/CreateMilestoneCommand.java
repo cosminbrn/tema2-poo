@@ -5,9 +5,11 @@ import main.command.Command;
 import main.command.enums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
+import main.globals.Observer;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
 import main.tickets.enums.ActionType;
+import main.users.Developer;
 import main.users.Manager;
 import main.users.enums.Role;
 
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static main.milestones.enums.MilestoneMessage.MILESTONE_CREATION;
 import static main.tickets.enums.ActionType.ADDED_TO_MILESTONE;
 import static main.users.enums.Role.MANAGER;
 
@@ -56,9 +59,14 @@ public class CreateMilestoneCommand extends Command {
 
         manager.addCreatedMilestone(milestone);
         String[] assignedDevs = milestone.getAssignedDevs();
+
         for (String dev : assignedDevs) {
             milestone.getRepartition().putIfAbsent(dev, new ArrayList<>());
+            Developer developer = (Developer) db.getUserByUsername(dev);
+            milestone.addObserver(developer);
         }
+
+        milestone.notifyObservers(String.format(MILESTONE_CREATION.getMessage(), milestone.getName(), commandInput.getDueDate()));
 
         for (String milestoneName : milestone.getBlockingFor()) {
             Milestone blockedMilestone = db.getMilestoneByName(milestoneName);

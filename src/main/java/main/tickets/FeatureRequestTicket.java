@@ -1,10 +1,13 @@
 package main.tickets;
 
+import lombok.Getter;
 import main.tickets.enums.BusinessValue;
 import main.tickets.enums.CustomerDemand;
 
 public class FeatureRequestTicket extends Ticket {
+    @Getter
     private final BusinessValue businessValue;
+    @Getter
     private final CustomerDemand customerDemand;
 
     protected FeatureRequestTicket(FeatureRequestBuilder builder) {

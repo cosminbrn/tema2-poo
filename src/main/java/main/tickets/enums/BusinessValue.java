@@ -1,10 +1,19 @@
 package main.tickets.enums;
 
+import lombok.Getter;
+
 public enum BusinessValue {
-    S,
-    M,
-    L,
-    XL;
+    S(1),
+    M(3),
+    L(6),
+    XL(10);
+
+    @Getter
+    public final int value;
+
+    BusinessValue(int value) {
+        this.value = value;
+    }
 
     public static BusinessValue fromString(String value) {
         return switch (value) {

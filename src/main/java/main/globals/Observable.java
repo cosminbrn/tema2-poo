@@ -1,6 +1,6 @@
 package main.globals;
 
-public interface Observbale {
+public interface Observable {
     void addObserver(Observer observer);
     void removeObserver(Observer observer);
     void notifyObservers(String notification);

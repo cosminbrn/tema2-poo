@@ -22,7 +22,7 @@ import static main.tickets.enums.BusinessPriority.*;
 import static main.tickets.enums.Status.IN_PROGRESS;
 import static main.tickets.enums.Status.OPEN;
 import static main.users.enums.Role.DEVELOPER;
-import static main.users.enums.Role.MANAGER;
+
 
 public class AssignTicketCommand extends Command {
     @Override

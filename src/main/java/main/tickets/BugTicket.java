@@ -1,6 +1,7 @@
 package main.tickets;
 
 
+import lombok.Getter;
 import main.tickets.enums.Frequency;
 import main.tickets.enums.Severity;
 
@@ -10,7 +11,9 @@ import main.tickets.enums.Severity;
 public class BugTicket extends Ticket {
     private final String expectedBehavior;
     private final String actualBehavior;
+    @Getter
     private final Frequency frequency;
+    @Getter
     private final Severity severity;
 
     // Optional fields
