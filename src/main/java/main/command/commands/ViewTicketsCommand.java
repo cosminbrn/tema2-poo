@@ -19,9 +19,17 @@ import java.util.List;
 import static main.App.MAPPER;
 import static main.command.enums.CommandType.VIEW_TICKETS;
 
+/**
+ * Command to view tickets for the current user according to role.
+ */
 public class ViewTicketsCommand extends Command {
     Database db = Database.getInstance();
 
+    /**
+     * Execute view tickets command and append the resulting tickets array.
+     * @param input  parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput input, ArrayNode output) {
 
@@ -69,6 +77,13 @@ public class ViewTicketsCommand extends Command {
         addOutput(input, output, ticketsArray);
     }
 
+    /**
+     * Helper to append ticket list result to the output array.
+     *
+     * @param input   parsed command input
+     * @param output  JSON array to append results to
+     * @param tickets ticket array to include in the response
+     */
     public void addOutput(CommandInput input, ArrayNode output, ArrayNode tickets) {
         node.put("command", VIEW_TICKETS.getName());
         node.put("username", input.getUsername());

@@ -17,4 +17,12 @@ public abstract class Action {
         this.by = by;
         this.timestamp = timestamp;
     }
+
+    protected Action(Action other) {
+        this.actionType = other.actionType;
+        this.by = other.by;
+        this.timestamp = other.timestamp;
+    }
+
+    public abstract Action deepCopy();
 }

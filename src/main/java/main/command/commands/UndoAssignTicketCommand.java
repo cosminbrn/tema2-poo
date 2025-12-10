@@ -18,8 +18,16 @@ import static main.tickets.enums.Status.IN_PROGRESS;
 import static main.tickets.enums.Status.OPEN;
 import static main.users.enums.Role.DEVELOPER;
 
+/**
+ * Command to undo the assignment of a ticket from a developer.
+ */
 public class UndoAssignTicketCommand extends Command {
 
+    /**
+     * Execute undo assign ticket command and update ticket and developer state.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
@@ -47,16 +55,17 @@ public class UndoAssignTicketCommand extends Command {
         ticket.setAssignedAt("");
         ticket.setStatus(OPEN);
 
-
         ticket.addAction(DE_ASSIGNED, commandInput.getUsername(), commandInput.getTimestamp());
-        ticket.addAction(STATUS_CHANGED, commandInput.getUsername(), commandInput.getTimestamp(), IN_PROGRESS, OPEN);
+        //ticket.addAction(STATUS_CHANGED, commandInput.getUsername(), commandInput.getTimestamp(), IN_PROGRESS, OPEN);
 
         Milestone milestone = db.getMilestoneByName(ticket.getAssignedMilestone());
         if (milestone != null) {
             milestone.getRepartition().get(developer.getUsername()).removeIf(ticketId -> ticketId == ticket.getId());
         }
 
+        Ticket ticketCopy = ticket.deepCopy();
+
+        developer.addPreviouslyAssignedTicket(ticketCopy);
         developer.removeTicketFromAssigned(ticket);
-        developer.addPreviouslyAssignedTicket(ticket.deepCopy());
     }
 }

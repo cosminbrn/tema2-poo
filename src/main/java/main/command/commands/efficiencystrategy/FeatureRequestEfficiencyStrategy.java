@@ -1,13 +1,21 @@
 package main.command.commands.efficiencystrategy;
 
 import main.tickets.FeatureRequestTicket;
-import main.tickets.Ticket;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeatureRequestEfficiencyStrategy implements EfficiencyStrategy {
-    public double calculateEfficiency(List<FeatureRequestTicket> tickets) {
+/**
+ * Efficiency strategy for feature request tickets.
+ */
+public class FeatureRequestEfficiencyStrategy implements EfficiencyStrategy<FeatureRequestTicket> {
+    /**
+     * Calculate the efficiency score for a list of feature request tickets.
+     * @param tickets list of feature request tickets
+     * @return the efficiency score
+     */
+    @Override
+    public double calculateEfficiency(final List<FeatureRequestTicket> tickets) {
         List<Double> scores = new ArrayList<>();
         for (FeatureRequestTicket featureRequest : tickets) {
             double businessValue = featureRequest.getBusinessValue().getValue();

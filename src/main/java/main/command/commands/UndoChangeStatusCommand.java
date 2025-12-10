@@ -16,7 +16,15 @@ import static main.tickets.enums.ActionType.STATUS_CHANGED;
 import static main.tickets.enums.Status.IN_PROGRESS;
 import static main.users.enums.Role.DEVELOPER;
 
+/**
+ * Command to undo the last status change on a ticket by a developer.
+ */
 public class UndoChangeStatusCommand extends Command {
+    /**
+     * Execute undo change status command and update ticket actions.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();

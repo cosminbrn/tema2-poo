@@ -25,7 +25,15 @@ import java.util.List;
 
 import static main.App.MAPPER;
 
+/**
+ * Generate a ticket risk report for managers.
+ */
 public class GenerateTicketRiskReportCommand extends Command {
+    /**
+     * Execute the ticket risk report command and append the resulting report to output.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
@@ -95,6 +103,12 @@ public class GenerateTicketRiskReportCommand extends Command {
         addOutput(commandInput, output, report);
     }
 
+    /**
+     * Helper to append the generated ticket risk report to the output.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     * @param report report object to attach
+     */
     public void addOutput(CommandInput commandInput, ArrayNode output, ObjectNode report) {
         node.put("command", commandInput.getCommand());
         node.put("username", commandInput.getUsername());

@@ -93,6 +93,10 @@ public final class Developer extends User implements Observer {
         this.closedTickets.add(ticket);
     }
 
+    public void removeClosedTicket(final Ticket ticket) {
+        this.closedTickets.remove(ticket);
+    }
+
     public void removeTicketFromAssigned(final Ticket ticket) {
         this.assignedTickets.remove(ticket);
     }

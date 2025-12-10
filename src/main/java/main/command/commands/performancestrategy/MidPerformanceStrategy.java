@@ -7,7 +7,17 @@ import java.util.List;
 
 import static main.command.commands.performancestrategy.SeniorityBonus.MID;
 
+/**
+ * Strategy for calculating performance score for mid-level developers.
+ */
 public class MidPerformanceStrategy implements PerformanceScoreStrategy {
+
+    /**
+     * Calculate the performance score for a mid-level developer for the given day.
+     * @param dev the developer to evaluate
+     * @param currentDay the current day string used by the strategy
+     * @return the performance score
+     */
     @Override
     public double calculatePerformanceScore(Developer dev, String currentDay) {
         List<Ticket> closedTicketsLastMonth = dev.getClosedTicketsFromLastMonth(currentDay);

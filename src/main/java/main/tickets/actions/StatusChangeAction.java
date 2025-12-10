@@ -18,4 +18,15 @@ public class StatusChangeAction extends Action {
         this.from = from;
         this.to = to;
     }
+
+    protected StatusChangeAction(StatusChangeAction action) {
+        super(action);
+        this.from = action.from;
+        this.to = action.to;
+    }
+
+    @Override
+    public Action deepCopy() {
+        return new StatusChangeAction(this);
+    }
 }

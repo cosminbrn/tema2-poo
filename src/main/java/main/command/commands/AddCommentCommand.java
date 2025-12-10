@@ -12,8 +12,16 @@ import static main.command.enums.ErrorMessages.*;
 import static main.users.enums.Role.DEVELOPER;
 import static main.users.enums.Role.REPORTER;
 
+/**
+ * Command that handles adding comments to tickets.
+ */
 public class AddCommentCommand extends Command {
 
+    /**
+     * Execute add comment command and append output or errors.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();

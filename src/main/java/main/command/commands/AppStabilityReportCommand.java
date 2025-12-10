@@ -29,7 +29,15 @@ import static main.command.commands.riskstrategy.RiskScore.NEGLIGIBLE;
 import static main.command.commands.riskstrategy.RiskScore.SIGNIFICANT;
 import static main.globals.Stability.*;
 
+/**
+ * Command that generates an application stability report for managers.
+ */
 public class AppStabilityReportCommand extends Command {
+    /**
+     * Execute the stability report command and append the resulting JSON node.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
@@ -150,6 +158,13 @@ public class AppStabilityReportCommand extends Command {
         addOutput(commandInput, output, report);
     }
 
+    /**
+     * Helper to append a successfully generated report to the provided output
+     * array.
+     * @param commandInput the original command input (must not be null)
+     * @param output the JSON array to append the result to (must not be null)
+     * @param report the report object to attach (must not be null)
+     */
     public void addOutput(CommandInput commandInput, ArrayNode output, ObjectNode report) {
         node.put("command", commandInput.getCommand());
         node.put("username", commandInput.getUsername());

@@ -25,6 +25,11 @@ import static main.users.enums.Role.DEVELOPER;
 
 
 public class AssignTicketCommand extends Command {
+    /**
+     * Execute assign ticket command and append output or errors.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
@@ -72,21 +77,16 @@ public class AssignTicketCommand extends Command {
             addErrorOutput(commandInput, output, String.format(MILESTONE_BLOCKED.getErrorMessage(), ticket.getId(), milestoneName));
             return;
         }
+
         ticket.setAssignedTo(developer.getUsername());
         ticket.setAssignedAt(commandInput.getTimestamp());
         ticket.setStatus(IN_PROGRESS);
 
-
         ticket.addAction(ASSIGNED, commandInput.getUsername(), commandInput.getTimestamp());
         ticket.addAction(STATUS_CHANGED, commandInput.getUsername(), commandInput.getTimestamp(), OPEN, IN_PROGRESS);
 
-
-
         Milestone milestone = db.getMilestoneByName(milestoneName);
         milestone.getRepartition().get(developer.getUsername()).add(ticket.getId());
-
-
-
         developer.addAssignedTicket(ticket);
     }
 

@@ -18,6 +18,7 @@ import java.util.List;
 
 import static main.tickets.enums.ActionType.*;
 import static main.tickets.enums.BusinessPriority.*;
+import static main.tickets.enums.Status.*;
 
 /**
  * Abstract class representing a ticket with common properties.
@@ -29,6 +30,7 @@ public abstract class Ticket {
     private final String title;
     @Setter
     private BusinessPriority businessPriority;
+    private BusinessPriority previousBusinessPriority;
     @Setter
     private Status status;
     private final String createdAt;
@@ -211,14 +213,15 @@ public abstract class Ticket {
     }
 
     public Status updateStatus(String currentDay) {
-        if (this.status == Status.OPEN) {
-            this.status = Status.IN_PROGRESS;
-        } else if (this.status == Status.IN_PROGRESS) {
-            this.status = Status.RESOLVED;
+        previousBusinessPriority = businessPriority;
+        if (this.status == OPEN) {
+            this.status = IN_PROGRESS;
+        } else if (this.status == IN_PROGRESS) {
+            this.status = RESOLVED;
             this.solvedAt = currentDay;
-        } else if (this.status == Status.RESOLVED) {
+        } else if (this.status == RESOLVED) {
             Database db = Database.getInstance();
-            this.status = Status.CLOSED;
+            this.status = CLOSED;
             if (this.assignedTo.isEmpty()) {
                 this.solvedAt = currentDay;
             }
@@ -228,11 +231,15 @@ public abstract class Ticket {
     }
 
     public Status undoStatus() {
-        if (this.status == Status.CLOSED) {
-            this.status = Status.RESOLVED;
+        previousBusinessPriority = businessPriority;
+        if (this.status == CLOSED) {
+            Database db = Database.getInstance();
+            this.status = RESOLVED;
             this.solvedAt = "";
-        } else if (this.status == Status.RESOLVED) {
-            this.status = Status.IN_PROGRESS;
+            ((Developer) db.getUserByUsername(this.assignedTo)).removeClosedTicket(this);
+        } else if (this.status == RESOLVED) {
+            this.status = IN_PROGRESS;
+            this.solvedAt = "";
         }
         return this.status;
     }

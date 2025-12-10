@@ -21,4 +21,14 @@ public class AddToMilestoneAction extends Action  {
         super(ADDED_TO_MILESTONE, by, timestamp);
         this.milestone = milestoneName;
     }
+
+    protected AddToMilestoneAction(AddToMilestoneAction other) {
+        super(other);
+        this.milestone = other.milestone;
+    }
+
+    @Override
+    public Action deepCopy() {
+        return new AddToMilestoneAction(this);
+    }
 }

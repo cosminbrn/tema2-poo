@@ -14,7 +14,15 @@ import java.util.List;
 import static main.App.MAPPER;
 import static main.command.enums.CommandType.VIEW_ASSIGNED_TICKETS;
 
+/**
+ * Command to view tickets assigned to the current user.
+ */
 public class ViewAssignedTicketsCommand extends Command {
+    /**
+     * Execute view assigned tickets command and append assigned tickets array.
+     * @param input parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput input, ArrayNode output) {
         Database db = Database.getInstance();
@@ -59,6 +67,12 @@ public class ViewAssignedTicketsCommand extends Command {
         addOutput(input, output, assignedTicketsArray);
     }
 
+    /**
+     * Helper to append assigned tickets to the output array.
+     * @param input parsed command input
+     * @param output JSON array to append results to
+     * @param assignedTicketsArray array of assigned tickets to include
+     */
     public void addOutput(CommandInput input, ArrayNode output, ArrayNode assignedTicketsArray) {
         node.put("command", VIEW_ASSIGNED_TICKETS.getName());
         node.put("username", input.getUsername());

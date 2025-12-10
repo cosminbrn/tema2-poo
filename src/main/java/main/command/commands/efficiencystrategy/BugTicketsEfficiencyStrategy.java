@@ -1,13 +1,21 @@
 package main.command.commands.efficiencystrategy;
 
 import main.tickets.BugTicket;
-import main.tickets.Ticket;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BugTicketsEfficiencyStrategy implements EfficiencyStrategy {
-    public double calculateEfficiency(List<BugTicket> tickets) {
+/**
+ * Efficiency strategy for bug tickets.
+ */
+public class BugTicketsEfficiencyStrategy implements EfficiencyStrategy<BugTicket> {
+    /**
+     * Calculate the efficiency score for a list of bug tickets.
+     * @param tickets list of bug tickets
+     * @return the efficiency score
+     */
+    @Override
+    public double calculateEfficiency(final List<BugTicket> tickets) {
         List<Double> scores = new ArrayList<>();
         for (BugTicket bug : tickets) {
             int resolutionTime = bug.getResolutionTime();

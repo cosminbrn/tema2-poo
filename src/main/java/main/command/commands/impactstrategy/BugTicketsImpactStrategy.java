@@ -6,8 +6,16 @@ import main.tickets.FeatureRequestTicket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Impact strategy for bug tickets.
+ */
 public class BugTicketsImpactStrategy implements ImpactStrategy {
-    public double calculateImpact(List<BugTicket> tickets) {
+    /**
+     * Calculate the impact score for a list of bug tickets.
+     * @param tickets list of bug tickets
+     * @return the impact score
+     */
+    public double calculateImpact(final List<BugTicket> tickets) {
         List<Double> scores = new ArrayList<>();
         for (BugTicket bug : tickets) {
             double frequency = bug.getFrequency().getValue();

@@ -5,8 +5,16 @@ import main.tickets.BugTicket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Risk strategy for bug tickets.
+ */
 public class BugTicketsRiskStrategy implements RiskStrategy {
-    public double calculateImpact(List<BugTicket> tickets) {
+    /**
+     * Calculate the risk impact for a list of bug tickets.
+     * @param tickets list of bug tickets
+     * @return the impact score
+     */
+    public double calculateImpact(final List<BugTicket> tickets) {
         List<Double> scores = new ArrayList<>();
         for (BugTicket bug : tickets) {
             double frequency = bug.getFrequency().getValue();

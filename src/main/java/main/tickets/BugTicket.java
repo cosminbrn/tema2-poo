@@ -2,6 +2,7 @@ package main.tickets;
 
 
 import lombok.Getter;
+import main.tickets.actions.Action;
 import main.tickets.enums.Frequency;
 import main.tickets.enums.Severity;
 
@@ -104,6 +105,12 @@ public class BugTicket extends Ticket {
         if (getComments() != null) {
             for (Comment c : getComments()) {
                 copy.addComment(c.author(), c.comment(), c.timestamp());
+            }
+        }
+
+        if (getActions() != null) {
+            for (Action a : getActions()) {
+                copy.getActions().add(a.deepCopy());
             }
         }
 

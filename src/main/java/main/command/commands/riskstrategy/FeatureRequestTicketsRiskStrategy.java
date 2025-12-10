@@ -6,8 +6,16 @@ import main.tickets.FeatureRequestTicket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Risk strategy for feature request tickets.
+ */
 public class FeatureRequestTicketsRiskStrategy implements ImpactStrategy {
-    public double calculateImpact(List<FeatureRequestTicket> tickets) {
+    /**
+     * Calculate the risk impact for a list of feature request tickets.
+     * @param tickets list of feature request tickets
+     * @return the impact score
+     */
+    public double calculateImpact(final List<FeatureRequestTicket> tickets) {
         List<Double> scores = new ArrayList<>();
         for (FeatureRequestTicket featureRequest : tickets) {
             double businessValue = featureRequest.getBusinessValue().getValue();

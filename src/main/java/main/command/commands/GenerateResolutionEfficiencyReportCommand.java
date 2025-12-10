@@ -23,7 +23,15 @@ import static main.App.MAPPER;
 import static main.command.enums.CommandType.GENERATE_RESOLUTION_EFFICIENCY_REPORT;
 import static main.globals.TicketType.BUG;
 
+/**
+ * Generate a resolution efficiency report for managers.
+ */
 public class GenerateResolutionEfficiencyReportCommand extends Command {
+    /**
+     * Execute the resolution efficiency report command and append the resulting JSON node to output.
+     * @param commandInput the parsed command input
+     * @param output the array node to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
@@ -65,7 +73,7 @@ public class GenerateResolutionEfficiencyReportCommand extends Command {
 
         int lowCount = 0, mediumCount = 0, highCount = 0, criticalCount = 0;
         for (Ticket ticket : validTickets) {
-            switch (ticket.getBusinessPriority()) {
+            switch (ticket.getPreviousBusinessPriority()) {
                 case LOW -> lowCount++;
                 case MEDIUM -> mediumCount++;
                 case HIGH -> highCount++;
@@ -93,6 +101,12 @@ public class GenerateResolutionEfficiencyReportCommand extends Command {
         addOutput(commandInput, output, report);
     }
 
+    /**
+     * Helper to append the generated report to the output.
+     * @param input parsed command input
+     * @param output JSON array to append results to
+     * @param report report object to attach
+     */
     public void addOutput(final CommandInput input, final ArrayNode output, final ObjectNode report) {
         ObjectNode node = MAPPER.createObjectNode();
         node.put("command", GENERATE_RESOLUTION_EFFICIENCY_REPORT.getName());

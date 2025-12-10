@@ -9,4 +9,13 @@ public class DeassignAction extends Action {
     public DeassignAction(String by, String timestamp) {
         super(DE_ASSIGNED, by, timestamp);
     }
+
+    protected DeassignAction(DeassignAction deassignAction) {
+        super(deassignAction);
+    }
+
+    @Override
+    public Action deepCopy() {
+        return new DeassignAction(this);
+    }
 }

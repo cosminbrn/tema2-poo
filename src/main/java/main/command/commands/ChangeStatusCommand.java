@@ -11,12 +11,23 @@ import main.tickets.enums.ActionType;
 import main.users.User;
 import main.users.enums.Role;
 
+import java.time.LocalDate;
+
 import static main.command.enums.ErrorMessages.*;
 import static main.tickets.enums.ActionType.STATUS_CHANGED;
 import static main.tickets.enums.Status.CLOSED;
 import static main.users.enums.Role.DEVELOPER;
 
+/**
+ * Command to change the status of a ticket by a developer.
+ */
 public class ChangeStatusCommand extends Command {
+    /**
+     * Execute change status command and append output or errors.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     * @return void
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
@@ -49,6 +60,7 @@ public class ChangeStatusCommand extends Command {
         if (ticket.getStatus() == CLOSED) {
             Milestone ticketMilestone = db.getMilestoneByName(ticket.getAssignedMilestone());
             ticketMilestone.closeTicket(ticket);
+            ticketMilestone.updateMilestone(LocalDate.parse(commandInput.getTimestamp()));
         }
     }
 }

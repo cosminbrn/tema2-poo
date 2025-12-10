@@ -21,8 +21,16 @@ import static main.globals.WorkflowStage.TESTING;
 import static main.tickets.enums.BusinessPriority.LOW;
 import static main.tickets.enums.Status.OPEN;
 
+/**
+ * Command to report new tickets during testing stage.
+ */
 public class ReportTicketCommand extends Command {
 
+    /**
+     * Execute the report ticket command and add a new ticket to the database.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();

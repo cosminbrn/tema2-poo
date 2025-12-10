@@ -23,7 +23,15 @@ import java.util.List;
 import static main.App.MAPPER;
 import static main.command.enums.CommandType.GENERATE_PERFORMANCE_REPORT;
 
+/**
+ * Generate a performance report for managers.
+ */
 public class GeneratePerformanceReportCommand extends Command {
+    /**
+     * Execute the performance report command and append reports to output.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
@@ -78,6 +86,12 @@ public class GeneratePerformanceReportCommand extends Command {
         addOutput(commandInput, output, reports);
     }
 
+    /**
+     * Helper to append the generated performance reports to the output.
+     * @param input parsed command input
+     * @param output JSON array to append results to
+     * @param reports reports array to include in the response
+     */
     public void addOutput(final CommandInput input, final ArrayNode output, final ArrayNode reports) {
         node.put("command", GENERATE_PERFORMANCE_REPORT.getName());
         node.put("username", input.getUsername());

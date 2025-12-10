@@ -14,4 +14,14 @@ public class RemoveFromDevAction extends Action {
         super(REMOVED_FROM_DEV, by, timestamp);
         this.from = from;
     }
+
+    protected RemoveFromDevAction(RemoveFromDevAction action) {
+        super(action);
+        this.from = action.from;
+    }
+
+    @Override
+    public Action deepCopy() {
+        return new RemoveFromDevAction(this);
+    }
 }

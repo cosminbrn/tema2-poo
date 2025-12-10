@@ -67,7 +67,7 @@ public class Engine {
         while (currentStage != BANKRUPT && currentDay.isBefore(LocalDate.parse("2027-01-01"))) {
             updateStage();
             db.updateDatabase(currentDay);
-            while (LocalDate.parse(commandInput.getTimestamp()).isEqual(currentDay)) {
+            while (LocalDate.parse(commandInput.getTimestamp()).isEqual(currentDay) || LocalDate.parse(commandInput.getTimestamp()).isBefore(currentDay)) {
                 Command command = CommandFactory.createCommand(commandInput, output);
                 command.execute(commandInput, output);
                 if (commandInputIndex < input.getCommandInputs().size()) {

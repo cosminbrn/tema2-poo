@@ -1,14 +1,21 @@
 package main.command.commands.efficiencystrategy;
 
-import main.tickets.FeatureRequestTicket;
-import main.tickets.Ticket;
 import main.tickets.UIFeedbackTicket;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeedbackTicketsEfficiencyStrategy implements EfficiencyStrategy {
-    public double calculateEfficiency(List<UIFeedbackTicket> tickets) {
+/**
+ * Efficiency strategy for UI feedback tickets.
+ */
+public class FeedbackTicketsEfficiencyStrategy implements EfficiencyStrategy<UIFeedbackTicket> {
+    /**
+     * Calculate the efficiency score for a list of UI feedback tickets.
+     * @param tickets list of UI feedback tickets
+     * @return the efficiency score
+     */
+    @Override
+    public double calculateEfficiency(final List<UIFeedbackTicket> tickets) {
         List<Double> scores = new ArrayList<>();
         for (UIFeedbackTicket feedbackTicket : tickets) {
             double usabilityScore = feedbackTicket.getUsabilityScore();

@@ -29,11 +29,11 @@ public class Milestone implements Observable {
     private MilestoneState status = ACTIVE;
     private boolean isBlocked;
     @Getter
-    private List<Integer> openTickets;
+    private final List<Integer> openTickets;
     @Getter
-    private List<Integer> closedTickets;
+    private final List<Integer> closedTickets;
     private double completionPercentage;
-    private Map<String, List<Integer>> repartition;
+    private final Map<String, List<Integer>> repartition;
 
     private final List<Observer> observers = new ArrayList<>();
 
@@ -134,16 +134,13 @@ public class Milestone implements Observable {
                 Database db = Database.getInstance();
                 Milestone blockedMilestone = db.getMilestoneByName(milestoneToUnlock);
                 if (blockedMilestone != null && blockedMilestone.isBlocked()) {
-                    blockedMilestone.unblockMilestone();
-                    blockedMilestone.notifyObservers(String.format(MILESTONE_OPENED.getMessage(), blockedMilestone.getName(), closedTickets.getLast()));
+                    blockedMilestone.unblockMilestone(currentDate);
+
                 }
             }
         }
 
-        if (currentDate.isAfter(this.dueDate)) {
-            setTicketPrioritiesToCritical();
-            notifyObservers(String.format(MILESTONE_UNLOCKED_OVERDUE.getMessage(), this.name));
-        } else if (((int) ChronoUnit.DAYS.between(currentDate, dueDate) + 1) <= 2) {
+        if (((int) ChronoUnit.DAYS.between(currentDate, dueDate) + 1) == 2) {
             setTicketPrioritiesToCritical();
             notifyObservers(String.format(MILESTONE_ALMOST_DUE.getMessage(), this.name));
         } else if (((int) ChronoUnit.DAYS.between(currentDate, dueDate) + 1) % 3 == 0) {
@@ -177,7 +174,13 @@ public class Milestone implements Observable {
         this.isBlocked = true;
     }
 
-    public void unblockMilestone() {
+    public void unblockMilestone(LocalDate currentDate) {
+        if (currentDate.isAfter(this.dueDate)) {
+            setTicketPrioritiesToCritical();
+            notifyObservers(String.format(MILESTONE_UNLOCKED_OVERDUE.getMessage(), this.name));
+        } else {
+            notifyObservers(String.format(MILESTONE_OPENED.getMessage(), this.name, closedTickets.getLast()));
+        }
         this.isBlocked = false;
     }
 

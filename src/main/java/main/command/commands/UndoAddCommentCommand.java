@@ -11,7 +11,15 @@ import java.util.List;
 
 import static main.command.enums.ErrorMessages.COMMENTS_NOT_ALLOWED_ON_ANONYMOUS_TICKETS;
 
+/**
+ * Command to undo the last comment added by a user to a ticket.
+ */
 public class UndoAddCommentCommand extends Command {
+    /**
+     * Execute undo add comment command and update ticket and user state.
+     * @param commandInput parsed command input
+     * @param output JSON array to append results to
+     */
     @Override
     public void execute(CommandInput commandInput, ArrayNode output) {
         Database db = Database.getInstance();
