@@ -2,11 +2,14 @@ package main.users;
 
 import lombok.Getter;
 import main.tickets.Ticket;
-import main.users.enums.Role;
+import main.globals.userenums.Role;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract class representing a user.
+ */
 public abstract class User {
     @Getter
     private final String username;
@@ -23,11 +26,19 @@ public abstract class User {
         this.role = role;
     }
 
-    public void addCommentedTicket(final Ticket ticket) {
+    /**
+     * Adds a ticket to the commented tickets list.
+     * @param ticket the ticket to add
+     */
+    public final void addCommentedTicket(final Ticket ticket) {
         this.commentedTickets.add(ticket);
     }
 
-    public void removeLastCommentedTicket() {
+    /**
+     * Removes the last ticket from the commented tickets list.
+     * If the list is empty, no action is taken.
+     */
+    public final void removeLastCommentedTicket() {
         if (!this.commentedTickets.isEmpty()) {
             this.commentedTickets.removeLast();
         }

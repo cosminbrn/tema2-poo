@@ -1,0 +1,50 @@
+package main.globals.commandenums;
+
+import lombok.Getter;
+
+/**
+ * Enum representing different command types.
+ */
+public enum CommandType {
+    CREATE_MILESTONE("createMilestone"),
+    REPORT_TICKET("reportTicket"),
+    VIEW_TICKETS("viewTickets"),
+    LOST_INVESTORS("lostInvestors"),
+    VIEW_MILESTONES("viewMilestones"),
+    ASSIGN_TICKET("assignTicket"),
+    VIEW_ASSIGNED_TICKETS("viewAssignedTickets"),
+    UNDO_ASSIGN_TICKET("undoAssignTicket"),
+    ADD_COMMENT("addComment"),
+    UNDO_ADD_COMMENT("undoAddComment"),
+    CHANGE_STATUS("changeStatus"),
+    UNDO_CHANGE_STATUS("undoChangeStatus"),
+    VIEW_TICKET_HISTORY("viewTicketHistory"),
+    VIEW_NOTIFICATIONS("viewNotifications"),
+    GENERATE_PERFORMANCE_REPORT("generatePerformanceReport"),
+    GENERATE_RESOLUTION_EFFICIENCY_REPORT("generateResolutionEfficiencyReport"),
+    GENERATE_CUSTOMER_IMPACT_REPORT("generateCustomerImpactReport"),
+    GENERATE_TICKET_RISK_REPORT("generateTicketRiskReport"),
+    APP_STABILITY_REPORT("appStabilityReport"),
+    SEARCH("search");
+
+    @Getter
+    public final String name;
+
+    CommandType(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Converts a string to its corresponding CommandType enum value.
+     * @param commandType the command type as a string
+     * @return the corresponding CommandType enum value, or null if not found
+     */
+    public static CommandType fromString(String commandType) {
+        for (CommandType type : CommandType.values()) {
+            if (type.name.equalsIgnoreCase(commandType)) {
+                return type;
+            }
+        }
+        return null;
+    }
+}

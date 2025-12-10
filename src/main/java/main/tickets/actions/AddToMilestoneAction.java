@@ -2,7 +2,7 @@ package main.tickets.actions;
 
 import lombok.Getter;
 
-import static main.tickets.enums.ActionType.ADDED_TO_MILESTONE;
+import static main.globals.ticketenums.ActionType.ADDED_TO_MILESTONE;
 
 /**
  * Class representing an action of adding a ticket to a milestone.
@@ -17,12 +17,14 @@ public class AddToMilestoneAction extends Action  {
      * @param timestamp Time when the action was performed
      * @param milestoneName Name of the milestone the ticket was added to
      */
-    public AddToMilestoneAction(String by, String timestamp, String milestoneName) {
+    public AddToMilestoneAction(final String by,
+                                final String timestamp,
+                                final String milestoneName) {
         super(ADDED_TO_MILESTONE, by, timestamp);
         this.milestone = milestoneName;
     }
 
-    protected AddToMilestoneAction(AddToMilestoneAction other) {
+    protected AddToMilestoneAction(final AddToMilestoneAction other) {
         super(other);
         this.milestone = other.milestone;
     }

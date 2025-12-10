@@ -2,25 +2,25 @@ package main.command;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import main.command.commands.AddCommentCommand;
-import main.command.commands.AppStabilityReportCommand;
+import main.command.commands.generate.AppStabilityReportCommand;
 import main.command.commands.AssignTicketCommand;
 import main.command.commands.ChangeStatusCommand;
 import main.command.commands.CreateMilestoneCommand;
-import main.command.commands.GenerateCustomerImpactReportCommand;
-import main.command.commands.GeneratePerformanceReportCommand;
-import main.command.commands.GenerateResolutionEfficiencyReportCommand;
-import main.command.commands.GenerateTicketRiskReportCommand;
+import main.command.commands.generate.impact.GenerateCustomerImpactReportCommand;
+import main.command.commands.generate.performance.GeneratePerformanceReportCommand;
+import main.command.commands.generate.efficiency.GenerateResolutionEfficiencyReportCommand;
+import main.command.commands.generate.risk.GenerateTicketRiskReportCommand;
 import main.command.commands.LostInvestorsCommand;
 import main.command.commands.ReportTicketCommand;
-import main.command.commands.UndoAddCommentCommand;
-import main.command.commands.UndoAssignTicketCommand;
-import main.command.commands.UndoChangeStatusCommand;
-import main.command.commands.ViewAssignedTicketsCommand;
-import main.command.commands.ViewMilestonesCommand;
-import main.command.commands.ViewNotificationsCommand;
-import main.command.commands.ViewTicketHistoryCommand;
-import main.command.commands.ViewTicketsCommand;
-import main.command.enums.CommandType;
+import main.command.commands.undo.UndoAddCommentCommand;
+import main.command.commands.undo.UndoAssignTicketCommand;
+import main.command.commands.undo.UndoChangeStatusCommand;
+import main.command.commands.view.ViewAssignedTicketsCommand;
+import main.command.commands.view.milestones.ViewMilestonesCommand;
+import main.command.commands.view.ViewNotificationsCommand;
+import main.command.commands.view.history.ViewTicketHistoryCommand;
+import main.command.commands.view.tickets.ViewTicketsCommand;
+import main.globals.commandenums.CommandType;
 import main.fileio.CommandInput;
 
 import java.util.Objects;
@@ -35,9 +35,8 @@ public final class CommandFactory {
 
     /**
      * Create a Command instance for the provided input.
-     *
      * @param commandInput the parsed command input
-     * @param output       the output array (kept for compatibility)
+     * @param output the output array (kept for compatibility)
      * @return a Command instance or null if the command type is unknown
      */
     public static Command createCommand(final CommandInput commandInput,
@@ -71,6 +70,7 @@ public final class CommandFactory {
             case GENERATE_CUSTOMER_IMPACT_REPORT -> new GenerateCustomerImpactReportCommand();
             case GENERATE_TICKET_RISK_REPORT -> new GenerateTicketRiskReportCommand();
             case APP_STABILITY_REPORT -> new AppStabilityReportCommand();
+            default -> null;
         };
     }
 }

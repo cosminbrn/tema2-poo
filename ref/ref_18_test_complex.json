@@ -344,7 +344,7 @@
     "id" : 6,
     "type" : "FEATURE_REQUEST",
     "title" : "Export reports to Excel",
-    "businessPriority" : "CRITICAL",
+    "businessPriority" : "HIGH",
     "status" : "OPEN",
     "createdAt" : "2025-10-08",
     "solvedAt" : "",
@@ -353,7 +353,7 @@
 }, {
   "command" : "viewMilestones",
   "username" : "gabriel_manager",
-  "timestamp" : "2025-10-28",
+  "timestamp" : "2025-10-27",
   "milestones" : [ {
     "name" : "Solve Backend and Frontend",
     "blockingFor" : [ ],
@@ -364,7 +364,7 @@
     "createdBy" : "gabriel_manager",
     "status" : "ACTIVE",
     "isBlocked" : false,
-    "daysUntilDue" : 19,
+    "daysUntilDue" : 20,
     "overdueBy" : 0,
     "openTickets" : [ 0, 1, 5, 6 ],
     "closedTickets" : [ ],
@@ -390,9 +390,9 @@
     },
     "ticketsByPriority" : {
       "LOW" : 0,
-      "MEDIUM" : 0,
-      "HIGH" : 0,
-      "CRITICAL" : 4
+      "MEDIUM" : 1,
+      "HIGH" : 2,
+      "CRITICAL" : 1
     },
     "riskByType" : {
       "BUG" : "SIGNIFICANT",

@@ -1,16 +1,16 @@
 package main.tickets.actions;
 
-import static main.tickets.enums.ActionType.DE_ASSIGNED;
+import static main.globals.ticketenums.ActionType.DE_ASSIGNED;
 
 /**
  * Class representing a de-assignment action on a ticket.
  */
 public class DeassignAction extends Action {
-    public DeassignAction(String by, String timestamp) {
+    public DeassignAction(final String by, final String timestamp) {
         super(DE_ASSIGNED, by, timestamp);
     }
 
-    protected DeassignAction(DeassignAction deassignAction) {
+    protected DeassignAction(final DeassignAction deassignAction) {
         super(deassignAction);
     }
 

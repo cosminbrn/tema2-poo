@@ -125,5 +125,10 @@
     "command": "generateCustomerImpactReport",
     "username": "gabriel_manager",
     "timestamp": "2025-10-17"
+  },
+  {
+    "command": "lostInvestors",
+    "username": "gabriel_manager",
+    "timestamp": "2025-12-01"
   }
 ]

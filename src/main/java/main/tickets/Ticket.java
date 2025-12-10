@@ -3,22 +3,23 @@ package main.tickets;
 import lombok.Getter;
 import lombok.Setter;
 import main.database.Database;
-import main.globals.TicketType;
-import main.tickets.actions.*;
-import main.tickets.enums.ActionType;
-import main.tickets.enums.BusinessPriority;
-import main.globals.ExpertiseArea;
-import main.tickets.enums.Status;
+import main.globals.ticketenums.TicketType;
+import main.tickets.actions.Action;
+import main.tickets.actions.AssignAction;
+import main.tickets.actions.DeassignAction;
+import main.tickets.actions.AddToMilestoneAction;
+import main.tickets.actions.RemoveFromDevAction;
+import main.tickets.actions.StatusChangeAction;
+import main.globals.ticketenums.ActionType;
+import main.globals.ticketenums.BusinessPriority;
+import main.globals.userenums.ExpertiseArea;
+import main.globals.ticketenums.Status;
 import main.users.Developer;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-
-import static main.tickets.enums.ActionType.*;
-import static main.tickets.enums.BusinessPriority.*;
-import static main.tickets.enums.Status.*;
 
 /**
  * Abstract class representing a ticket with common properties.
@@ -53,7 +54,7 @@ public abstract class Ticket {
     @Setter @Getter
     private String assignedMilestone = "";
 
-    protected Ticket(Builder<?> builder) {
+    protected Ticket(final Builder<?> builder) {
         this.id = builder.id;
         this.type = builder.type;
         this.title = builder.title;
@@ -75,24 +76,29 @@ public abstract class Ticket {
     }
 
     public static class ActionFactory {
+        private static final int ARG_BY = 0;
+        private static final int ARG_TIMESTAMP = 1;
+        private static final int ARG_FROM = 2;
+        private static final int ARG_TO = 3;
+        private static final int ARG_MILESTONE = 4;
+
         /**
-         * Static Factory Method to Create Actions based on their type.
-         * @param type The type of action to create.
-         * @param args The String args. They go as follows:
-         *             args[0] = by
-         *             args[1] = timestamp
-         *             args[2] = from
-         *             args[3] = to
-         *             args[4] = milestone
-         * @return The created Action object.
+         * Static Factory Method to create Actions based on their type.
+         * @param type the type of action to create
+         * @param args the String args array
+         * @return the created Action object
          */
-        public static Action createAction(ActionType type, String... args) {
-            return switch(type) {
-                case ASSIGNED -> new AssignAction(args[0], args[1]);
-                case DE_ASSIGNED -> new DeassignAction(args[0], args[1]);
-                case STATUS_CHANGED -> new StatusChangeAction(args[0], args[1], Status.fromString(args[2]), Status.fromString(args[3]));
-                case ADDED_TO_MILESTONE -> new AddToMilestoneAction(args[0], args[1], args[4]);
-                case REMOVED_FROM_DEV -> new RemoveFromDevAction(args[0], args[1], args[2]);
+        public static Action createAction(final ActionType type, final String... args) {
+            return switch (type) {
+                case ASSIGNED -> new AssignAction(args[ARG_BY], args[ARG_TIMESTAMP]);
+                case DE_ASSIGNED -> new DeassignAction(args[ARG_BY], args[ARG_TIMESTAMP]);
+                case STATUS_CHANGED -> new StatusChangeAction(args[ARG_BY],
+                            args[ARG_TIMESTAMP], Status.fromString(args[ARG_FROM]),
+                        Status.fromString(args[ARG_TO]));
+                case ADDED_TO_MILESTONE -> new AddToMilestoneAction(args[ARG_BY],
+                        args[ARG_TIMESTAMP], args[ARG_MILESTONE]);
+                case REMOVED_FROM_DEV -> new RemoveFromDevAction(args[ARG_BY],
+                        args[ARG_TIMESTAMP], args[ARG_FROM]);
             };
         }
     }
@@ -111,65 +117,125 @@ public abstract class Ticket {
         private String assignedTo = "";
         private String assignedAt = "";
         private String solvedAt = "";
-        private List<Comment> comments = new ArrayList<>();
-        private List<Action> actions = new ArrayList<>();
+        private final List<Comment> comments = new ArrayList<>();
+        private final List<Action> actions = new ArrayList<>();
 
-        public T setAssignedAt(String assignedAt) {
+        /**
+         * Set the assignedAt timestamp.
+         * @param assignedAt assigned at timestamp
+         * @return builder instance
+         */
+        public T setAssignedAt(final String assignedAt) {
             this.assignedAt = assignedAt;
             return self();
         }
 
-        public T setSolvedAt(String solvedAt) {
+        /**
+         * Set the solvedAt timestamp.
+         * @param solvedAt solved at timestamp
+         * @return builder instance
+         */
+        public T setSolvedAt(final String solvedAt) {
             this.solvedAt = solvedAt;
             return self();
         }
 
-        public T setId(int id) {
+        /**
+         * Set the ticket id.
+         * @param id ticket id
+         * @return builder instance
+         */
+        public T setId(final int id) {
             this.id = id;
             return self();
         }
 
-        public T setAssignedTo(String assignedTo) {
+        /**
+         * Set the username of the assignee.
+         * @param assignedTo assignee username
+         * @return builder instance
+         */
+        public T setAssignedTo(final String assignedTo) {
             this.assignedTo = assignedTo;
             return self();
         }
 
-        public T setType(TicketType type) {
+        /**
+         * Set the ticket type.
+         * @param type ticket type
+         * @return builder instance
+         */
+        public T setType(final TicketType type) {
             this.type = type;
             return self();
         }
 
-        public T setTitle(String title) {
+        /**
+         * Set the ticket title.
+         * @param title ticket title
+         * @return builder instance
+         */
+        public T setTitle(final String title) {
             this.title = title;
             return self();
         }
 
-        public T setBusinessPriority(BusinessPriority businessPriority) {
+        /**
+         * Set the business priority.
+         * @param businessPriority business priority
+         * @return builder instance
+         */
+        public T setBusinessPriority(final BusinessPriority businessPriority) {
             this.businessPriority = businessPriority;
             return self();
         }
 
-        public T setStatus(Status status) {
+        /**
+         * Set the ticket status.
+         * @param status ticket status
+         * @return builder instance
+         */
+        public T setStatus(final Status status) {
             this.status = status;
             return self();
         }
 
-        public T setExpertiseArea(ExpertiseArea expertiseArea) {
+        /**
+         * Set the expertise area required.
+         * @param expertiseArea expertise area
+         * @return builder instance
+         */
+        public T setExpertiseArea(final ExpertiseArea expertiseArea) {
             this.expertiseArea = expertiseArea;
             return self();
         }
 
-        public T setReportedBy(String reportedBy) {
+        /**
+         * Set the reporter username.
+         * @param reportedBy reporter username
+         * @return builder instance
+         */
+        public T setReportedBy(final String reportedBy) {
             this.reportedBy = reportedBy;
             return self();
         }
 
-        public T setDescription(String description) {
+        /**
+         * Set the description text.
+         * @param description ticket description
+         * @return builder instance
+         */
+        public T setDescription(final String description) {
             this.description = description;
             return self();
         }
 
-        public T setCreatedAt(String createdAt) {
+        /**
+         * Set the creation timestamp.
+         * @param createdAt creation timestamp
+         * @return builder instance
+         */
+        public T setCreatedAt(final String createdAt) {
             this.createdAt = createdAt;
             return self();
         }
@@ -179,21 +245,35 @@ public abstract class Ticket {
         public abstract Ticket build();
     }
 
+    /**
+     * Advance business priority one step up.
+     */
     public void updatePriority() {
-        if (this.businessPriority == LOW) {
-            this.businessPriority = MEDIUM;
-        } else if (this.businessPriority == MEDIUM) {
-            this.businessPriority = HIGH;
-        } else if (this.businessPriority == HIGH) {
-            this.businessPriority = CRITICAL;
+        if (this.businessPriority == BusinessPriority.LOW) {
+            this.businessPriority = BusinessPriority.MEDIUM;
+        } else if (this.businessPriority == BusinessPriority.MEDIUM) {
+            this.businessPriority = BusinessPriority.HIGH;
+        } else if (this.businessPriority == BusinessPriority.HIGH) {
+            this.businessPriority = BusinessPriority.CRITICAL;
         }
     }
 
-    public void addComment(String username, String comment, String timestamp) {
+    /**
+     * Add a comment to the ticket.
+     * @param username author username
+     * @param comment comment text
+     * @param timestamp creation timestamp
+     */
+    public void addComment(final String username, final String comment, final String timestamp) {
         this.comments.add(new Comment(username, comment, timestamp));
     }
 
-    public List<Comment> getCommentsByUser(String username) {
+    /**
+     * Get comments authored by the specified user.
+     * @param username author username
+     * @return list of comments by the user
+     */
+    public List<Comment> getCommentsByUser(final String username) {
         List<Comment> userComments = new ArrayList<>();
         for (Comment comment : this.comments) {
             if (comment.author().equalsIgnoreCase(username)) {
@@ -203,7 +283,11 @@ public abstract class Ticket {
         return userComments;
     }
 
-    public void removeLastCommentByUser(String username) {
+    /**
+     * Remove the last comment authored by the specified user.
+     * @param username author username
+     */
+    public void removeLastCommentByUser(final String username) {
         for (int i = comments.size() - 1; i >= 0; i--) {
             if (comments.get(i).author().equalsIgnoreCase(username)) {
                 comments.remove(i);
@@ -212,16 +296,21 @@ public abstract class Ticket {
         }
     }
 
-    public Status updateStatus(String currentDay) {
+    /**
+     * Update ticket status following the workflow.
+     * @param currentDay the current day timestamp
+     * @return the new status
+     */
+    public Status updateStatus(final String currentDay) {
         previousBusinessPriority = businessPriority;
-        if (this.status == OPEN) {
-            this.status = IN_PROGRESS;
-        } else if (this.status == IN_PROGRESS) {
-            this.status = RESOLVED;
+        if (this.status == Status.OPEN) {
+            this.status = Status.IN_PROGRESS;
+        } else if (this.status == Status.IN_PROGRESS) {
+            this.status = Status.RESOLVED;
             this.solvedAt = currentDay;
-        } else if (this.status == RESOLVED) {
+        } else if (this.status == Status.RESOLVED) {
             Database db = Database.getInstance();
-            this.status = CLOSED;
+            this.status = Status.CLOSED;
             if (this.assignedTo.isEmpty()) {
                 this.solvedAt = currentDay;
             }
@@ -230,56 +319,90 @@ public abstract class Ticket {
         return this.status;
     }
 
+    /**
+     * Undo the current ticket status following the workflow.
+     * @return the new status
+     */
     public Status undoStatus() {
         previousBusinessPriority = businessPriority;
-        if (this.status == CLOSED) {
+        if (this.status == Status.CLOSED) {
             Database db = Database.getInstance();
-            this.status = RESOLVED;
+            this.status = Status.RESOLVED;
             this.solvedAt = "";
             ((Developer) db.getUserByUsername(this.assignedTo)).removeClosedTicket(this);
-        } else if (this.status == RESOLVED) {
-            this.status = IN_PROGRESS;
+        } else if (this.status == Status.RESOLVED) {
+            this.status = Status.IN_PROGRESS;
             this.solvedAt = "";
         }
         return this.status;
     }
 
-    private <T> void executeAddAction(ActionType actionType, String by, String timestamp,
-                              T from, Status to, String milestone) {
+    private <T> void executeAddAction(final ActionType actionType, final String by,
+                                      final String timestamp,
+                              final T from, final Status to, final String milestone) {
 
         String fromStr = from != null ? from.toString() : "";
         String toStr = to != null ? to.toString() : "";
 
-        Action action = ActionFactory.createAction(actionType, by, timestamp, fromStr, toStr, milestone);
+        Action action = ActionFactory.createAction(actionType, by, timestamp,
+                fromStr, toStr, milestone);
         this.actions.add(action);
     }
 
-    public void addAction(ActionType actionType, String by, String timestamp) {
+    /**
+     * Add a generic action without status/milestone details.
+     * @param actionType action type
+     * @param by actor username
+     * @param timestamp action timestamp
+     */
+    public void addAction(final ActionType actionType, final String by,
+                          final String timestamp) {
         executeAddAction(actionType, by, timestamp, null, null, "");
     }
 
-    public void addAction(ActionType actionType, String by, String timestamp, Status from, Status to) {
+    /**
+     * Add a status change action.
+     * @param actionType action type
+     * @param by actor username
+     * @param timestamp action timestamp
+     * @param from previous status
+     * @param to new status
+     */
+    public void addAction(final ActionType actionType, final String by,
+                          final String timestamp, final Status from, final Status to) {
         executeAddAction(actionType, by, timestamp, from, to, "");
     }
 
-    public void addAction(ActionType actionType, String by, String timestamp, String arg) {
-        if (actionType == REMOVED_FROM_DEV) {
+    /**
+     * Add an action that includes either removed-from-dev or added-to-milestone specifics.
+     * @param actionType action type
+     * @param by actor username
+     * @param timestamp action timestamp
+     * @param arg extra argument (dev or milestone)
+     */
+    public void addAction(final ActionType actionType, final String by,
+                          final String timestamp, final String arg) {
+        if (actionType == ActionType.REMOVED_FROM_DEV) {
             executeAddAction(actionType, by, timestamp, arg, null, "");
-        } else if (actionType == ADDED_TO_MILESTONE) {
+        } else if (actionType == ActionType.ADDED_TO_MILESTONE) {
             executeAddAction(actionType, by, timestamp, null, null, arg);
         } else {
             throw new IllegalArgumentException(actionType.toString());
         }
     }
 
+    /**
+     * Compute resolution time in days.
+     * @return resolution time in days
+     */
     public int getResolutionTime() {
-        return 1 + (int) ChronoUnit.DAYS.between(LocalDate.parse(this.getAssignedAt()), LocalDate.parse(this.getSolvedAt()));
+        return 1 + (int) ChronoUnit.DAYS.between(LocalDate.parse(this.getAssignedAt()),
+                LocalDate.parse(this.getSolvedAt()));
     }
 
     /**
      * Creates a deep copy of the ticket.
-     * @return A new Ticket object that is a deep copy of the current ticket.
+     * @return a new Ticket object that is a deep copy of the current ticket
      */
     public abstract Ticket deepCopy();
 }
-

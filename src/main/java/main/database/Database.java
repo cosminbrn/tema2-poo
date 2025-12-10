@@ -4,8 +4,7 @@ import lombok.Getter;
 import main.fileio.UserInput;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
-import main.tickets.enums.ActionType;
-import main.tickets.enums.BusinessPriority;
+import main.globals.ticketenums.BusinessPriority;
 import main.users.Developer;
 import main.users.User;
 import main.users.UserFactory;
@@ -14,28 +13,33 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static main.tickets.enums.ActionType.REMOVED_FROM_DEV;
-import static main.tickets.enums.Status.*;
+import static main.globals.ticketenums.ActionType.REMOVED_FROM_DEV;
+import static main.globals.ticketenums.Status.*;
 
 /**
  * Singleton class representing the database.
- * TODO: javadoc la toate metodele
  */
 public class Database {
+
     private static Database instance;
-
     private int nextTicketID = 0;
-
     private List<User> users;
     @Getter
     private List<Ticket> tickets;
     @Getter
     private List<Milestone> milestones;
 
+    /**
+     * Singleton constructor.
+     */
     private Database() {
 
     }
 
+    /**
+     * Gets the singleton instance of the database.
+     * @return the database instance
+     */
     public static Database getInstance() {
         if (instance == null) {
             instance = new Database();
@@ -43,6 +47,9 @@ public class Database {
         return instance;
     }
 
+    /**
+     * Initializes the database.
+     */
     public static void init() {
         getInstance();
         instance.users = new ArrayList<>();
@@ -50,33 +57,49 @@ public class Database {
         instance.milestones = new ArrayList<>();
     }
 
+    /**
+     * Resets the database instance (for testing purposes).
+     */
     public void reset() {
         instance = null;
     }
 
-    public void addUser(User user) {
+    public void addUser(final User user) {
         getInstance().users.add(user);
     }
 
-    public void addTicket(Ticket ticket) {
+    public void addTicket(final Ticket ticket) {
         getInstance().tickets.add(ticket);
     }
 
-    public void addMilestone(Milestone milestone) {
+    public void addMilestone(final Milestone milestone) {
         getInstance().milestones.add(milestone);
     }
 
+    /**
+     * Gets the next ticket ID and increments the counter.
+     * @return the next ticket ID
+     */
+    public int getNextTicketId() {
+        return nextTicketID++;
+    }
+
+    /**
+     * Loads users into the database.
+     * @param users list of user inputs
+     */
     public void loadUsers(ArrayList<UserInput> users) {
         for (UserInput userInput : users) {
             addUser(UserFactory.createUser(userInput));
         }
     }
 
-    public int getNextTicketId() {
-        return nextTicketID++;
-    }
-
-    public User getUserByUsername(String username) {
+    /**
+     * Gets a user by username.
+     * @param username the username
+     * @return the user or null if not found
+     */
+    public User getUserByUsername(final String username) {
         for (User user : users) {
             if (user.getUsername().equals(username)) {
                 return user;
@@ -85,7 +108,12 @@ public class Database {
         return null;
     }
 
-    public Ticket getTicketById(int ticketID) {
+    /**
+     * Gets a ticket by its ID.
+     * @param ticketID the ticket ID
+     * @return the ticket or null if not found
+     */
+    public Ticket getTicketById(final int ticketID) {
         for (Ticket ticket : tickets) {
             if (ticket.getId() == ticketID) {
                 return ticket;
@@ -94,7 +122,12 @@ public class Database {
         return null;
     }
 
-    public List<Ticket> getTicketsByIds(int[] ticketIds) {
+    /**
+     * Gets tickets by their IDs.
+     * @param ticketIds array of ticket IDs
+     * @return list of tickets
+     */
+    public List<Ticket> getTicketsByIds(final int[] ticketIds) {
         List<Ticket> result = new ArrayList<>();
         for (int ticketId : ticketIds) {
             Ticket ticket = getTicketById(ticketId);
@@ -105,7 +138,12 @@ public class Database {
         return result;
     }
 
-    public List<Ticket> getTicketsByIds(List<Integer> ticketIds) {
+    /**
+     * Gets tickets by their IDs.
+     * @param ticketIds list of ticket IDs
+     * @return list of tickets
+     */
+    public List<Ticket> getTicketsByIds(final List<Integer> ticketIds) {
         List<Ticket> result = new ArrayList<>();
         for (Integer ticketId : ticketIds) {
             Ticket ticket = getTicketById(ticketId);
@@ -116,7 +154,12 @@ public class Database {
         return result;
     }
 
-    public Milestone getMilestoneByName(String milestoneName) {
+    /**
+     * Gets a milestone by its name.
+     * @param milestoneName the milestone name
+     * @return the milestone or null if not found
+     */
+    public Milestone getMilestoneByName(final String milestoneName) {
         for (Milestone milestone : milestones) {
             if (milestone.getName().equals(milestoneName)) {
                 return milestone;
@@ -125,7 +168,11 @@ public class Database {
         return null;
     }
 
-    public void updateMilestones(LocalDate currentDay) {
+    /**
+     * Updates all milestones based on the current day.
+     * @param currentDay the current day
+     */
+    public void updateMilestones(final LocalDate currentDay) {
         if (milestones == null) {
             return;
         }
@@ -134,17 +181,26 @@ public class Database {
         }
     }
 
-    public void checkTicketPriorities(LocalDate currentDay) {
+    /**
+     * Checks ticket priorities and updates their status if necessary.
+     * @param currentDay the current day
+     */
+    public void checkTicketPriorities(final LocalDate currentDay) {
         for (Ticket ticket : tickets) {
             BusinessPriority businessPriority = ticket.getBusinessPriority();
             Developer developer = (Developer) getUserByUsername(ticket.getAssignedTo());
             if (developer != null && !developer.hasAccess(businessPriority)) {
                 ticket.setStatus(OPEN);
-                ticket.addAction(REMOVED_FROM_DEV, "system", currentDay.toString(), developer.getUsername());
+                ticket.addAction(REMOVED_FROM_DEV, "system", currentDay.toString(),
+                        developer.getUsername());
             }
         }
     }
 
+    /**
+     * Gets all tickets that are either CLOSED or RESOLVED.
+     * @return list of closed or resolved tickets
+     */
     public List<Ticket> getClosedResolvedTickets() {
         List<Ticket> result = new ArrayList<>();
         for (Ticket ticket : tickets) {
@@ -155,6 +211,10 @@ public class Database {
         return result;
     }
 
+    /**
+     * Gets all tickets that are either OPEN or IN_PROGRESS.
+     * @return list of open or in-progress tickets
+     */
     public List<Ticket> getOpenInProgressTickets() {
         List<Ticket> result = new ArrayList<>();
         for (Ticket ticket : tickets) {
@@ -165,12 +225,21 @@ public class Database {
         return result;
     }
 
+    /**
+     * Updates the database by updating milestones and checking ticket priorities.
+     * @param currentDay the current day
+     */
     public void updateDatabase(LocalDate currentDay) {
         updateMilestones(currentDay);
         checkTicketPriorities(currentDay);
     }
 
-    public List<Milestone> getMilestonesByDeveloper(String developerUsername) {
+    /**
+     * Gets milestones assigned to a specific developer.
+     * @param developerUsername the developer's username
+     * @return list of milestones assigned to the developer
+     */
+    public List<Milestone> getMilestonesByDeveloper(final String developerUsername) {
         List<Milestone> result = new ArrayList<>();
         for (Milestone milestone : milestones) {
             for (String devUsername : milestone.getAssignedDevs()) {

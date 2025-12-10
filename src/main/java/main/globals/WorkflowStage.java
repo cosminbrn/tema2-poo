@@ -2,6 +2,9 @@ package main.globals;
 
 import lombok.Getter;
 
+/**
+ * Enum representing the various stages of a workflow.
+ */
 public enum WorkflowStage {
     TESTING,
     DEVELOPMENT,
@@ -12,15 +15,13 @@ public enum WorkflowStage {
     TESTING_STAGE_DURATION(12);
 
     @Getter
-    public final int defaultDuration;
+    private final int defaultDuration;
 
     WorkflowStage() {
         this.defaultDuration = -1;
     }
 
-    WorkflowStage(int defaultDuration) {
+    WorkflowStage(final int defaultDuration) {
         this.defaultDuration = defaultDuration;
     }
-
-
 }

@@ -13,11 +13,18 @@ import main.globals.WorkflowStage;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-import static main.globals.WorkflowStage.*;
+import static main.globals.WorkflowStage.DONE;
+import static main.globals.WorkflowStage.TESTING;
+import static main.globals.WorkflowStage.DEVELOPMENT;
+import static main.globals.WorkflowStage.BANKRUPT;
+import static main.globals.WorkflowStage.TESTING_STAGE_DURATION;
 
-public class Engine {
+/**
+ * Singleton class representing the main engine of the application.
+ * It manages the workflow stages, current date, and command execution.
+ */
+public final class Engine {
     private static Engine instance = null;
-
 
     @Getter @Setter
     private static WorkflowStage currentStage;
@@ -25,10 +32,17 @@ public class Engine {
     private static LocalDate currentDay;
     private static int commandInputIndex;
 
+    /**
+     * Private constructor to enforce a singleton pattern.
+     */
     private Engine() {
-        // Private constructor to prevent instantiation
+
     }
 
+    /**
+     * Method to get the singleton instance of the Engine.
+     * @return The singleton instance of the Engine.
+     */
     public static Engine getInstance() {
         if (instance == null) {
             instance = new Engine();
@@ -39,13 +53,16 @@ public class Engine {
     }
 
     /**
-     * TODO:
+     * Method to reset the engine and database to the initial state.
      */
     public static void reset() {
         Database.getInstance().reset();
         instance = null;
     }
 
+    /**
+     * Method to initialize the engine and database.
+     */
     public static void init() {
         getInstance();
         Database.init();
@@ -53,11 +70,12 @@ public class Engine {
 
 
     /**
-     * Method to run the engine with the given input and output. It runs on a day-by-day basis, updating the database every iteration.
+     * Method to run the engine with the given input and output. It runs on a day-by-day basis,
+     * updating the database every iteration.
      * @param input The input loader containing the command inputs.
      * @param output The output array node to store the results.
      */
-    public static void run(InputLoader input, ArrayNode output) {
+    public static void run(final InputLoader input, final ArrayNode output) {
         Database db = Database.getInstance();
         db.loadUsers(input.getUserInputs());
         currentStage = TESTING;
@@ -67,7 +85,8 @@ public class Engine {
         while (currentStage != BANKRUPT && currentDay.isBefore(LocalDate.parse("2027-01-01"))) {
             updateStage();
             db.updateDatabase(currentDay);
-            while (LocalDate.parse(commandInput.getTimestamp()).isEqual(currentDay) || LocalDate.parse(commandInput.getTimestamp()).isBefore(currentDay)) {
+            while (LocalDate.parse(commandInput.getTimestamp()).isEqual(currentDay)
+                    || LocalDate.parse(commandInput.getTimestamp()).isBefore(currentDay)) {
                 Command command = CommandFactory.createCommand(commandInput, output);
                 command.execute(commandInput, output);
                 if (commandInputIndex < input.getCommandInputs().size()) {
@@ -85,7 +104,7 @@ public class Engine {
      * Method to get the next command input from the database.
      * @return The next command input.
      */
-    private static CommandInput getNextCommandInput(InputLoader input) {
+    private static CommandInput getNextCommandInput(final InputLoader input) {
         CommandInput commandInput = input.getCommandInputs().get(commandInputIndex);
         commandInputIndex++;
         return commandInput;
@@ -108,7 +127,7 @@ public class Engine {
         }
     }
 
-    public void setCurrentState(WorkflowStage workflowStage) {
+    public void setCurrentState(final WorkflowStage workflowStage) {
         currentStage = workflowStage;
     }
 }

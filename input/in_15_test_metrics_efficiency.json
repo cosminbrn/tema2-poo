@@ -173,5 +173,10 @@
     "command": "generateResolutionEfficiencyReport",
     "username": "gabriel_manager",
     "timestamp": "2025-10-18"
+  },
+  {
+    "command": "lostInvestors",
+    "username": "gabriel_manager",
+    "timestamp": "2025-12-01"
   }
 ]

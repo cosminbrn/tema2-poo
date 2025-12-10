@@ -7,7 +7,7 @@ import main.milestones.Milestone;
 import java.util.ArrayList;
 import java.util.List;
 
-import static main.users.enums.Role.MANAGER;
+import static main.globals.userenums.Role.MANAGER;
 
 /**
  * Class representing a manager user.
@@ -25,10 +25,18 @@ public final class Manager extends User {
         this.subordinates = subordinates;
     }
 
+    /**
+     * Adds a created milestone to the manager's list.
+     * @param milestone the milestone to add
+     */
     public void addCreatedMilestone(final Milestone milestone) {
         this.createdMilestones.add(milestone);
     }
 
+    /**
+     * Gets the list of subordinate developers.
+     * @return list of subordinate developers
+     */
     public List<Developer> getSubordinateDevelopers() {
         Database db = Database.getInstance();
         List<Developer> subordinateUsers = new ArrayList<>();

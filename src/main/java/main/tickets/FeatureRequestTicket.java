@@ -2,16 +2,15 @@ package main.tickets;
 
 import lombok.Getter;
 import main.tickets.actions.Action;
-import main.tickets.enums.BusinessValue;
-import main.tickets.enums.CustomerDemand;
+import main.globals.ticketenums.BusinessValue;
+import main.globals.ticketenums.CustomerDemand;
 
 public class FeatureRequestTicket extends Ticket {
     @Getter
     private final BusinessValue businessValue;
     @Getter
     private final CustomerDemand customerDemand;
-
-    protected FeatureRequestTicket(FeatureRequestBuilder builder) {
+    protected FeatureRequestTicket(final FeatureRequestBuilder builder) {
         super(builder);
         this.businessValue = builder.businessValue;
         this.customerDemand = builder.customerDemand;
@@ -21,27 +20,49 @@ public class FeatureRequestTicket extends Ticket {
         private BusinessValue businessValue;
         private CustomerDemand customerDemand;
 
-        public FeatureRequestBuilder setBusinessValue(BusinessValue businessValue) {
+        /**
+         * Set the business value of the feature request.
+         * @param businessValue business value
+         * @return builder instance
+         */
+        public FeatureRequestBuilder setBusinessValue(final BusinessValue businessValue) {
             this.businessValue = businessValue;
             return this;
         }
 
-        public FeatureRequestBuilder setCustomerDemand(CustomerDemand customerDemand) {
+        /**
+         * Set the customer demand of the feature request.
+         * @param customerDemand customer demand
+         * @return builder instance
+         */
+        public FeatureRequestBuilder setCustomerDemand(final CustomerDemand customerDemand) {
             this.customerDemand = customerDemand;
             return this;
         }
 
+        /**
+         * Return the concrete builder instance.
+         * @return builder instance
+         */
         @Override
         protected FeatureRequestBuilder self() {
             return this;
         }
 
+        /**
+         * Build a FeatureRequestTicket from the accumulated values.
+         * @return new FeatureRequestTicket
+         */
         @Override
         public FeatureRequestTicket build() {
             return new FeatureRequestTicket(this);
         }
     }
 
+    /**
+     * Create a deep copy of this feature request ticket.
+     * @return deep copy of the ticket
+     */
     @Override
     public Ticket deepCopy() {
         FeatureRequestBuilder b = new FeatureRequestBuilder();

@@ -2,6 +2,9 @@ package main.globals;
 
 import lombok.Getter;
 
+/**
+ * Enum representing the stability status.
+ */
 public enum Stability {
     STABLE("STABLE"),
     UNSTABLE("UNSTABLE"),

@@ -3,8 +3,8 @@ package main.tickets;
 
 import lombok.Getter;
 import main.tickets.actions.Action;
-import main.tickets.enums.Frequency;
-import main.tickets.enums.Severity;
+import main.globals.ticketenums.Frequency;
+import main.globals.ticketenums.Severity;
 
 /**
  * Class representing a bug ticket.

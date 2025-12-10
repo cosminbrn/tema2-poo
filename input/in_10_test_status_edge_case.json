@@ -70,7 +70,7 @@
   {
     "command": "createMilestone",
     "username": "gabriel_manager",
-    "timestamp": "2025-11-01",
+    "timestamp": "2025-10-20",
     "name": "Release 1.0",
     "dueDate": "2025-10-28",
     "blockingFor": [],

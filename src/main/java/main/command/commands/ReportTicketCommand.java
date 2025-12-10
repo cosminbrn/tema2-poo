@@ -2,24 +2,24 @@ package main.command.commands;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import main.command.Command;
-import main.command.enums.ErrorMessages;
+import main.globals.commandenums.ErrorMessages;
 import main.database.Database;
 import main.engine.Engine;
 import main.fileio.CommandInput;
 import main.fileio.ParamsInput;
-import main.globals.ExpertiseArea;
-import main.globals.TicketType;
+import main.globals.userenums.ExpertiseArea;
+import main.globals.ticketenums.TicketType;
+import main.globals.ticketenums.*;
 import main.tickets.BugTicket;
 import main.tickets.FeatureRequestTicket;
 import main.tickets.Ticket;
 import main.tickets.UIFeedbackTicket;
-import main.tickets.enums.*;
 import main.users.User;
 
-import static main.globals.TicketType.*;
+import static main.globals.ticketenums.TicketType.*;
 import static main.globals.WorkflowStage.TESTING;
-import static main.tickets.enums.BusinessPriority.LOW;
-import static main.tickets.enums.Status.OPEN;
+import static main.globals.ticketenums.BusinessPriority.LOW;
+import static main.globals.ticketenums.Status.OPEN;
 
 /**
  * Command to report new tickets during testing stage.
@@ -32,24 +32,28 @@ public class ReportTicketCommand extends Command {
      * @param output JSON array to append results to
      */
     @Override
-    public void execute(CommandInput commandInput, ArrayNode output) {
+    public void execute(final CommandInput commandInput, final ArrayNode output) {
         Database db = Database.getInstance();
         ParamsInput params = commandInput.getParams();
         TicketType type = TicketType.valueOf(params.getType());
 
         if (type != BUG && commandInput.getParams().getReportedBy().isEmpty()) {
-            addErrorOutput(commandInput, output, ErrorMessages.ANONYMOUS_REPORTING_ONLY_FOR_BUGS.getErrorMessage());
+            addErrorOutput(commandInput, output,
+                    ErrorMessages.ANONYMOUS_REPORTING_ONLY_FOR_BUGS.getErrorMessage());
             return;
         }
 
         if (Engine.getCurrentStage() != TESTING) {
-            addErrorOutput(commandInput, output, ErrorMessages.REPORT_ONLY_DURING_TESTING.getErrorMessage());
+            addErrorOutput(commandInput, output,
+                    ErrorMessages.REPORT_ONLY_DURING_TESTING.getErrorMessage());
             return;
         }
 
         User currentUser = db.getUserByUsername(commandInput.getUsername());
         if (currentUser == null) {
-            addErrorOutput(commandInput, output, String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(), commandInput.getUsername()));
+            addErrorOutput(commandInput, output,
+                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
+                            commandInput.getUsername()));
             return;
         }
 

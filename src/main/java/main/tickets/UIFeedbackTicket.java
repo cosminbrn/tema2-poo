@@ -2,9 +2,9 @@ package main.tickets;
 
 import lombok.Getter;
 import main.tickets.actions.Action;
-import main.tickets.enums.BusinessValue;
+import main.globals.ticketenums.BusinessValue;
 
-public class UIFeedbackTicket extends Ticket {
+public final class UIFeedbackTicket extends Ticket {
     private final String uiElementId;
     @Getter
     private final BusinessValue businessValue;
@@ -15,7 +15,7 @@ public class UIFeedbackTicket extends Ticket {
     private final String screenshotUrl;
     private final String suggestedFix;
 
-    protected UIFeedbackTicket(UIFeedbackTicketBuilder builder) {
+    private UIFeedbackTicket(final UIFeedbackTicketBuilder builder) {
         super(builder);
         this.uiElementId = builder.uiElementId;
         this.businessValue = builder.businessValue;
@@ -24,6 +24,9 @@ public class UIFeedbackTicket extends Ticket {
         this.suggestedFix = builder.suggestedFix;
     }
 
+    /**
+     * Builder class for UIFeedbackTicket.
+     */
     public static class UIFeedbackTicketBuilder extends Ticket.Builder<UIFeedbackTicketBuilder> {
         private String uiElementId;
         private BusinessValue businessValue;
@@ -33,42 +36,79 @@ public class UIFeedbackTicket extends Ticket {
         private String screenshotUrl = "";
         private String suggestedFix = "";
 
-        public UIFeedbackTicketBuilder setUiElementId(String uiElementId) {
+        /**
+         * Set UI element identifier related to the feedback.
+         * @param uiElementId ui element id
+         * @return builder instance
+         */
+        public UIFeedbackTicketBuilder setUiElementId(final String uiElementId) {
             this.uiElementId = uiElementId;
             return this;
         }
 
-        public UIFeedbackTicketBuilder setBusinessValue(BusinessValue businessValue) {
+        /**
+         * Set the business value for this feedback ticket.
+         * @param businessValue business value
+         * @return builder instance
+         */
+        public UIFeedbackTicketBuilder setBusinessValue(final BusinessValue businessValue) {
             this.businessValue = businessValue;
             return this;
         }
 
-        public UIFeedbackTicketBuilder setUsabilityScore(int usabilityScore) {
+        /**
+         * Set the usability score.
+         * @param usabilityScore usability score
+         * @return builder instance
+         */
+        public UIFeedbackTicketBuilder setUsabilityScore(final int usabilityScore) {
             this.usabilityScore = usabilityScore;
             return this;
         }
 
-        public UIFeedbackTicketBuilder setScreenshotUrl(String screenshotUrl) {
+        /**
+         * Set the screenshot URL for the feedback.
+         * @param screenshotUrl screenshot URL
+         * @return builder instance
+         */
+        public UIFeedbackTicketBuilder setScreenshotUrl(final String screenshotUrl) {
             this.screenshotUrl = screenshotUrl;
             return this;
         }
 
-        public UIFeedbackTicketBuilder setSuggestedFix(String suggestedFix) {
+        /**
+         * Set the suggested fix text.
+         * @param suggestedFix suggested fix
+         * @return builder instance
+         */
+        public UIFeedbackTicketBuilder setSuggestedFix(final String suggestedFix) {
             this.suggestedFix = suggestedFix;
             return this;
         }
 
+        /**
+         * Return the concrete builder instance.
+         * @return builder instance
+         */
         @Override
         protected UIFeedbackTicketBuilder self() {
             return this;
         }
 
+        /**
+         * Build a UIFeedbackTicket from the accumulated values.
+         * @return new UIFeedbackTicket
+         */
         @Override
         public UIFeedbackTicket build() {
             return new UIFeedbackTicket(this);
         }
     }
 
+    /**
+     * Create a deep copy of the UIFeedbackTicket.
+     * @return a deep copy of the ticket
+     */
     @Override
     public Ticket deepCopy() {
         UIFeedbackTicketBuilder b = new UIFeedbackTicketBuilder();

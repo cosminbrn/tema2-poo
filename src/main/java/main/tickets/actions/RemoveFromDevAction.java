@@ -2,7 +2,7 @@ package main.tickets.actions;
 
 import lombok.Getter;
 
-import static main.tickets.enums.ActionType.REMOVED_FROM_DEV;
+import static main.globals.ticketenums.ActionType.REMOVED_FROM_DEV;
 
 /**
  * Class representing a removal from development action on a ticket.
@@ -10,12 +10,14 @@ import static main.tickets.enums.ActionType.REMOVED_FROM_DEV;
 @Getter
 public class RemoveFromDevAction extends Action {
     private final String from;
-    public RemoveFromDevAction(String by, String timestamp, String from) {
+    public RemoveFromDevAction(final String by,
+                               final String timestamp,
+                               final String from) {
         super(REMOVED_FROM_DEV, by, timestamp);
         this.from = from;
     }
 
-    protected RemoveFromDevAction(RemoveFromDevAction action) {
+    protected RemoveFromDevAction(final RemoveFromDevAction action) {
         super(action);
         this.from = action.from;
     }

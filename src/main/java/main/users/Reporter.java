@@ -1,6 +1,6 @@
 package main.users;
 
-import static main.users.enums.Role.REPORTER;
+import static main.globals.userenums.Role.REPORTER;
 
 /**
  * Class representing a Reporter user.

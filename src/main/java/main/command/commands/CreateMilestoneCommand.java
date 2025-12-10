@@ -2,22 +2,22 @@ package main.command.commands;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import main.command.Command;
-import main.command.enums.ErrorMessages;
+import main.globals.commandenums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
 import main.users.Developer;
 import main.users.Manager;
-import main.users.enums.Role;
+import main.globals.userenums.Role;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static main.milestones.enums.MilestoneMessage.MILESTONE_CREATION;
-import static main.tickets.enums.ActionType.ADDED_TO_MILESTONE;
-import static main.users.enums.Role.MANAGER;
+import static main.globals.milestoneenums.MilestoneMessage.MILESTONE_CREATION;
+import static main.globals.ticketenums.ActionType.ADDED_TO_MILESTONE;
+import static main.globals.userenums.Role.MANAGER;
 
 /**
  * Command that creates a milestone and assigns tickets and developers to it.

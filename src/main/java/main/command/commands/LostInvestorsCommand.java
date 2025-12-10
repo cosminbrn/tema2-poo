@@ -17,7 +17,7 @@ public class LostInvestorsCommand extends Command {
      * @param output JSON array to append results to
      */
     @Override
-    public void execute(CommandInput commandInput, ArrayNode output) {
+    public void execute(final CommandInput commandInput, final ArrayNode output) {
         Engine engine = Engine.getInstance();
         engine.setCurrentState(BANKRUPT);
     }
