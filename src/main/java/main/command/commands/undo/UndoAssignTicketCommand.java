@@ -46,6 +46,9 @@ public class UndoAssignTicketCommand extends Command {
 
         Developer developer = (Developer) db.getUserByUsername(commandInput.getUsername());
         Ticket ticket = developer.getAssignedTicketById(commandInput.getTicketID());
+        if (ticket == null) {
+            return;
+        }
 
         if (ticket.getStatus() != IN_PROGRESS) {
             addErrorOutput(commandInput, output,

@@ -9,11 +9,7 @@ import main.tickets.Ticket;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static main.globals.milestoneenums.MilestoneMessage.MILESTONE_ALMOST_DUE;
 import static main.globals.milestoneenums.MilestoneMessage.MILESTONE_OPENED;
@@ -34,12 +30,12 @@ public final class Milestone implements Observable {
     private final List<Integer> tickets;
     private final String[] assignedDevs;
     private final String createdBy;
+    private LocalDate completedAt;
 
     private MilestoneState status = ACTIVE;
     private boolean isBlocked;
     @Getter
     private final List<Integer> openTickets;
-    @Getter
     private final LinkedList<Integer> closedTickets;
     private double completionPercentage;
     private final Map<String, List<Integer>> repartition;
@@ -189,12 +185,11 @@ public final class Milestone implements Observable {
 
         if (calculateCompletionPercentage() == 1.0) {
             Database db = Database.getInstance();
-            this.status = COMPLETED;
+            completeMilestone(currentDate);
             for (String milestoneToUnlock : blockingFor) {
                 Milestone blockedMilestone = db.getMilestoneByName(milestoneToUnlock);
                 if (blockedMilestone != null && blockedMilestone.isBlocked()) {
                     blockedMilestone.unblockMilestone(currentDate, db.getTicketById(this.closedTickets.getLast()));
-
                 }
             }
         }
@@ -231,8 +226,11 @@ public final class Milestone implements Observable {
     /**
      * Close this milestone.
      */
-    public void closeMilestone() {
-        this.status = MilestoneState.CLOSED;
+    public void completeMilestone(LocalDate currentDate) {
+        this.status = COMPLETED;
+        if (this.completedAt == null) {
+            this.completedAt = currentDate;
+        }
     }
 
     /**
@@ -260,7 +258,7 @@ public final class Milestone implements Observable {
             notifyObservers(String.format(MILESTONE_UNLOCKED_OVERDUE.getMessage(), this.name));
         } else {
             notifyObservers(String.format(MILESTONE_OPENED.getMessage(),
-                    this.name, lastClosedTicket));
+                    this.name, lastClosedTicket.getId()));
         }
         this.isBlocked = false;
     }
@@ -280,7 +278,10 @@ public final class Milestone implements Observable {
      * @return overdue days
      */
     public int calculateOverdueBy(final LocalDate currentDate) {
-        return Math.max(0, 1 + (int) ChronoUnit.DAYS.between(this.dueDate, currentDate));
+        if (completedAt == null) {
+            return Math.max(0, (int) ChronoUnit.DAYS.between(this.dueDate, currentDate) + 1);
+        }
+        return Math.max(0, 1 + (int) ChronoUnit.DAYS.between(this.dueDate, this.completedAt));
     }
 
     /**
@@ -315,5 +316,10 @@ public final class Milestone implements Observable {
         removeTicketFromOpenTickets(ticketId);
         addTicketToClosedTickets(ticketId);
         calculateCompletionPercentage();
+    }
+    public List<Integer> getSortedClosedTickets() {
+        List<Integer> result = new ArrayList<>(this.closedTickets);
+        result.sort(Comparator.naturalOrder());
+        return result;
     }
 }

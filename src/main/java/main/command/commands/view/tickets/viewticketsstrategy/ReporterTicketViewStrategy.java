@@ -10,16 +10,19 @@ import java.util.List;
 /**
  * Strategy interface for filtering tickets based on reporter.
  */
-public class ReporterTicketViewStrategy implements TicketFilteringStrategy {
+public final class ReporterTicketViewStrategy implements TicketFilteringStrategy {
     @Override
-    public List<Ticket> getTickets(User user) {
+    public List<Ticket> getTickets(final User user) {
         List<Ticket> result = new ArrayList<>();
         for (Ticket ticket : Database.getInstance().getTickets()) {
             if (ticket.getReportedBy().equals(user.getUsername())) {
                 result.add(ticket);
             }
         }
-        result.sort(Comparator.comparing(Ticket::getCreatedAt, Comparator.reverseOrder()).thenComparingInt(Ticket::getId));
+        result.sort(
+                Comparator.comparing(Ticket::getCreatedAt).reversed()
+                        .thenComparingInt(Ticket::getId)
+        );
         return result;
     }
 }

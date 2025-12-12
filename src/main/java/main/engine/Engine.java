@@ -28,7 +28,8 @@ public final class Engine {
 
     @Getter @Setter
     private static WorkflowStage currentStage;
-    private static LocalDate currentStageStartDate;
+    @Getter @Setter
+    private static LocalDate currentStageStartDate = null;
     private static LocalDate currentDay;
     private static int commandInputIndex;
 
@@ -114,16 +115,13 @@ public final class Engine {
      * Method to update the current workflow stage based on the command input timestamp.
      */
     private static void updateStage() {
-        if (currentStage == TESTING) {
-            if (currentStageStartDate == null) {
-                currentStageStartDate = currentDay;
-                return;
-            }
-            long daysBetween = ChronoUnit.DAYS.between(currentStageStartDate, currentDay) + 1;
-            if (daysBetween > TESTING_STAGE_DURATION.getDefaultDuration()) {
-                currentStage = DEVELOPMENT;
-                currentStageStartDate = currentDay;
-            }
+        if (currentStage == TESTING && currentStageStartDate == null) {
+            currentStageStartDate = currentDay;
+        }
+        long daysBetween = ChronoUnit.DAYS.between(currentStageStartDate, currentDay) + 1;
+        if (daysBetween > TESTING_STAGE_DURATION.getDefaultDuration()) {
+            currentStage = DEVELOPMENT;
+            currentStageStartDate = currentDay;
         }
     }
 

@@ -47,8 +47,13 @@ public class ViewTicketHistoryCommand extends Command {
         HistoryFilteringStrategy strategy = switch (user.getRole()) {
             case DEVELOPER -> new DeveloperHistoryStrategy();
             case MANAGER ->  new ManagerHistoryStrategy();
-            default -> throw new IllegalStateException("Unexpected value: " + user.getRole());
+            default -> null;
         };
+
+        if (strategy == null) {
+            addErrorOutput(input, output, ErrorMessages.REPORTERS_NOT_ALLOWED.getErrorMessage());
+            return;
+        }
 
         List<Ticket> tickets = strategy.getTickets(user);
         tickets.sort(Comparator.comparing(Ticket::getCreatedAt).thenComparing(Ticket::getId));

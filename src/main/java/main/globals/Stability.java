@@ -11,9 +11,9 @@ public enum Stability {
     PARTIALLY_STABLE("PARTIALLY_STABLE");
 
     @Getter
-    public final String name;
+    private final String name;
 
-    Stability(String name) {
+    Stability(final String name) {
         this.name = name;
     }
 }

@@ -28,7 +28,10 @@ public enum ErrorMessages {
     COMMENTS_NOT_ALLOWED_ON_ANONYMOUS_TICKETS("Comments are not allowed on anonymous tickets."),
     REPORTER_TICKET_IS_CLOSED("Reporters cannot comment on CLOSED tickets."),
     NOT_10_CHARACTERS_LONG("Comment must be at least 10 characters long."),
-    TICKET_NOT_REPORTED_BY_REPORTER("Reporter %s cannot comment on ticket %d.");
+    TICKET_NOT_REPORTED_BY_REPORTER("Reporter %s cannot comment on ticket %d."),
+    CANNOT_START_TESTING("Cannot start a new testing phase."),
+    REPORTERS_NOT_ALLOWED("The user does not have permission to execute "
+            + "this command: required role DEVELOPER, MANAGER; user role REPORTER.");
 
     @Getter
     private final String errorMessage;

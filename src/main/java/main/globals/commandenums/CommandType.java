@@ -25,12 +25,13 @@ public enum CommandType {
     GENERATE_CUSTOMER_IMPACT_REPORT("generateCustomerImpactReport"),
     GENERATE_TICKET_RISK_REPORT("generateTicketRiskReport"),
     APP_STABILITY_REPORT("appStabilityReport"),
-    SEARCH("search");
+    SEARCH("search"),
+    START_TESTING_PHASE("startTestingPhase");
 
     @Getter
-    public final String name;
+    private final String name;
 
-    CommandType(String name) {
+    CommandType(final String name) {
         this.name = name;
     }
 
@@ -39,7 +40,7 @@ public enum CommandType {
      * @param commandType the command type as a string
      * @return the corresponding CommandType enum value, or null if not found
      */
-    public static CommandType fromString(String commandType) {
+    public static CommandType fromString(final String commandType) {
         for (CommandType type : CommandType.values()) {
             if (type.name.equalsIgnoreCase(commandType)) {
                 return type;

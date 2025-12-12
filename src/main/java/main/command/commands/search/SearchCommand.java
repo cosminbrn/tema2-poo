@@ -20,6 +20,8 @@ import main.users.User;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static main.App.MAPPER;
 import static main.globals.commandenums.CommandType.SEARCH;
@@ -136,8 +138,6 @@ public class SearchCommand extends Command {
             if (!matchingWords.isEmpty()) {
                 ticketNode.set("matchingWords", MAPPER.valueToTree(matchingWords));
             }
-
-
             results.add(ticketNode);
         }
         return results;
@@ -153,7 +153,7 @@ public class SearchCommand extends Command {
         if (keywords != null && !keywords.isEmpty()) {
             for (String keyword : keywords) {
                 if (content.contains(keyword.toLowerCase())) {
-                    matchingWords.add(keyword);
+                    matchingWords.addAll(findFullWords(content, keyword));
                 }
             }
         }
@@ -185,5 +185,20 @@ public class SearchCommand extends Command {
             TicketFilteringStrategy strategy = new ManagerTicketViewStrategy();
             return strategy.getTickets(user);
         }
+    }
+
+    private static List<String> findFullWords(String text, String search) {
+        List<String> matches = new ArrayList<>();
+
+        String regex = "\\b\\w*" + Pattern.quote(search) + "\\w*\\b";
+
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(text);
+
+        while (matcher.find()) {
+            matches.add(matcher.group());
+        }
+
+        return matches;
     }
 }

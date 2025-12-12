@@ -7,6 +7,7 @@ import main.database.Database;
 import main.fileio.CommandInput;
 import main.users.Developer;
 import main.globals.userenums.Role;
+import main.users.User;
 
 import static main.App.MAPPER;
 
@@ -20,17 +21,18 @@ public class ViewNotificationsCommand extends Command {
      * @param output JSON array to append results to
      */
     @Override
-    public void execute(CommandInput commandInput, ArrayNode output) {
+    public void execute(final CommandInput commandInput, final ArrayNode output) {
         Database db = Database.getInstance();
 
-        if (db.getUserByUsername(commandInput.getUsername()) == null) {
+        final User user = db.getUserByUsername(commandInput.getUsername());
+        if (user == null) {
             addErrorOutput(commandInput, output,
                     String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
                             commandInput.getUsername()));
             return;
         }
 
-        Role role = db.getUserByUsername(commandInput.getUsername()).getRole();
+        Role role = user.getRole();
         if (role != Role.DEVELOPER && role != Role.MANAGER) {
             addErrorOutput(commandInput, output,
                     String.format(ErrorMessages.REQUIRED_ROLE_DEVELOPER.getErrorMessage(),
@@ -40,9 +42,11 @@ public class ViewNotificationsCommand extends Command {
 
         ArrayNode notifications = MAPPER.createArrayNode();
 
-        Developer dev = (Developer) db.getUserByUsername(commandInput.getUsername());
-        for (String notification : dev.getNotifications()) {
-            notifications.add(notification);
+        Developer dev = (Developer) user;
+        if (dev.getNotifications() != null) {
+            for (String notification : dev.getNotifications()) {
+                notifications.add(notification);
+            }
         }
         dev.clearNotifications();
 

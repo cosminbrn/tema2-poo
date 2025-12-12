@@ -2,16 +2,17 @@ package main.command;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import main.command.commands.AddCommentCommand;
-import main.command.commands.generate.AppStabilityReportCommand;
 import main.command.commands.AssignTicketCommand;
 import main.command.commands.ChangeStatusCommand;
 import main.command.commands.CreateMilestoneCommand;
+import main.command.commands.LostInvestorsCommand;
+import main.command.commands.ReportTicketCommand;
+import main.command.commands.StartTestingPhaseCommand;
+import main.command.commands.generate.AppStabilityReportCommand;
 import main.command.commands.generate.impact.GenerateCustomerImpactReportCommand;
 import main.command.commands.generate.performance.GeneratePerformanceReportCommand;
 import main.command.commands.generate.efficiency.GenerateResolutionEfficiencyReportCommand;
 import main.command.commands.generate.risk.GenerateTicketRiskReportCommand;
-import main.command.commands.LostInvestorsCommand;
-import main.command.commands.ReportTicketCommand;
 import main.command.commands.search.SearchCommand;
 import main.command.commands.undo.UndoAddCommentCommand;
 import main.command.commands.undo.UndoAssignTicketCommand;
@@ -72,6 +73,7 @@ public final class CommandFactory {
             case GENERATE_TICKET_RISK_REPORT -> new GenerateTicketRiskReportCommand();
             case APP_STABILITY_REPORT -> new AppStabilityReportCommand();
             case SEARCH -> new SearchCommand();
+            case START_TESTING_PHASE -> new StartTestingPhaseCommand();
             default -> null;
         };
     }

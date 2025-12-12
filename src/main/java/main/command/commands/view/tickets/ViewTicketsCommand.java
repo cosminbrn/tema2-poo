@@ -23,7 +23,12 @@ import static main.globals.commandenums.CommandType.VIEW_TICKETS;
  * Command to view tickets for the current user according to role.
  */
 public class ViewTicketsCommand extends Command {
-    Database db = Database.getInstance();
+    private final Database db = Database.getInstance();
+
+    // Accessor to satisfy visibility rule used by Checkstyle
+    public Database getDb() {
+        return db;
+    }
 
     /**
      * Execute view tickets command and append the resulting tickets array.
@@ -31,7 +36,7 @@ public class ViewTicketsCommand extends Command {
      * @param output JSON array to append results to
      */
     @Override
-    public void execute(CommandInput input, ArrayNode output) {
+    public void execute(final CommandInput input, final ArrayNode output) {
 
         User user = db.getUserByUsername(input.getUsername());
 

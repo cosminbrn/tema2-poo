@@ -14,12 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static main.globals.ticketenums.ActionType.REMOVED_FROM_DEV;
-import static main.globals.ticketenums.Status.*;
+import static main.globals.ticketenums.Status.CLOSED;
+import static main.globals.ticketenums.Status.IN_PROGRESS;
+import static main.globals.ticketenums.Status.OPEN;
+import static main.globals.ticketenums.Status.RESOLVED;
 
 /**
  * Singleton class representing the database.
  */
-public class Database {
+public final class Database {
 
     private static Database instance;
     private int nextTicketID = 0;
@@ -86,10 +89,10 @@ public class Database {
 
     /**
      * Loads users into the database.
-     * @param users list of user inputs
+     * @param userInputs list of user inputs to add to the database
      */
-    public void loadUsers(ArrayList<UserInput> users) {
-        for (UserInput userInput : users) {
+    public void loadUsers(final ArrayList<UserInput> userInputs) {
+        for (UserInput userInput : userInputs) {
             addUser(UserFactory.createUser(userInput));
         }
     }
@@ -229,7 +232,7 @@ public class Database {
      * Updates the database by updating milestones and checking ticket priorities.
      * @param currentDay the current day
      */
-    public void updateDatabase(LocalDate currentDay) {
+    public void updateDatabase(final LocalDate currentDay) {
         updateMilestones(currentDay);
         checkTicketPriorities(currentDay);
     }

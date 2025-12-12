@@ -70,7 +70,7 @@ public class ViewMilestonesCommand extends Command {
             milestoneNode.put("overdueBy",
                     milestone.calculateOverdueBy(LocalDate.parse(input.getTimestamp())));
             milestoneNode.set("openTickets", MAPPER.valueToTree(milestone.getOpenTickets()));
-            milestoneNode.set("closedTickets", MAPPER.valueToTree(milestone.getClosedTickets()));
+            milestoneNode.set("closedTickets", MAPPER.valueToTree(milestone.getSortedClosedTickets()));
             milestoneNode.put("completionPercentage",
                     milestone.calculateCompletionPercentage());
 
@@ -80,6 +80,7 @@ public class ViewMilestonesCommand extends Command {
                 ObjectNode repartitionNode = MAPPER.createObjectNode();
                 String dev = repartitionEntry.getKey();
                 List<Integer> tickets = repartitionEntry.getValue();
+                tickets.sort(Comparator.naturalOrder());
                 repartitionNode.put("developer", dev);
                 repartitionNode.set("assignedTickets", MAPPER.valueToTree(tickets));
                 repartitionsNode.add(repartitionNode);
