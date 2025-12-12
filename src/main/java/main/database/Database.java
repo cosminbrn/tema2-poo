@@ -193,9 +193,12 @@ public final class Database {
             BusinessPriority businessPriority = ticket.getBusinessPriority();
             Developer developer = (Developer) getUserByUsername(ticket.getAssignedTo());
             if (developer != null && !developer.hasAccess(businessPriority)) {
+                developer.removeTicketFromAssigned(ticket);
                 ticket.setStatus(OPEN);
                 ticket.addAction(REMOVED_FROM_DEV, "system", currentDay.toString(),
                         developer.getUsername());
+                ticket.setAssignedTo("");
+
             }
         }
     }
