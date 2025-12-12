@@ -62,9 +62,10 @@ public class ViewTicketHistoryCommand extends Command {
         for (Ticket ticket : tickets) {
             ObjectNode ticketNode = MAPPER.createObjectNode();
 
+            Ticket actualliveTicket = db.getTicketById(ticket.getId());
             ticketNode.put("id", ticket.getId());
             ticketNode.put("title", ticket.getTitle());
-            ticketNode.put("status", ticket.getStatus().getStatusName());
+            ticketNode.put("status", actualliveTicket.getStatus().getStatusName());
 
             ArrayNode actionsArray = MAPPER.createArrayNode();
             for (Action action : ticket.getActions()) {

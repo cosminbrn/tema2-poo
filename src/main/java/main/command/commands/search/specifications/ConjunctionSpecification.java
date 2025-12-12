@@ -12,7 +12,7 @@ public class ConjunctionSpecification<T> implements Specification<T> {
     }
 
     @Override
-    public boolean isSatisfiedBy(T item) {
+    public boolean isSatisfiedBy(final T item) {
         for (Specification<T> spec : specificationList) {
             if (!spec.isSatisfiedBy(item)) {
                 return false;

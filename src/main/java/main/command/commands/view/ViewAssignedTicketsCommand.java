@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import main.command.Command;
 import main.database.Database;
 import main.fileio.CommandInput;
+import main.globals.commandenums.ErrorMessages;
+import main.globals.userenums.Role;
 import main.tickets.Ticket;
+import main.users.User;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,6 +35,12 @@ public class ViewAssignedTicketsCommand extends Command {
             if (ticket.getAssignedTo().equals(input.getUsername())) {
                 tickets.add(ticket);
             }
+        }
+
+        User user = db.getUserByUsername(input.getUsername());
+        if (user.getRole() != Role.DEVELOPER) {
+            addErrorOutput(input, output, String.format(ErrorMessages.REQUIRED_ROLE_DEVELOPER.getErrorMessage(), user.getRole().getRoleName().toUpperCase()));
+            return;
         }
 
 

@@ -13,6 +13,7 @@ import main.milestones.Milestone;
 import main.users.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -75,8 +76,12 @@ public class ViewMilestonesCommand extends Command {
                     milestone.calculateCompletionPercentage());
 
             ArrayNode repartitionsNode = MAPPER.createArrayNode();
-            for (Map.Entry<String, List<Integer>> repartitionEntry :
-                    milestone.getRepartition().entrySet()) {
+
+            List<Map.Entry<String, List<Integer>>> entryList = new ArrayList<>(milestone.getRepartition().entrySet());
+
+            entryList.sort(Comparator.comparingInt((Map.Entry<String, List<Integer>> e) -> e.getValue().size()).thenComparing(Map.Entry::getKey));
+
+            for (Map.Entry<String, List<Integer>> repartitionEntry : entryList) {
                 ObjectNode repartitionNode = MAPPER.createObjectNode();
                 String dev = repartitionEntry.getKey();
                 List<Integer> tickets = repartitionEntry.getValue();

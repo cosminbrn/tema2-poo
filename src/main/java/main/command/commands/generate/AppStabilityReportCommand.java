@@ -19,6 +19,7 @@ import main.tickets.FeatureRequestTicket;
 import main.tickets.Ticket;
 import main.tickets.UIFeedbackTicket;
 import main.globals.userenums.Role;
+import main.users.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,6 @@ import java.util.List;
 import static main.App.MAPPER;
 import static main.command.commands.generate.risk.riskstrategy.RiskScore.NEGLIGIBLE;
 import static main.command.commands.generate.risk.riskstrategy.RiskScore.SIGNIFICANT;
-import static main.globals.Stability.*;
 
 /**
  * Command that generates an application stability report for managers.
@@ -43,14 +43,15 @@ public class AppStabilityReportCommand extends Command {
     public void execute(final CommandInput commandInput, final ArrayNode output) {
         Database db = Database.getInstance();
 
-        if (db.getUserByUsername(commandInput.getUsername()) == null) {
+        final User user = db.getUserByUsername(commandInput.getUsername());
+        if (user == null) {
             addErrorOutput(commandInput, output,
                     String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
                             commandInput.getUsername()));
             return;
         }
 
-        Role role = db.getUserByUsername(commandInput.getUsername()).getRole();
+        Role role = user.getRole();
         if (role != Role.MANAGER) {
             addErrorOutput(commandInput, output,
                     String.format(ErrorMessages.REQUIRED_ROLE_MANAGER.getErrorMessage(),
@@ -144,9 +145,9 @@ public class AppStabilityReportCommand extends Command {
         customerImpactByType.put("UI_FEEDBACK", uiImpact);
         report.set("impactByType", customerImpactByType);
 
-        Stability stability = PARTIALLY_STABLE;
+        Stability stability = Stability.PARTIALLY_STABLE;
         if (db.getOpenInProgressTickets().isEmpty()) {
-            stability = STABLE;
+            stability = Stability.STABLE;
         } else {
             int ok = 1;
             for (RiskScore score : riskScores) {
@@ -157,18 +158,18 @@ public class AppStabilityReportCommand extends Command {
             }
 
             for (Double impact : impacts) {
-                if (impact >= 50.0) {
+                if (impact >= IMPACT_THRESHOLD) {
                     ok = 0;
                     break;
                 }
             }
 
             if (ok == 1) {
-                stability = STABLE;
+                stability = Stability.STABLE;
             } else {
                 for (RiskScore score : riskScores) {
                     if (score == SIGNIFICANT) {
-                        stability = UNSTABLE;
+                        stability = Stability.UNSTABLE;
                         break;
                     }
                 }

@@ -31,6 +31,7 @@ public final class Milestone implements Observable {
     private final String[] assignedDevs;
     private final String createdBy;
     private LocalDate completedAt;
+    private LocalDate lastCriticalDate;
 
     private MilestoneState status = ACTIVE;
     private boolean isBlocked;
@@ -196,8 +197,12 @@ public final class Milestone implements Observable {
 
         int daysUntil = (int) ChronoUnit.DAYS.between(currentDate, dueDate) + 1;
         if (daysUntil == ALMOST_DUE_DAYS) {
-            setTicketPrioritiesToCritical();
-            notifyObservers(String.format(MILESTONE_ALMOST_DUE.getMessage(), this.name));
+            if (!(lastCriticalDate != null && lastCriticalDate.isEqual(currentDate))) {
+                setTicketPrioritiesToCritical();
+                notifyObservers(String.format(MILESTONE_ALMOST_DUE.getMessage(), this.name));
+                lastCriticalDate = currentDate;
+            }
+
         } else if (daysUntil % DAYS_MODULO == 0) {
             updateTicketPriorities();
         }
@@ -269,7 +274,10 @@ public final class Milestone implements Observable {
      * @return days until due
      */
     public int calculateDaysUntilDue(final LocalDate currentDate) {
-        return Math.max(0, (int) ChronoUnit.DAYS.between(currentDate, this.dueDate) + 1);
+        if (completedAt == null) {
+            return Math.max(0, (int) ChronoUnit.DAYS.between(currentDate, this.dueDate) + 1);
+        }
+        return Math.max(0, (int) ChronoUnit.DAYS.between(completedAt, this.dueDate) + 1);
     }
 
     /**

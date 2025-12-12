@@ -5,7 +5,7 @@ import main.tickets.Ticket;
 
 import java.util.List;
 
-public class KeywordsSpecification implements Specification<Ticket> {
+public final class KeywordsSpecification implements Specification<Ticket> {
     private final List<String> keywords;
 
     public KeywordsSpecification(final List<String> keywords) {
@@ -13,7 +13,7 @@ public class KeywordsSpecification implements Specification<Ticket> {
     }
 
     @Override
-    public boolean isSatisfiedBy(Ticket ticket) {
+    public boolean isSatisfiedBy(final Ticket ticket) {
         String content = ticket.getTitle().toLowerCase();
         if (ticket.getDescription() != null) {
             content = content + ticket.getDescription().toLowerCase();

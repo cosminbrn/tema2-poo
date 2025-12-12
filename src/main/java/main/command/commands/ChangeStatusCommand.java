@@ -5,6 +5,7 @@ import main.command.Command;
 import main.globals.commandenums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
+import main.globals.ticketenums.Status;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
 import main.users.User;
@@ -58,15 +59,9 @@ public class ChangeStatusCommand extends Command {
             return;
         }
 
-        var previous = ticket.getStatus();
-        var updated = ticket.updateStatus(commandInput.getTimestamp());
+        Status previous = ticket.getStatus();
+        Status updated = ticket.updateStatus(commandInput.getTimestamp());
         ticket.addAction(STATUS_CHANGED, commandInput.getUsername(),
                 commandInput.getTimestamp(), previous, updated);
-
-        if (ticket.getStatus() == CLOSED) {
-            Milestone ticketMilestone = db.getMilestoneByName(ticket.getAssignedMilestone());
-            ticketMilestone.closeTicket(ticket);
-            ticketMilestone.updateMilestone(LocalDate.parse(commandInput.getTimestamp()));
-        }
     }
 }

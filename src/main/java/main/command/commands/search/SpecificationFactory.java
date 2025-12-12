@@ -1,7 +1,15 @@
 package main.command.commands.search;
 
-import main.command.commands.search.specifications.*;
+import main.command.commands.search.specifications.AvailableForAssignmentSpecification;
+import main.command.commands.search.specifications.BusinessPrioritySpecification;
+import main.command.commands.search.specifications.ConjunctionSpecification;
+import main.command.commands.search.specifications.CreatedAtSpecification;
+import main.command.commands.search.specifications.ExpertiseAreaSpecification;
+import main.command.commands.search.specifications.KeywordsSpecification;
+import main.command.commands.search.specifications.PerformanceScoreSpecification;
+import main.command.commands.search.specifications.SenioritySpecification;
 import main.command.commands.search.specifications.SpecificationFlag;
+import main.command.commands.search.specifications.TicketTypeSpecification;
 import main.fileio.FiltersInput;
 import main.globals.Specification;
 import main.globals.ticketenums.BusinessPriority;
@@ -18,7 +26,7 @@ import java.util.List;
 
 
 
-public class  SpecificationFactory {
+public final class SpecificationFactory {
     private SpecificationFactory() { }
 
     private static List<Specification<Ticket>> createTicketSpecifications(final FiltersInput
@@ -87,6 +95,12 @@ public class  SpecificationFactory {
         return results;
     }
 
+    /**
+     * Creates a conjunction specification for tickets from filters and user.
+     * @param filters filter input
+     * @param user current user
+     * @return conjunction specification or null if none
+     */
     public static ConjunctionSpecification<Ticket> createTicketConjunctionSpecification(
             final FiltersInput filters, final User user) {
         List<Specification<Ticket>> specifications = createTicketSpecifications(filters, user);
@@ -96,9 +110,13 @@ public class  SpecificationFactory {
         return new ConjunctionSpecification<>(specifications);
     }
 
+    /**
+     * Creates a conjunction specification for developers from filters.
+     * @param filters filter input
+     * @return conjunction specification or null if none
+     */
     public static ConjunctionSpecification<Developer> createDeveloperConjunctionSpecification(
-            final FiltersInput
-                    filters) {
+            final FiltersInput filters) {
         List<Specification<Developer>> specifications = createDeveloperSpecifications(filters);
         if (specifications.isEmpty()) {
             return null;

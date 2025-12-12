@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import main.database.Database;
 import main.globals.ticketenums.TicketType;
+import main.milestones.Milestone;
 import main.tickets.actions.Action;
 import main.tickets.actions.AssignAction;
 import main.tickets.actions.DeassignAction;
@@ -315,6 +316,9 @@ public abstract class Ticket {
                 this.solvedAt = currentDay;
             }
             ((Developer) db.getUserByUsername(this.assignedTo)).addClosedTicket(this);
+            Milestone ticketMilestone = db.getMilestoneByName(getAssignedMilestone());
+            ticketMilestone.closeTicket(this);
+            ticketMilestone.updateMilestone(LocalDate.parse(currentDay));
         }
         return this.status;
     }

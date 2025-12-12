@@ -50,7 +50,7 @@ public class SearchCommand extends Command {
             Specification<Ticket> spec = SpecificationFactory.createTicketConjunctionSpecification(filters, dev);
             if (spec == null) {
                 result = callViewTickets(dev);
-                addOutput(commandInput, output, getTicketNode(result, filters.getKeywords()));
+                addOutput(commandInput, output, getViewTicketNode(result, filters.getKeywords()));
                 return;
             }
 
@@ -62,7 +62,7 @@ public class SearchCommand extends Command {
                     result.add(ticket);
                 }
             }
-            addOutput(commandInput, output, getTicketNode(result, filters.getKeywords()));
+            addOutput(commandInput, output, getViewTicketNode(result, filters.getKeywords()));
         } else if (currentUser.getRole() == Role.MANAGER) {
             Manager manager = (Manager) currentUser;
             FiltersInput filters = commandInput.getFilters();
@@ -135,9 +135,30 @@ public class SearchCommand extends Command {
             ticketNode.put("createdAt", ticket.getCreatedAt());
             ticketNode.put("solvedAt", ticket.getSolvedAt());
             ticketNode.put("reportedBy", ticket.getReportedBy());
-            if (!matchingWords.isEmpty()) {
-                ticketNode.set("matchingWords", MAPPER.valueToTree(matchingWords));
-            }
+            ticketNode.set("matchingWords", MAPPER.valueToTree(matchingWords));
+            results.add(ticketNode);
+        }
+        return results;
+    }
+
+    private ArrayNode getViewTicketNode(List<Ticket> tickets, List<String> keywords) {
+
+        tickets.sort(Comparator.comparing(Ticket::getCreatedAt).thenComparingInt(Ticket::getId));
+        ArrayNode results = MAPPER.createArrayNode();
+
+        for (Ticket ticket : tickets) {
+            List<String> matchingWords = getStrings(keywords, ticket);
+
+
+            ObjectNode ticketNode = MAPPER.createObjectNode();
+            ticketNode.put("id", ticket.getId());
+            ticketNode.put("type", ticket.getType().getTypeName());
+            ticketNode.put("title", ticket.getTitle());
+            ticketNode.put("businessPriority", ticket.getBusinessPriority().getLabel());
+            ticketNode.put("status", ticket.getStatus().getStatusName());
+            ticketNode.put("createdAt", ticket.getCreatedAt());
+            ticketNode.put("solvedAt", ticket.getSolvedAt());
+            ticketNode.put("reportedBy", ticket.getReportedBy());
             results.add(ticketNode);
         }
         return results;
