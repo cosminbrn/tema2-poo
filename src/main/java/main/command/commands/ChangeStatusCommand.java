@@ -6,12 +6,9 @@ import main.globals.commandenums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
 import main.globals.ticketenums.Status;
-import main.milestones.Milestone;
 import main.tickets.Ticket;
 import main.users.User;
 import main.globals.userenums.Role;
-
-import java.time.LocalDate;
 
 import static main.globals.ticketenums.ActionType.STATUS_CHANGED;
 import static main.globals.ticketenums.Status.CLOSED;

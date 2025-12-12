@@ -22,21 +22,21 @@ public class FeatureRequestTicket extends Ticket {
 
         /**
          * Set the business value of the feature request.
-         * @param businessValue business value
+         * @param businessValueValue business value
          * @return builder instance
          */
-        public FeatureRequestBuilder setBusinessValue(final BusinessValue businessValue) {
-            this.businessValue = businessValue;
+        public FeatureRequestBuilder setBusinessValue(final BusinessValue businessValueValue) {
+            this.businessValue = businessValueValue;
             return this;
         }
 
         /**
          * Set the customer demand of the feature request.
-         * @param customerDemand customer demand
+         * @param customerDemandValue customer demand
          * @return builder instance
          */
-        public FeatureRequestBuilder setCustomerDemand(final CustomerDemand customerDemand) {
-            this.customerDemand = customerDemand;
+        public FeatureRequestBuilder setCustomerDemand(final CustomerDemand customerDemandValue) {
+            this.customerDemand = customerDemandValue;
             return this;
         }
 

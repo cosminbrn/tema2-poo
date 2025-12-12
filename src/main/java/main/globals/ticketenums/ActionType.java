@@ -1,7 +1,5 @@
 package main.globals.ticketenums;
 
-import lombok.Getter;
-
 public enum ActionType {
     ASSIGNED("ASSIGNED"),
     DE_ASSIGNED("DE-ASSIGNED"),
@@ -9,10 +7,13 @@ public enum ActionType {
     ADDED_TO_MILESTONE("ADDED_TO_MILESTONE"),
     REMOVED_FROM_DEV("REMOVED_FROM_DEV");
 
-    @Getter
     private final String action;
 
-    ActionType(String action) {
+    ActionType(final String action) {
         this.action = action;
+    }
+
+    public String getAction() {
+        return action;
     }
 }

@@ -13,14 +13,23 @@ import main.milestones.Milestone;
 import java.util.List;
 
 public class StartTestingPhaseCommand extends Command {
+    /**
+     * Executes the command that starts the testing phase if no milestones
+     * are currently active; otherwise emits an error.
+     * @param commandInput the parsed command input
+     * @param output       the JSON array where results are appended
+     */
     @Override
-    public void execute(CommandInput commandInput, ArrayNode output) {
+    public void execute(final CommandInput commandInput,
+                        final ArrayNode output) {
         Database db = Database.getInstance();
 
         List<Milestone> milestones = db.getMilestones();
         for (Milestone milestone : milestones) {
             if (milestone.getStatus() == MilestoneState.ACTIVE) {
-                addErrorOutput(commandInput, output, ErrorMessages.CANNOT_START_TESTING.getErrorMessage());
+                addErrorOutput(commandInput, output,
+                        ErrorMessages.CANNOT_START_TESTING.getErrorMessage());
+                return;
             }
         }
 

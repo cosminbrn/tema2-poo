@@ -1,7 +1,5 @@
 package main.globals.commandenums;
 
-import lombok.Getter;
-
 /**
  * Enum holding formatted error messages used across commands.
  */
@@ -33,10 +31,13 @@ public enum ErrorMessages {
     REPORTERS_NOT_ALLOWED("The user does not have permission to execute "
             + "this command: required role DEVELOPER, MANAGER; user role REPORTER.");
 
-    @Getter
     private final String errorMessage;
 
-    ErrorMessages(String errorMessage) {
+    ErrorMessages(final String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

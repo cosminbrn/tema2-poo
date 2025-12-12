@@ -14,6 +14,10 @@ public class DeassignAction extends Action {
         super(deassignAction);
     }
 
+    /**
+     * Create a deep copy of this de-assignment action.
+     * @return a new one with the same data
+     */
     @Override
     public Action deepCopy() {
         return new DeassignAction(this);

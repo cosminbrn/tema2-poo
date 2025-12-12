@@ -14,6 +14,10 @@ public class AssignAction extends Action {
         super(action);
     }
 
+    /**
+     * Create a deep copy of this assignment action.
+     * @return a new {@code AssignAction} with the same data
+     */
     @Override
     public Action deepCopy() {
         return new AssignAction(this);

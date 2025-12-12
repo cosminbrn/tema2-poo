@@ -1,21 +1,34 @@
 package main.globals.ticketenums;
 
-import lombok.Getter;
-
+/**
+ * Enum representing customer demand levels with numeric values.
+ */
 public enum CustomerDemand {
     LOW(1),
     MEDIUM(3),
     HIGH(6),
     VERY_HIGH(10);
 
-    @Getter
-    public final int value;
+    private final int value;
 
-    CustomerDemand(int value) {
+    CustomerDemand(final int value) {
         this.value = value;
     }
 
-    public static CustomerDemand fromString(String value) {
+    /**
+     * Returns the numeric value for this demand level.
+     * @return demand value
+     */
+    public int getValue() {
+        return value;
+    }
+
+    /**
+     * Converts a string representation to its corresponding CustomerDemand enum.
+     * @param value the string representation of the CustomerDemand
+     * @return the corresponding CustomerDemand enum constant
+     */
+    public static CustomerDemand fromString(final String value) {
         return switch (value.toLowerCase()) {
             case "low" -> LOW;
             case "medium" -> MEDIUM;

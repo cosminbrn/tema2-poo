@@ -31,7 +31,7 @@ public class ViewMilestonesCommand extends Command {
      * @param output JSON array to append results to
      */
     @Override
-    public void execute(CommandInput input, ArrayNode output) {
+    public void execute(final CommandInput input, final ArrayNode output) {
         Database db = Database.getInstance();
 
         if (db.getUserByUsername(input.getUsername()) == null) {
@@ -51,10 +51,12 @@ public class ViewMilestonesCommand extends Command {
         };
 
         List<Milestone> milestones = strategy.getMilestones(user);
-        milestones.sort(Comparator.comparing(Milestone::getDueDate).thenComparing(Milestone::getName));
+        milestones.sort(Comparator.comparing(Milestone::getDueDate)
+                .thenComparing(Milestone::getName));
         ArrayNode milestonesArray = MAPPER.createArrayNode();
         for (Milestone milestone : milestones) {
-            milestone.updateMilestone(LocalDate.parse(input.getTimestamp()));
+            LocalDate date = LocalDate.parse(input.getTimestamp());
+            milestone.updateMilestone(date);
             ObjectNode milestoneNode = MAPPER.createObjectNode();
 
             milestoneNode.put("name", milestone.getName());
@@ -71,15 +73,19 @@ public class ViewMilestonesCommand extends Command {
             milestoneNode.put("overdueBy",
                     milestone.calculateOverdueBy(LocalDate.parse(input.getTimestamp())));
             milestoneNode.set("openTickets", MAPPER.valueToTree(milestone.getOpenTickets()));
-            milestoneNode.set("closedTickets", MAPPER.valueToTree(milestone.getSortedClosedTickets()));
+            milestoneNode.set("closedTickets",
+                    MAPPER.valueToTree(milestone.getSortedClosedTickets()));
             milestoneNode.put("completionPercentage",
                     milestone.calculateCompletionPercentage());
 
             ArrayNode repartitionsNode = MAPPER.createArrayNode();
 
-            List<Map.Entry<String, List<Integer>>> entryList = new ArrayList<>(milestone.getRepartition().entrySet());
+            List<Map.Entry<String, List<Integer>>> entryList =
+                    new ArrayList<>(milestone.getRepartition().entrySet());
 
-            entryList.sort(Comparator.comparingInt((Map.Entry<String, List<Integer>> e) -> e.getValue().size()).thenComparing(Map.Entry::getKey));
+            entryList.sort(Comparator.comparingInt((Map.Entry<String,
+                            List<Integer>> e) -> e.getValue().size())
+                    .thenComparing(Map.Entry::getKey));
 
             for (Map.Entry<String, List<Integer>> repartitionEntry : entryList) {
                 ObjectNode repartitionNode = MAPPER.createObjectNode();

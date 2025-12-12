@@ -18,8 +18,8 @@ public final class KeywordsSpecification implements Specification<Ticket> {
         if (ticket.getDescription() != null) {
             content = content + ticket.getDescription().toLowerCase();
         }
-        for (String keywords : keywords) {
-            if (content.contains(keywords.toLowerCase())) {
+        for (String keywordValue : keywords) {
+            if (content.contains(keywordValue.toLowerCase())) {
                 return true;
             }
         }

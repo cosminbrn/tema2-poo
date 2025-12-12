@@ -20,8 +20,7 @@ public class BugTicket extends Ticket {
     // Optional fields
     private final String environment;
     private final int errorCode;
-
-    protected BugTicket(BugBuilder builder) {
+    protected BugTicket(final BugBuilder builder) {
         super(builder);
         this.expectedBehavior = builder.expectedBehavior;
         this.actualBehavior = builder.actualBehavior;
@@ -41,47 +40,91 @@ public class BugTicket extends Ticket {
         private String environment = "";
         private int errorCode = 0;
 
-        public BugBuilder setExpectedBehavior(String expectedBehavior) {
-            this.expectedBehavior = expectedBehavior;
+        /**
+         * Set the expected behavior description for the bug.
+         * @param expectedBehaviorValue expected behavior text
+         * @return builder instance
+         */
+        public BugBuilder setExpectedBehavior(final String expectedBehaviorValue) {
+            this.expectedBehavior = expectedBehaviorValue;
             return this;
         }
 
-        public BugBuilder setActualBehavior(String actualBehavior) {
-            this.actualBehavior = actualBehavior;
+        /**
+         * Set the actual behavior description for the bug.
+         * @param actualBehaviorValue actual behavior text
+         * @return builder instance
+         */
+        public BugBuilder setActualBehavior(final String actualBehaviorValue) {
+            this.actualBehavior = actualBehaviorValue;
             return this;
         }
 
-        public BugBuilder setFrequency(Frequency frequency) {
-            this.frequency = frequency;
+        /**
+         * Set the bug frequency.
+         * @param frequencyValue frequency value
+         * @return builder instance
+         */
+        public BugBuilder setFrequency(final Frequency frequencyValue) {
+            this.frequency = frequencyValue;
             return this;
         }
 
-        public BugBuilder setSeverity(Severity severity) {
-            this.severity = severity;
+        /**
+         * Set the bug severity.
+         * @param severityValue severity value
+         * @return builder instance
+         */
+        public BugBuilder setSeverity(final Severity severityValue) {
+            this.severity = severityValue;
             return this;
         }
 
-        public BugBuilder setEnvironment(String environment) {
-            this.environment = environment;
+        /**
+         * Set the environment details where the bug occurs.
+         * @param environmentValue environment description
+         * @return builder instance
+         */
+        public BugBuilder setEnvironment(final String environmentValue) {
+            this.environment = environmentValue;
             return this;
         }
 
-        public BugBuilder setErrorCode(int errorCode) {
-            this.errorCode = errorCode;
+        /**
+         * Set the error code associated with the bug.
+         * @param errorCodeValue error code value
+         * @return builder instance
+         */
+        public BugBuilder setErrorCode(final int errorCodeValue) {
+            this.errorCode = errorCodeValue;
             return this;
         }
 
+        /**
+         * Returns this concrete builder instance.
+         * @return the current class
+         */
         @Override
         protected BugBuilder self() {
             return this;
         }
 
+        /**
+         * Build a bug ticket from the accumulated values.
+         *
+         * @return new bug ticket instance
+         */
         @Override
         public BugTicket build() {
             return new BugTicket(this);
         }
     }
 
+    /**
+     * Create a deep copy of this bug ticket, including comments and actions.
+     *
+     * @return deep copy of this bug ticket
+     */
     @Override
     public Ticket deepCopy() {
         BugBuilder b = new BugBuilder();

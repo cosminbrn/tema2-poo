@@ -25,7 +25,10 @@ import static main.globals.commandenums.CommandType.VIEW_TICKETS;
 public class ViewTicketsCommand extends Command {
     private final Database db = Database.getInstance();
 
-    // Accessor to satisfy visibility rule used by Checkstyle
+    /**
+     * Returns the database instance used by this command.
+     * @return the shared database instance
+     */
     public Database getDb() {
         return db;
     }

@@ -15,7 +15,7 @@ public final class PerformanceScoreSpecification implements Specification<Develo
     /**
      * Checks if the developer's performance score satisfies the specification.
      * @param dev the developer to check
-     * @return true if the developer's performance score satisfies the specification, false otherwise
+     * @return true if the developer's performance score satisfies, false otherwise
      */
     @Override
     public boolean isSatisfiedBy(final Developer dev) {

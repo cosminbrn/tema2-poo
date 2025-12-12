@@ -67,14 +67,26 @@ public final class Database {
         instance = null;
     }
 
+    /**
+     * Adds a user to the database.
+     * @param user the user to add
+     */
     public void addUser(final User user) {
         getInstance().users.add(user);
     }
 
+    /**
+     * Adds a ticket to the database.
+     * @param ticket the ticket to add
+     */
     public void addTicket(final Ticket ticket) {
         getInstance().tickets.add(ticket);
     }
 
+    /**
+     * Adds a milestone to the database.
+     * @param milestone the milestone to add
+     */
     public void addMilestone(final Milestone milestone) {
         getInstance().milestones.add(milestone);
     }
@@ -181,6 +193,7 @@ public final class Database {
         }
         for (Milestone milestone : milestones) {
             milestone.updateMilestone(currentDay);
+            milestone.checkForTicketPriorityUpdates(currentDay);
         }
     }
 

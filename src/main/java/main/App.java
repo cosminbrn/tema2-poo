@@ -16,10 +16,10 @@ import java.io.IOException;
 public final class App {
     private App() { }
 
-    private static final String inputUserFile = "input/database/users.json";
+    private static final String INPUT_USER_FILE = "input/database/users.json";
     public static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static final ObjectWriter writer = MAPPER.writer().withDefaultPrettyPrinter();
+    private static final ObjectWriter WRITER = MAPPER.writer().withDefaultPrettyPrinter();
 
     /**
      * Runs the application: reads commands from an input file,
@@ -32,7 +32,7 @@ public final class App {
             throws IOException {
         final ArrayNode outputs = MAPPER.createArrayNode();
 
-        final InputLoader inputLoader = new InputLoader(inputPath, inputUserFile);
+        final InputLoader inputLoader = new InputLoader(inputPath, INPUT_USER_FILE);
 
         Engine.reset();
         Engine.init();
@@ -43,7 +43,7 @@ public final class App {
         try {
             File outputFile = new File(outputPath);
             outputFile.getParentFile().mkdirs();
-            writer.withDefaultPrettyPrinter().writeValue(outputFile, outputs);
+            WRITER.withDefaultPrettyPrinter().writeValue(outputFile, outputs);
         } catch (IOException e) {
             System.out.println("error writing to output file: " + e.getMessage());
         }

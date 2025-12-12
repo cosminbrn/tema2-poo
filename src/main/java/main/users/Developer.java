@@ -11,7 +11,6 @@ import main.tickets.Ticket;
 import main.globals.ticketenums.BusinessPriority;
 import main.globals.userenums.Seniority;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,6 +194,10 @@ public final class Developer extends User implements Observer {
         return Database.getInstance().getMilestonesByDeveloper(this.getUsername());
     }
 
+    /**
+     * Returns all OPEN tickets from milestones assigned to this developer.
+     * @return list of open tickets from the developer's milestones
+     */
     public List<Ticket> getOpenTicketsFromAssignedMilestones() {
         Database db = Database.getInstance();
         List<Milestone> milestones = getAssignedMilestones();

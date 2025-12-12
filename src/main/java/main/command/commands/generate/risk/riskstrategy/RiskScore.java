@@ -22,6 +22,11 @@ public enum RiskScore {
         this.upperThreshold = upperThreshold;
     }
 
+    /**
+     * Converts an integer score to its corresponding RiskScore enum.
+     * @param score the integer risk score
+     * @return the corresponding RiskScore enum constant
+     */
     public static RiskScore fromInt(final int score) {
         if (score >= 0 && score < NEGLIGIBLE.getUpperThreshold()) {
             return NEGLIGIBLE;

@@ -5,6 +5,7 @@ import main.command.Command;
 import main.globals.commandenums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
+import main.globals.ticketenums.Status;
 import main.milestones.Milestone;
 import main.tickets.Ticket;
 import main.users.Developer;
@@ -32,7 +33,8 @@ public class UndoAssignTicketCommand extends Command {
 
         if (db.getUserByUsername(commandInput.getUsername()) == null) {
             addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(), commandInput.getUsername()));
+                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
+                            commandInput.getUsername()));
             return;
         }
 
@@ -45,17 +47,14 @@ public class UndoAssignTicketCommand extends Command {
         }
 
         Developer developer = (Developer) db.getUserByUsername(commandInput.getUsername());
-        Ticket ticket = developer.getAssignedTicketById(commandInput.getTicketID());
-        if (ticket == null) {
-            return;
-        }
+        Status status = db.getTicketById(commandInput.getTicketID()).getStatus();
 
-        if (ticket.getStatus() != IN_PROGRESS) {
+        if (status != IN_PROGRESS) {
             addErrorOutput(commandInput, output,
                     TICKET_NOT_IN_PROGRESS.getErrorMessage());
             return;
         }
-
+        Ticket ticket = developer.getAssignedTicketById(commandInput.getTicketID());
         ticket.setAssignedTo("");
         ticket.setAssignedAt("");
         ticket.setStatus(OPEN);

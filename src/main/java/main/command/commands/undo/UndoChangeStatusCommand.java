@@ -31,7 +31,8 @@ public class UndoChangeStatusCommand extends Command {
 
         if (db.getUserByUsername(commandInput.getUsername()) == null) {
             addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(), commandInput.getUsername()));
+                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
+                            commandInput.getUsername()));
             return;
         }
 
@@ -39,7 +40,8 @@ public class UndoChangeStatusCommand extends Command {
         Role role = user.getRole();
         if (role != DEVELOPER) {
             addErrorOutput(commandInput, output,
-                    String.format(REQUIRED_ROLE_DEVELOPER.getErrorMessage(), role.getRoleName()));
+                    String.format(REQUIRED_ROLE_DEVELOPER.getErrorMessage(),
+                            role.getRoleName()));
             return;
         }
 

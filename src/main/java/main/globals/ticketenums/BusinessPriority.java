@@ -13,7 +13,7 @@ public enum BusinessPriority {
     @Getter
     private final int value;
 
-    BusinessPriority(String label, int value) {
+    BusinessPriority(final String label, final int value) {
         this.label = label;
         this.value = value;
     }

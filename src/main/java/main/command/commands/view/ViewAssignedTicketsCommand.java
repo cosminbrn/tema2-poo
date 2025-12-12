@@ -39,7 +39,9 @@ public class ViewAssignedTicketsCommand extends Command {
 
         User user = db.getUserByUsername(input.getUsername());
         if (user.getRole() != Role.DEVELOPER) {
-            addErrorOutput(input, output, String.format(ErrorMessages.REQUIRED_ROLE_DEVELOPER.getErrorMessage(), user.getRole().getRoleName().toUpperCase()));
+            addErrorOutput(input, output,
+                    String.format(ErrorMessages.REQUIRED_ROLE_DEVELOPER.getErrorMessage(),
+                            user.getRole().getRoleName().toUpperCase()));
             return;
         }
 

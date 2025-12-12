@@ -17,7 +17,7 @@ public enum SeniorityBonus {
      * Construct a SeniorityBonus value with provided points.
      * @param bonusPoints the bonus points for this seniority level
      */
-    SeniorityBonus(int bonusPoints) {
+    SeniorityBonus(final int bonusPoints) {
         this.bonusPoints = bonusPoints;
     }
 }

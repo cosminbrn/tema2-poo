@@ -4,7 +4,8 @@ import lombok.Getter;
 import main.globals.ticketenums.ActionType;
 
 /**
- * Abstract class representing a generic action performed on a ticket.
+ * Base class for all ticket actions, storing common metadata
+ * such as type, actor, and timestamp.
  */
 @Getter
 public abstract class Action {
@@ -26,5 +27,9 @@ public abstract class Action {
         this.timestamp = other.timestamp;
     }
 
+    /**
+     * Returns a deep copy of this action instance.
+     * @return deep-copied action
+     */
     public abstract Action deepCopy();
 }

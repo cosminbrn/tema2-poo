@@ -123,126 +123,130 @@ public abstract class Ticket {
 
         /**
          * Set the assignedAt timestamp.
-         * @param assignedAt assigned at timestamp
+         * @param assignedAtValue assigned at timestamp
          * @return builder instance
          */
-        public T setAssignedAt(final String assignedAt) {
-            this.assignedAt = assignedAt;
+        public T setAssignedAt(final String assignedAtValue) {
+            this.assignedAt = assignedAtValue;
             return self();
         }
 
         /**
          * Set the solvedAt timestamp.
-         * @param solvedAt solved at timestamp
+         * @param solvedAtValue solved at timestamp
          * @return builder instance
          */
-        public T setSolvedAt(final String solvedAt) {
-            this.solvedAt = solvedAt;
+        public T setSolvedAt(final String solvedAtValue) {
+            this.solvedAt = solvedAtValue;
             return self();
         }
 
         /**
          * Set the ticket id.
-         * @param id ticket id
+         * @param idValue ticket id
          * @return builder instance
          */
-        public T setId(final int id) {
-            this.id = id;
+        public T setId(final int idValue) {
+            this.id = idValue;
             return self();
         }
 
         /**
          * Set the username of the assignee.
-         * @param assignedTo assignee username
+         * @param assignedToValue assignee username
          * @return builder instance
          */
-        public T setAssignedTo(final String assignedTo) {
-            this.assignedTo = assignedTo;
+        public T setAssignedTo(final String assignedToValue) {
+            this.assignedTo = assignedToValue;
             return self();
         }
 
         /**
          * Set the ticket type.
-         * @param type ticket type
+         * @param typeValue ticket type
          * @return builder instance
          */
-        public T setType(final TicketType type) {
-            this.type = type;
+        public T setType(final TicketType typeValue) {
+            this.type = typeValue;
             return self();
         }
 
         /**
          * Set the ticket title.
-         * @param title ticket title
+         * @param titleValue ticket title
          * @return builder instance
          */
-        public T setTitle(final String title) {
-            this.title = title;
+        public T setTitle(final String titleValue) {
+            this.title = titleValue;
             return self();
         }
 
         /**
          * Set the business priority.
-         * @param businessPriority business priority
+         * @param businessPriorityValue business priority
          * @return builder instance
          */
-        public T setBusinessPriority(final BusinessPriority businessPriority) {
-            this.businessPriority = businessPriority;
+        public T setBusinessPriority(final BusinessPriority businessPriorityValue) {
+            this.businessPriority = businessPriorityValue;
             return self();
         }
 
         /**
          * Set the ticket status.
-         * @param status ticket status
+         * @param statusValue ticket status
          * @return builder instance
          */
-        public T setStatus(final Status status) {
-            this.status = status;
+        public T setStatus(final Status statusValue) {
+            this.status = statusValue;
             return self();
         }
 
         /**
          * Set the expertise area required.
-         * @param expertiseArea expertise area
+         * @param expertiseAreaValue expertise area
          * @return builder instance
          */
-        public T setExpertiseArea(final ExpertiseArea expertiseArea) {
-            this.expertiseArea = expertiseArea;
+        public T setExpertiseArea(final ExpertiseArea expertiseAreaValue) {
+            this.expertiseArea = expertiseAreaValue;
             return self();
         }
 
         /**
          * Set the reporter username.
-         * @param reportedBy reporter username
+         * @param reportedByValue reporter username
          * @return builder instance
          */
-        public T setReportedBy(final String reportedBy) {
-            this.reportedBy = reportedBy;
+        public T setReportedBy(final String reportedByValue) {
+            this.reportedBy = reportedByValue;
             return self();
         }
 
         /**
          * Set the description text.
-         * @param description ticket description
+         * @param descriptionValue ticket description
          * @return builder instance
          */
-        public T setDescription(final String description) {
-            this.description = description;
+        public T setDescription(final String descriptionValue) {
+            this.description = descriptionValue;
             return self();
         }
 
         /**
          * Set the creation timestamp.
-         * @param createdAt creation timestamp
+         * @param createdAtValue creation timestamp
          * @return builder instance
          */
-        public T setCreatedAt(final String createdAt) {
-            this.createdAt = createdAt;
+        public T setCreatedAt(final String createdAtValue) {
+            this.createdAt = createdAtValue;
             return self();
         }
 
         protected abstract T self();
 
+        /**
+         * Build the Ticket object.
+         * @return the constructed Ticket
+         */
         public abstract Ticket build();
     }
 
@@ -319,6 +323,7 @@ public abstract class Ticket {
             Milestone ticketMilestone = db.getMilestoneByName(getAssignedMilestone());
             ticketMilestone.closeTicket(this);
             ticketMilestone.updateMilestone(LocalDate.parse(currentDay));
+            ticketMilestone.checkForTicketPriorityUpdates(LocalDate.parse(currentDay));
         }
         return this.status;
     }

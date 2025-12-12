@@ -22,6 +22,10 @@ public class RemoveFromDevAction extends Action {
         this.from = action.from;
     }
 
+    /**
+     * Create a deep copy of this remove-from-dev action.
+     * @return a new one with the same data
+     */
     @Override
     public Action deepCopy() {
         return new RemoveFromDevAction(this);

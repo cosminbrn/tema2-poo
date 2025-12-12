@@ -35,5 +35,5 @@ public interface EfficiencyStrategy<T> {
      * @param tickets the list of tickets to evaluate
      * @return the efficiency score
      */
-    double calculateEfficiency(final List<T> tickets);
+    double calculateEfficiency(List<T> tickets);
 }

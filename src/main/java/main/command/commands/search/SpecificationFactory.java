@@ -86,11 +86,13 @@ public final class SpecificationFactory {
         }
 
         if (performanceScoreBelow != 0) {
-            results.add(new PerformanceScoreSpecification(performanceScoreBelow, SpecificationFlag.BELOW));
+            results.add(new PerformanceScoreSpecification(performanceScoreBelow,
+                    SpecificationFlag.BELOW));
         }
 
         if (performanceScoreAbove != 0) {
-            results.add(new PerformanceScoreSpecification(performanceScoreAbove, SpecificationFlag.ABOVE));
+            results.add(new PerformanceScoreSpecification(performanceScoreAbove,
+                    SpecificationFlag.ABOVE));
         }
         return results;
     }
@@ -102,8 +104,10 @@ public final class SpecificationFactory {
      * @return conjunction specification or null if none
      */
     public static ConjunctionSpecification<Ticket> createTicketConjunctionSpecification(
-            final FiltersInput filters, final User user) {
-        List<Specification<Ticket>> specifications = createTicketSpecifications(filters, user);
+            final FiltersInput filters,
+            final User user) {
+        List<Specification<Ticket>> specifications =
+                createTicketSpecifications(filters, user);
         if (specifications.isEmpty()) {
             return null;
         }
@@ -117,7 +121,8 @@ public final class SpecificationFactory {
      */
     public static ConjunctionSpecification<Developer> createDeveloperConjunctionSpecification(
             final FiltersInput filters) {
-        List<Specification<Developer>> specifications = createDeveloperSpecifications(filters);
+        List<Specification<Developer>> specifications =
+                createDeveloperSpecifications(filters);
         if (specifications.isEmpty()) {
             return null;
         }

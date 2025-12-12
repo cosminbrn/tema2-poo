@@ -10,10 +10,11 @@ import java.util.List;
 /**
  * Milestone view strategy for developers: shows milestones assigned to the developer.
  */
-public class DeveloperMilestoneViewStrategy implements  MilestoneFilteringStrategy {
-    Database db = Database.getInstance();
+public final class DeveloperMilestoneViewStrategy implements  MilestoneFilteringStrategy {
+
     @Override
     public List<Milestone> getMilestones(final User user) {
+        Database db = Database.getInstance();
         List<Milestone> result = new ArrayList<>();
         for (Milestone milestone : db.getMilestones()) {
             for (String assignedDev : milestone.getAssignedDevs()) {

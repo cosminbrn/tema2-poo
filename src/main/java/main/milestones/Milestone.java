@@ -179,11 +179,8 @@ public final class Milestone implements Observable {
      * Update milestone state and notify observers when relevant.
      * @param currentDate the current date
      */
-    public void updateMilestone(final LocalDate currentDate) {
-        if (isBlocked) {
-            return;
-        }
 
+    public void checkIfComplete(final LocalDate currentDate) {
         if (calculateCompletionPercentage() == 1.0) {
             Database db = Database.getInstance();
             completeMilestone(currentDate);
@@ -194,6 +191,13 @@ public final class Milestone implements Observable {
                 }
             }
         }
+    }
+    public void updateMilestone(final LocalDate currentDate) {
+        if (isBlocked) {
+            return;
+        }
+
+        checkIfComplete(currentDate);
 
         int daysUntil = (int) ChronoUnit.DAYS.between(currentDate, dueDate) + 1;
         if (daysUntil == ALMOST_DUE_DAYS) {
@@ -203,7 +207,16 @@ public final class Milestone implements Observable {
                 lastCriticalDate = currentDate;
             }
 
-        } else if (daysUntil % DAYS_MODULO == 0) {
+        }
+    }
+
+    public void checkForTicketPriorityUpdates(final LocalDate currentDate) {
+        if (isBlocked) {
+            return;
+        }
+
+        long daysSinceCreation = ChronoUnit.DAYS.between(createdAt, currentDate);
+        if (daysSinceCreation > 0 && daysSinceCreation % DAYS_MODULO == 0) {
             updateTicketPriorities();
         }
     }

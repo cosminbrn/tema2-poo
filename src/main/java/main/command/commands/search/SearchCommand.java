@@ -26,9 +26,19 @@ import java.util.regex.Pattern;
 import static main.App.MAPPER;
 import static main.globals.commandenums.CommandType.SEARCH;
 
+/**
+ * Command used to search tickets or developers based on a set of filters
+ * depending on the role of the current user.
+ */
 public class SearchCommand extends Command {
+    /**
+     * Executes the search command and appends the results or errors
+     * to the provided output node.
+     * @param commandInput the parsed command input
+     * @param output       the JSON array where results are appended
+     */
     @Override
-    public void execute(CommandInput commandInput, ArrayNode output) {
+    public void execute(final CommandInput commandInput, final ArrayNode output) {
         Database db = Database.getInstance();
 
         User currentUser = db.getUserByUsername(commandInput.getUsername());
@@ -45,15 +55,17 @@ public class SearchCommand extends Command {
             List<Ticket> result = new ArrayList<>();
 
             if (!filters.getSearchType().equals("TICKET")) {
-                throw new IllegalArgumentException("Search type must be TICKET for DEVELOPER");
+                throw new IllegalArgumentException(
+                        "Search type must be TICKET for DEVELOPER");
             }
-            Specification<Ticket> spec = SpecificationFactory.createTicketConjunctionSpecification(filters, dev);
+            Specification<Ticket> spec = SpecificationFactory
+                    .createTicketConjunctionSpecification(filters, dev);
             if (spec == null) {
                 result = callViewTickets(dev);
-                addOutput(commandInput, output, getViewTicketNode(result, filters.getKeywords()));
+                addOutput(commandInput, output,
+                        getViewTicketNode(result, filters.getKeywords()));
                 return;
             }
-
 
             List<Ticket> allTickets = dev.getOpenTicketsFromAssignedMilestones();
 
@@ -62,17 +74,20 @@ public class SearchCommand extends Command {
                     result.add(ticket);
                 }
             }
-            addOutput(commandInput, output, getViewTicketNode(result, filters.getKeywords()));
+            addOutput(commandInput, output,
+                    getViewTicketNode(result, filters.getKeywords()));
         } else if (currentUser.getRole() == Role.MANAGER) {
             Manager manager = (Manager) currentUser;
             FiltersInput filters = commandInput.getFilters();
 
             if (filters.getSearchType().equals("TICKET")) {
                 List<Ticket> result = new ArrayList<>();
-                Specification<Ticket> spec = SpecificationFactory.createTicketConjunctionSpecification(filters, manager);
+                Specification<Ticket> spec = SpecificationFactory
+                        .createTicketConjunctionSpecification(filters, manager);
                 if (spec == null) {
                     result = callViewTickets(manager);
-                    addOutput(commandInput, output, getTicketNode(result, filters.getKeywords()));
+                    addOutput(commandInput, output,
+                            getTicketNode(result, filters.getKeywords()));
                     return;
                 }
                 List<Ticket> allTickets = db.getTickets();
@@ -82,10 +97,12 @@ public class SearchCommand extends Command {
                         result.add(ticket);
                     }
                 }
-                addOutput(commandInput, output, getTicketNode(result, filters.getKeywords()));
+                addOutput(commandInput, output,
+                        getTicketNode(result, filters.getKeywords()));
             } else if (filters.getSearchType().equals("DEVELOPER")) {
                 List<Developer> result = new ArrayList<>();
-                Specification<Developer> spec = SpecificationFactory.createDeveloperConjunctionSpecification(filters);
+                Specification<Developer> spec = SpecificationFactory
+                        .createDeveloperConjunctionSpecification(filters);
                 if (spec == null) {
                     result = manager.getSubordinateDevelopers();
                     addOutput(commandInput, output, getDeveloperNode(result));
@@ -105,6 +122,13 @@ public class SearchCommand extends Command {
         }
     }
 
+    /**
+     * Adds the search command output with its metadata and results
+     * to the provided output array.
+     * @param input   the original command input
+     * @param output  the JSON array where the command output is appended
+     * @param results the search results node
+     */
     public void addOutput(final CommandInput input,
                           final ArrayNode output,
                           final ArrayNode results) {
@@ -117,9 +141,11 @@ public class SearchCommand extends Command {
         output.add(node);
     }
 
-    private ArrayNode getTicketNode(List<Ticket> tickets, List<String> keywords) {
+    private ArrayNode getTicketNode(final List<Ticket> tickets,
+                                    final List<String> keywords) {
 
-        tickets.sort(Comparator.comparing(Ticket::getCreatedAt).thenComparingInt(Ticket::getId));
+        tickets.sort(Comparator.comparing(Ticket::getCreatedAt)
+                .thenComparingInt(Ticket::getId));
         ArrayNode results = MAPPER.createArrayNode();
 
         for (Ticket ticket : tickets) {
@@ -130,7 +156,8 @@ public class SearchCommand extends Command {
             ticketNode.put("id", ticket.getId());
             ticketNode.put("type", ticket.getType().getTypeName());
             ticketNode.put("title", ticket.getTitle());
-            ticketNode.put("businessPriority", ticket.getBusinessPriority().getLabel());
+            ticketNode.put("businessPriority",
+                    ticket.getBusinessPriority().getLabel());
             ticketNode.put("status", ticket.getStatus().getStatusName());
             ticketNode.put("createdAt", ticket.getCreatedAt());
             ticketNode.put("solvedAt", ticket.getSolvedAt());
@@ -141,9 +168,11 @@ public class SearchCommand extends Command {
         return results;
     }
 
-    private ArrayNode getViewTicketNode(List<Ticket> tickets, List<String> keywords) {
+    private ArrayNode getViewTicketNode(final List<Ticket> tickets,
+                                        final List<String> keywords) {
 
-        tickets.sort(Comparator.comparing(Ticket::getCreatedAt).thenComparingInt(Ticket::getId));
+        tickets.sort(Comparator.comparing(Ticket::getCreatedAt)
+                .thenComparingInt(Ticket::getId));
         ArrayNode results = MAPPER.createArrayNode();
 
         for (Ticket ticket : tickets) {
@@ -154,7 +183,8 @@ public class SearchCommand extends Command {
             ticketNode.put("id", ticket.getId());
             ticketNode.put("type", ticket.getType().getTypeName());
             ticketNode.put("title", ticket.getTitle());
-            ticketNode.put("businessPriority", ticket.getBusinessPriority().getLabel());
+            ticketNode.put("businessPriority",
+                    ticket.getBusinessPriority().getLabel());
             ticketNode.put("status", ticket.getStatus().getStatusName());
             ticketNode.put("createdAt", ticket.getCreatedAt());
             ticketNode.put("solvedAt", ticket.getSolvedAt());
@@ -164,7 +194,8 @@ public class SearchCommand extends Command {
         return results;
     }
 
-    private static List<String> getStrings(List<String> keywords, Ticket ticket) {
+    private static List<String> getStrings(final List<String> keywords,
+                                           final Ticket ticket) {
         List<String> matchingWords = new ArrayList<>();
         String content = ticket.getTitle().toLowerCase();
         if (ticket.getDescription() != null) {
@@ -181,7 +212,7 @@ public class SearchCommand extends Command {
         return matchingWords;
     }
 
-    private ArrayNode getDeveloperNode(List<Developer> developers) {
+    private ArrayNode getDeveloperNode(final List<Developer> developers) {
         ArrayNode results = MAPPER.createArrayNode();
 
         developers.sort(Comparator.comparing(Developer::getUsername));
@@ -198,7 +229,7 @@ public class SearchCommand extends Command {
         return results;
     }
 
-    private List<Ticket> callViewTickets(User user) {
+    private List<Ticket> callViewTickets(final User user) {
         if (user.getRole() == Role.DEVELOPER) {
             TicketFilteringStrategy strategy = new DeveloperTicketViewStrategy();
             return strategy.getTickets(user);
@@ -208,7 +239,8 @@ public class SearchCommand extends Command {
         }
     }
 
-    private static List<String> findFullWords(String text, String search) {
+    private static List<String> findFullWords(final String text,
+                                              final String search) {
         List<String> matches = new ArrayList<>();
 
         String regex = "\\b\\w*" + Pattern.quote(search) + "\\w*\\b";

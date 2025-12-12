@@ -29,6 +29,10 @@ public class AddToMilestoneAction extends Action  {
         this.milestone = other.milestone;
     }
 
+    /**
+     * Create a deep copy of this add-to-milestone action.
+     * @return a new {@code AddToMilestoneAction} instance with the same data
+     */
     @Override
     public Action deepCopy() {
         return new AddToMilestoneAction(this);

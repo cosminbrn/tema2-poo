@@ -1,18 +1,19 @@
 package main.globals.ticketenums;
 
-import lombok.Getter;
-
 public enum Frequency {
     RARE(1),
     OCCASIONAL(2),
     FREQUENT(3),
     ALWAYS(4);
 
-    @Getter
     private final int value;
 
-    Frequency(int value) {
+    Frequency(final int value) {
         this.value = value;
+    }
+
+    public int getValue() {
+        return value;
     }
 
     /**
@@ -20,7 +21,7 @@ public enum Frequency {
      * @param value the string representation of the Frequency
      * @return the corresponding Frequency enum constant
      */
-    public static Frequency fromString(String value) {
+    public static Frequency fromString(final String value) {
         for (Frequency frequency : Frequency.values()) {
             if (frequency.name().equalsIgnoreCase(value)) {
                 return frequency;

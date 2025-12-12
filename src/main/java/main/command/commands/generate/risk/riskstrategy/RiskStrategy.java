@@ -13,7 +13,8 @@ public interface RiskStrategy {
      * @param maxValue the maximum value used for normalization
      * @return the capped impact percentage (0..100)
      */
-    default double calculateImpactFinal(double baseScore, double maxValue) {
+    default double calculateImpactFinal(final double baseScore,
+                                        final double maxValue) {
         return Math.min(OH, (baseScore * OH) / maxValue);
     }
 
@@ -22,8 +23,9 @@ public interface RiskStrategy {
      * @param scores list of scores
      * @return rounded average
      */
-    default double calculateAverageImpact(List<Double> scores) {
-        double res = scores.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+    default double calculateAverageImpact(final List<Double> scores) {
+        double res = scores.stream().mapToDouble(Double::doubleValue)
+                .average().orElse(0.0);
         return Math.round(res * OH) / OH;
     }
 }

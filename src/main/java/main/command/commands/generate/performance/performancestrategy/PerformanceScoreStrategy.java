@@ -36,7 +36,7 @@ public interface PerformanceScoreStrategy {
      * @param currentDay the current day string used by strategies
      * @return the performance score
      */
-    double calculatePerformanceScore(final Developer dev, final String currentDay);
+    double calculatePerformanceScore(Developer dev, String currentDay);
 
     /**
      * Compute the average number of resolved tickets across three types.
@@ -147,8 +147,8 @@ public interface PerformanceScoreStrategy {
             totalTime += ticket.getResolutionTime();
         }
 
-        return Math.round(PERCENT_MULTIPLIER * (totalTime / tickets.size())) /
-                PERCENT_MULTIPLIER;
+        return Math.round(PERCENT_MULTIPLIER * (totalTime / tickets.size()))
+                / PERCENT_MULTIPLIER;
     }
 
     /**

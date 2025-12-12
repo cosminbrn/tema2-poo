@@ -38,51 +38,51 @@ public final class UIFeedbackTicket extends Ticket {
 
         /**
          * Set UI element identifier related to the feedback.
-         * @param uiElementId ui element id
+         * @param uiElementIdValue ui element id
          * @return builder instance
          */
-        public UIFeedbackTicketBuilder setUiElementId(final String uiElementId) {
-            this.uiElementId = uiElementId;
+        public UIFeedbackTicketBuilder setUiElementId(final String uiElementIdValue) {
+            this.uiElementId = uiElementIdValue;
             return this;
         }
 
         /**
          * Set the business value for this feedback ticket.
-         * @param businessValue business value
+         * @param businessValueValue business value
          * @return builder instance
          */
-        public UIFeedbackTicketBuilder setBusinessValue(final BusinessValue businessValue) {
-            this.businessValue = businessValue;
+        public UIFeedbackTicketBuilder setBusinessValue(final BusinessValue businessValueValue) {
+            this.businessValue = businessValueValue;
             return this;
         }
 
         /**
          * Set the usability score.
-         * @param usabilityScore usability score
+         * @param usabilityScoreValue usability score
          * @return builder instance
          */
-        public UIFeedbackTicketBuilder setUsabilityScore(final int usabilityScore) {
-            this.usabilityScore = usabilityScore;
+        public UIFeedbackTicketBuilder setUsabilityScore(final int usabilityScoreValue) {
+            this.usabilityScore = usabilityScoreValue;
             return this;
         }
 
         /**
          * Set the screenshot URL for the feedback.
-         * @param screenshotUrl screenshot URL
+         * @param screenshotUrlValue screenshot URL
          * @return builder instance
          */
-        public UIFeedbackTicketBuilder setScreenshotUrl(final String screenshotUrl) {
-            this.screenshotUrl = screenshotUrl;
+        public UIFeedbackTicketBuilder setScreenshotUrl(final String screenshotUrlValue) {
+            this.screenshotUrl = screenshotUrlValue;
             return this;
         }
 
         /**
          * Set the suggested fix text.
-         * @param suggestedFix suggested fix
+         * @param suggestedFixValue suggested fix
          * @return builder instance
          */
-        public UIFeedbackTicketBuilder setSuggestedFix(final String suggestedFix) {
-            this.suggestedFix = suggestedFix;
+        public UIFeedbackTicketBuilder setSuggestedFix(final String suggestedFixValue) {
+            this.suggestedFix = suggestedFixValue;
             return this;
         }
 

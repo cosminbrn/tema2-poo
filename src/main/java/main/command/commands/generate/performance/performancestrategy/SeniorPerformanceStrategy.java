@@ -19,17 +19,21 @@ public class SeniorPerformanceStrategy implements PerformanceScoreStrategy {
      * @return the performance score
      */
     @Override
-    public double calculatePerformanceScore(final Developer dev, final String currentDay) {
-        List<Ticket> closedTicketsLastMonth = dev.getClosedTicketsFromLastMonth(currentDay);
+    public double calculatePerformanceScore(final Developer dev,
+                                            final String currentDay) {
+        List<Ticket> closedTicketsLastMonth =
+                dev.getClosedTicketsFromLastMonth(currentDay);
         double bonusPoints = SENIOR.getBonusPoints();
         int closedTickets = closedTicketsLastMonth.size();
         int highPriorityTickets =
-                PerformanceScoreStrategy.getHighPriorityTickets(closedTicketsLastMonth);
+                PerformanceScoreStrategy.getHighPriorityTickets(
+                        closedTicketsLastMonth);
         double avgResolutionTime =
-                PerformanceScoreStrategy.averageResolutionTime(closedTicketsLastMonth);
+                PerformanceScoreStrategy.averageResolutionTime(
+                        closedTicketsLastMonth);
         return Math.round(ONE_HUNDRED * (bonusPoints + Math.max(0,
-                POINT_FIVE * closedTickets + 1.0 *
-                        highPriorityTickets - POINT_FIVE * avgResolutionTime)))
+                POINT_FIVE * closedTickets + 1.0 * highPriorityTickets
+                        - POINT_FIVE * avgResolutionTime)))
                 / ONE_HUNDRED;
     }
 }

@@ -8,7 +8,7 @@ import static main.App.MAPPER;
 /**
  * Output strategy for DE-ASSIGNED actions.
  */
-public class DeassignedActionOutputStrategy implements ActionOutputStrategy{
+public class DeassignedActionOutputStrategy implements ActionOutputStrategy {
 
     /**
      * Convert de-assigned action into JSON node.

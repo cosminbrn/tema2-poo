@@ -3,7 +3,13 @@ package main.command.commands.view.history;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import main.command.Command;
-import main.command.commands.view.history.viewtickethistorystrategy.actionoutputstrategy.*;
+import main.command.commands.view.history.viewtickethistorystrategy.actionoutputstrategy.ActionOutputStrategy;
+import main.command.commands.view.history.viewtickethistorystrategy.actionoutputstrategy.AddedToMilestoneActionOutputStrategy;
+import main.command.commands.view.history.viewtickethistorystrategy.actionoutputstrategy.AssignedActionOutputStrategy;
+import main.command.commands.view.history.viewtickethistorystrategy.actionoutputstrategy.DeassignedActionOutputStrategy;
+import main.command.commands.view.history.viewtickethistorystrategy.actionoutputstrategy.RemovedFromDevActionOutputStrategy;
+
+import main.command.commands.view.history.viewtickethistorystrategy.actionoutputstrategy.StatusChangedActionOutputStrategy;
 import main.command.commands.view.history.viewtickethistorystrategy.tickethistorystrategy.DeveloperHistoryStrategy;
 import main.command.commands.view.history.viewtickethistorystrategy.tickethistorystrategy.HistoryFilteringStrategy;
 import main.command.commands.view.history.viewtickethistorystrategy.tickethistorystrategy.ManagerHistoryStrategy;
@@ -27,11 +33,11 @@ public class ViewTicketHistoryCommand extends Command {
 
     /**
      * Execute view ticket history command and append ticket history array to output.
-     * @param input parsed command input
+     * @param input  parsed command input
      * @param output JSON array to append results to
      */
     @Override
-    public void execute(CommandInput input, ArrayNode output) {
+    public void execute(final CommandInput input, final ArrayNode output) {
         Database db = Database.getInstance();
 
         if (db.getUserByUsername(input.getUsername()) == null) {
@@ -43,20 +49,21 @@ public class ViewTicketHistoryCommand extends Command {
 
         User user = db.getUserByUsername(input.getUsername());
 
-
         HistoryFilteringStrategy strategy = switch (user.getRole()) {
             case DEVELOPER -> new DeveloperHistoryStrategy();
-            case MANAGER ->  new ManagerHistoryStrategy();
+            case MANAGER -> new ManagerHistoryStrategy();
             default -> null;
         };
 
         if (strategy == null) {
-            addErrorOutput(input, output, ErrorMessages.REPORTERS_NOT_ALLOWED.getErrorMessage());
+            addErrorOutput(input, output,
+                    ErrorMessages.REPORTERS_NOT_ALLOWED.getErrorMessage());
             return;
         }
 
         List<Ticket> tickets = strategy.getTickets(user);
-        tickets.sort(Comparator.comparing(Ticket::getCreatedAt).thenComparing(Ticket::getId));
+        tickets.sort(Comparator.comparing(Ticket::getCreatedAt)
+                .thenComparing(Ticket::getId));
 
         ArrayNode ticketHistoryArray = MAPPER.createArrayNode();
         for (Ticket ticket : tickets) {
@@ -65,7 +72,8 @@ public class ViewTicketHistoryCommand extends Command {
             Ticket actualliveTicket = db.getTicketById(ticket.getId());
             ticketNode.put("id", ticket.getId());
             ticketNode.put("title", ticket.getTitle());
-            ticketNode.put("status", actualliveTicket.getStatus().getStatusName());
+            ticketNode.put("status",
+                    actualliveTicket.getStatus().getStatusName());
 
             ArrayNode actionsArray = MAPPER.createArrayNode();
             for (Action action : ticket.getActions()) {
@@ -99,8 +107,8 @@ public class ViewTicketHistoryCommand extends Command {
 
     /**
      * Helper to append ticket history to the output array.
-     * @param input parsed command input
-     * @param output JSON array to append results to
+     * @param input              parsed command input
+     * @param output             JSON array to append results to
      * @param ticketHistoryArray ticket history array to include
      */
     public void addOutput(final CommandInput input,

@@ -82,6 +82,9 @@ public class GenerateTicketRiskReportCommand extends Command {
                 case MEDIUM -> mediumCount++;
                 case HIGH -> highCount++;
                 case CRITICAL -> criticalCount++;
+                default -> {
+                    // ignore other priorities
+                }
             }
         }
 
@@ -103,7 +106,8 @@ public class GenerateTicketRiskReportCommand extends Command {
         String featureRisk =
                 RiskScore.fromInt((int) featureStrategy.calculateImpact(featureTickets)).getName();
         String uiRisk =
-                RiskScore.fromInt((int) uiFeedBackStrategy.calculateImpact(uiFeedbackTickets)).getName();
+                RiskScore.fromInt((int) uiFeedBackStrategy
+                        .calculateImpact(uiFeedbackTickets)).getName();
         riskByType.put("BUG", bugRisk);
         riskByType.put("FEATURE_REQUEST", featureRisk);
         riskByType.put("UI_FEEDBACK", uiRisk);
