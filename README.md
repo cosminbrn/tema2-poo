@@ -50,6 +50,10 @@
 
 - We have a lot of `Requests` coming in that contain a big enough logic behind them to prompt me to use this pattern. Through it, we create different stand-alone Objects to help us process the requests using the global `Singletons` to help us.
 
+### Specification
+
+- The search command requires a lot of if checks, so I decided to implement the dad of the if condition for the search command.
+
 ## Core classes and responsibilities
 
 ### Engine / Database

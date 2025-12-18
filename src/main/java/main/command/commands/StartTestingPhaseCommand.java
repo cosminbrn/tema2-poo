@@ -22,8 +22,6 @@ public class StartTestingPhaseCommand extends Command {
     @Override
     public void execute(final CommandInput commandInput,
                         final ArrayNode output) {
-        Database db = Database.getInstance();
-
         List<Milestone> milestones = db.getMilestones();
         for (Milestone milestone : milestones) {
             if (milestone.getStatus() == MilestoneState.ACTIVE) {

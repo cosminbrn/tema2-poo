@@ -39,9 +39,10 @@ public class ReportTicketCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
+
         ParamsInput params = commandInput.getParams();
         TicketType type = TicketType.valueOf(params.getType());
+        User currentUser = db.getUserByUsername(commandInput.getUsername());
 
         if (type != BUG && commandInput.getParams().getReportedBy().isEmpty()) {
             addErrorOutput(commandInput, output,
@@ -55,7 +56,7 @@ public class ReportTicketCommand extends Command {
             return;
         }
 
-        User currentUser = db.getUserByUsername(commandInput.getUsername());
+
         if (currentUser == null) {
             addErrorOutput(commandInput, output,
                     String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),

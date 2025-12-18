@@ -18,7 +18,6 @@ public class LostInvestorsCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Engine engine = Engine.getInstance();
-        engine.setCurrentState(BANKRUPT);
+        Engine.setCurrentStage(BANKRUPT);
     }
 }

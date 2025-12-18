@@ -124,8 +124,4 @@ public final class Engine {
             currentStageStartDate = currentDay;
         }
     }
-
-    public void setCurrentState(final WorkflowStage workflowStage) {
-        currentStage = workflowStage;
-    }
 }
