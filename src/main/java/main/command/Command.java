@@ -75,7 +75,7 @@ public abstract class Command {
                     ErrorMessages.REQUIRED_ROLE_DEVELOPER.getErrorMessage(),
                     userRole.getRoleName().toUpperCase()));
             return false;
-        } else if (!roleList.isEmpty()) {
+        } else if (roleList.size() == 2) {
             addErrorOutput(input, output,
                     ErrorMessages.REPORTERS_NOT_ALLOWED.getErrorMessage());
             return false;

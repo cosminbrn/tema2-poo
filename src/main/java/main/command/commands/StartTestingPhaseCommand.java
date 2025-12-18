@@ -8,6 +8,7 @@ import main.fileio.CommandInput;
 import main.globals.WorkflowStage;
 import main.globals.commandenums.ErrorMessages;
 import main.globals.milestoneenums.MilestoneState;
+import main.globals.userenums.Role;
 import main.milestones.Milestone;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class StartTestingPhaseCommand extends Command {
     @Override
     public void execute(final CommandInput commandInput,
                         final ArrayNode output) {
+        if (!validateCommand(commandInput, output, Role.MANAGER)) {
+            return;
+        }
         List<Milestone> milestones = db.getMilestones();
         for (Milestone milestone : milestones) {
             if (milestone.getStatus() == MilestoneState.ACTIVE) {

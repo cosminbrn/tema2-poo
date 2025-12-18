@@ -22,27 +22,13 @@ public class ViewNotificationsCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
-
-        final User user = db.getUserByUsername(commandInput.getUsername());
-        if (user == null) {
-            addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                            commandInput.getUsername()));
-            return;
-        }
-
-        Role role = user.getRole();
-        if (role != Role.DEVELOPER && role != Role.MANAGER) {
-            addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.REQUIRED_ROLE_DEVELOPER.getErrorMessage(),
-                            role.getRoleName().toUpperCase()));
+        if (!validateCommand(commandInput, output, Role.DEVELOPER)) {
             return;
         }
 
         ArrayNode notifications = MAPPER.createArrayNode();
 
-        Developer dev = (Developer) user;
+        Developer dev = (Developer) db.getUserByUsername(commandInput.getUsername());
         if (dev.getNotifications() != null) {
             for (String notification : dev.getNotifications()) {
                 notifications.add(notification);

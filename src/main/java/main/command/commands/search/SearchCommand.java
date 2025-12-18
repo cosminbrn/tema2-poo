@@ -39,16 +39,11 @@ public class SearchCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
-
-        User currentUser = db.getUserByUsername(commandInput.getUsername());
-        if (currentUser == null) {
-            addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                            commandInput.getUsername()));
+        if (!validateCommand(commandInput, output, Role.DEVELOPER, Role.MANAGER)) {
             return;
         }
 
+        User currentUser = db.getUserByUsername(commandInput.getUsername());
         if (currentUser.getRole() == Role.DEVELOPER) {
             Developer dev = (Developer) currentUser;
             FiltersInput filters = commandInput.getFilters();

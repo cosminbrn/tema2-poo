@@ -29,20 +29,7 @@ public class UndoAssignTicketCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
-
-        if (db.getUserByUsername(commandInput.getUsername()) == null) {
-            addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                            commandInput.getUsername()));
-            return;
-        }
-
-        Role role = db.getUserByUsername(commandInput.getUsername()).getRole();
-        if (role != DEVELOPER) {
-            addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.REQUIRED_ROLE_DEVELOPER.getErrorMessage(),
-                            role.getRoleName().toUpperCase()));
+        if (!validateCommand(commandInput, output, DEVELOPER)) {
             return;
         }
 

@@ -14,6 +14,7 @@ import main.globals.ticketenums.BusinessValue;
 import main.globals.ticketenums.CustomerDemand;
 import main.globals.ticketenums.Frequency;
 import main.globals.ticketenums.Severity;
+import main.globals.userenums.Role;
 import main.tickets.BugTicket;
 import main.tickets.FeatureRequestTicket;
 import main.tickets.Ticket;
@@ -39,11 +40,12 @@ public class ReportTicketCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
+        if (!validateCommand(commandInput, output, Role.REPORTER)) {
+            return;
+        }
 
         ParamsInput params = commandInput.getParams();
         TicketType type = TicketType.valueOf(params.getType());
-        User currentUser = db.getUserByUsername(commandInput.getUsername());
-
         if (type != BUG && commandInput.getParams().getReportedBy().isEmpty()) {
             addErrorOutput(commandInput, output,
                     ErrorMessages.ANONYMOUS_REPORTING_ONLY_FOR_BUGS.getErrorMessage());
@@ -53,14 +55,6 @@ public class ReportTicketCommand extends Command {
         if (Engine.getCurrentStage() != TESTING) {
             addErrorOutput(commandInput, output,
                     ErrorMessages.REPORT_ONLY_DURING_TESTING.getErrorMessage());
-            return;
-        }
-
-
-        if (currentUser == null) {
-            addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                            commandInput.getUsername()));
             return;
         }
 

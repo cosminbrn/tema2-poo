@@ -25,21 +25,7 @@ public class ChangeStatusCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
-
-        if (db.getUserByUsername(commandInput.getUsername()) == null) {
-            String msg = String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                    commandInput.getUsername());
-            addErrorOutput(commandInput, output, msg);
-            return;
-        }
-
-        User user = db.getUserByUsername(commandInput.getUsername());
-        Role role = user.getRole();
-        if (role != DEVELOPER) {
-            String msg = String.format(ErrorMessages.REQUIRED_ROLE_DEVELOPER.getErrorMessage(),
-                    role.getRoleName());
-            addErrorOutput(commandInput, output, msg);
+        if (!validateCommand(commandInput, output, Role.DEVELOPER)) {
             return;
         }
 

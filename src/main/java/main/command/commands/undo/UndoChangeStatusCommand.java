@@ -27,21 +27,7 @@ public class UndoChangeStatusCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
-
-        if (db.getUserByUsername(commandInput.getUsername()) == null) {
-            addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                            commandInput.getUsername()));
-            return;
-        }
-
-        User user = db.getUserByUsername(commandInput.getUsername());
-        Role role = user.getRole();
-        if (role != DEVELOPER) {
-            addErrorOutput(commandInput, output,
-                    String.format(REQUIRED_ROLE_DEVELOPER.getErrorMessage(),
-                            role.getRoleName()));
+        if (!validateCommand(commandInput, output, Role.DEVELOPER)) {
             return;
         }
 

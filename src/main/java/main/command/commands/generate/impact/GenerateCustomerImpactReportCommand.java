@@ -32,22 +32,7 @@ public class GenerateCustomerImpactReportCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
-
-        if (db.getUserByUsername(commandInput.getUsername()) == null) {
-            String err = String.format(
-                    ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                    commandInput.getUsername());
-            addErrorOutput(commandInput, output, err);
-            return;
-        }
-
-        Role role = db.getUserByUsername(commandInput.getUsername()).getRole();
-        if (role != Role.MANAGER) {
-            String err = String.format(
-                    ErrorMessages.REQUIRED_ROLE_MANAGER.getErrorMessage(),
-                    role.getRoleName().toUpperCase());
-            addErrorOutput(commandInput, output, err);
+        if (!validateCommand(commandInput, output, Role.MANAGER)) {
             return;
         }
 

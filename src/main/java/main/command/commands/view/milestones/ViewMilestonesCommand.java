@@ -9,6 +9,7 @@ import main.command.commands.view.milestones.viewmilestonesstrategy.MilestoneFil
 import main.globals.commandenums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
+import main.globals.userenums.Role;
 import main.milestones.Milestone;
 import main.users.User;
 
@@ -27,21 +28,16 @@ public class ViewMilestonesCommand extends Command {
 
     /**
      * Execute view milestones command and append milestones array to output.
-     * @param input parsed command input
+     * @param commandInput parsed command input
      * @param output JSON array to append results to
      */
     @Override
-    public void execute(final CommandInput input, final ArrayNode output) {
-        Database db = Database.getInstance();
-
-        if (db.getUserByUsername(input.getUsername()) == null) {
-            addErrorOutput(input, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                            input.getUsername()));
+    public void execute(final CommandInput commandInput, final ArrayNode output) {
+        if (!validateCommand(commandInput, output, Role.MANAGER, Role.DEVELOPER)) {
             return;
         }
 
-        User user = db.getUserByUsername(input.getUsername());
+        User user = db.getUserByUsername(commandInput.getUsername());
 
 
         MilestoneFilteringStrategy strategy = switch (user.getRole()) {
@@ -55,7 +51,7 @@ public class ViewMilestonesCommand extends Command {
                 .thenComparing(Milestone::getName));
         ArrayNode milestonesArray = MAPPER.createArrayNode();
         for (Milestone milestone : milestones) {
-            LocalDate date = LocalDate.parse(input.getTimestamp());
+            LocalDate date = LocalDate.parse(commandInput.getTimestamp());
             milestone.updateMilestone(date);
             ObjectNode milestoneNode = MAPPER.createObjectNode();
 
@@ -69,9 +65,9 @@ public class ViewMilestonesCommand extends Command {
             milestoneNode.put("status", milestone.getStatus().getState());
             milestoneNode.put("isBlocked", milestone.isBlocked());
             milestoneNode.put("daysUntilDue",
-                    milestone.calculateDaysUntilDue(LocalDate.parse(input.getTimestamp())));
+                    milestone.calculateDaysUntilDue(LocalDate.parse(commandInput.getTimestamp())));
             milestoneNode.put("overdueBy",
-                    milestone.calculateOverdueBy(LocalDate.parse(input.getTimestamp())));
+                    milestone.calculateOverdueBy(LocalDate.parse(commandInput.getTimestamp())));
             milestoneNode.set("openTickets", MAPPER.valueToTree(milestone.getOpenTickets()));
             milestoneNode.set("closedTickets",
                     MAPPER.valueToTree(milestone.getSortedClosedTickets()));
@@ -101,7 +97,7 @@ public class ViewMilestonesCommand extends Command {
 
             milestonesArray.add(milestoneNode);
         }
-        addOutput(input, output, milestonesArray);
+        addOutput(commandInput, output, milestonesArray);
     }
 
     /**

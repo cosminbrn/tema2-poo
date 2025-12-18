@@ -25,7 +25,9 @@ public class AddCommentCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
+        if (!validateCommand(commandInput, output, Role.REPORTER, Role.DEVELOPER)) {
+            return;
+        }
 
         int ticketID = commandInput.getTicketID();
         Ticket ticket = db.getTicketById(ticketID);

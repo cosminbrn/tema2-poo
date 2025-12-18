@@ -16,6 +16,7 @@ import main.command.commands.view.history.viewtickethistorystrategy.tickethistor
 import main.globals.commandenums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
+import main.globals.userenums.Role;
 import main.tickets.Ticket;
 import main.tickets.actions.Action;
 import main.users.User;
@@ -33,21 +34,16 @@ public class ViewTicketHistoryCommand extends Command {
 
     /**
      * Execute view ticket history command and append ticket history array to output.
-     * @param input  parsed command input
+     * @param commandInput  parsed command input
      * @param output JSON array to append results to
      */
     @Override
-    public void execute(final CommandInput input, final ArrayNode output) {
-        Database db = Database.getInstance();
-
-        if (db.getUserByUsername(input.getUsername()) == null) {
-            addErrorOutput(input, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                            input.getUsername()));
+    public void execute(final CommandInput commandInput, final ArrayNode output) {
+        if (!validateCommand(commandInput, output, Role.DEVELOPER, Role.MANAGER)) {
             return;
         }
 
-        User user = db.getUserByUsername(input.getUsername());
+        User user = db.getUserByUsername(commandInput.getUsername());
 
         HistoryFilteringStrategy strategy = switch (user.getRole()) {
             case DEVELOPER -> new DeveloperHistoryStrategy();
@@ -56,7 +52,7 @@ public class ViewTicketHistoryCommand extends Command {
         };
 
         if (strategy == null) {
-            addErrorOutput(input, output,
+            addErrorOutput(commandInput, output,
                     ErrorMessages.REPORTERS_NOT_ALLOWED.getErrorMessage());
             return;
         }
@@ -102,7 +98,7 @@ public class ViewTicketHistoryCommand extends Command {
             ticketHistoryArray.add(ticketNode);
         }
 
-        addOutput(input, output, ticketHistoryArray);
+        addOutput(commandInput, output, ticketHistoryArray);
     }
 
     /**

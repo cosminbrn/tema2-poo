@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import main.command.Command;
 import main.database.Database;
 import main.fileio.CommandInput;
+import main.globals.userenums.Role;
 import main.tickets.Ticket;
 import main.users.User;
 
@@ -22,7 +23,10 @@ public class UndoAddCommentCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
+        if (!validateCommand(commandInput, output, Role.REPORTER, Role.DEVELOPER)) {
+            return;
+        }
+
         Ticket ticket = db.getTicketById(commandInput.getTicketID());
         if (ticket == null) {
             return;

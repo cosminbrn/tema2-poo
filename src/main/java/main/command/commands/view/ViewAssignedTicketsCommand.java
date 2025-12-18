@@ -28,21 +28,15 @@ public class ViewAssignedTicketsCommand extends Command {
      */
     @Override
     public void execute(final CommandInput input, final ArrayNode output) {
-        Database db = Database.getInstance();
+        if (!validateCommand(input, output, Role.DEVELOPER)) {
+            return;
+        }
         List<Ticket> tickets = new ArrayList<>();
 
         for (Ticket ticket : db.getTickets()) {
             if (ticket.getAssignedTo().equals(input.getUsername())) {
                 tickets.add(ticket);
             }
-        }
-
-        User user = db.getUserByUsername(input.getUsername());
-        if (user.getRole() != Role.DEVELOPER) {
-            addErrorOutput(input, output,
-                    String.format(ErrorMessages.REQUIRED_ROLE_DEVELOPER.getErrorMessage(),
-                            user.getRole().getRoleName().toUpperCase()));
-            return;
         }
 
 

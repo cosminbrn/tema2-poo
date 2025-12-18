@@ -41,21 +41,7 @@ public class AppStabilityReportCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
-        Database db = Database.getInstance();
-
-        final User user = db.getUserByUsername(commandInput.getUsername());
-        if (user == null) {
-            addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                            commandInput.getUsername()));
-            return;
-        }
-
-        Role role = user.getRole();
-        if (role != Role.MANAGER) {
-            addErrorOutput(commandInput, output,
-                    String.format(ErrorMessages.REQUIRED_ROLE_MANAGER.getErrorMessage(),
-                            role.getRoleName().toUpperCase()));
+        if (!validateCommand(commandInput, output, Role.MANAGER)) {
             return;
         }
 

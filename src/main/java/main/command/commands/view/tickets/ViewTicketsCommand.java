@@ -10,6 +10,7 @@ import main.command.commands.view.tickets.viewticketsstrategy.TicketFilteringStr
 import main.globals.commandenums.ErrorMessages;
 import main.database.Database;
 import main.fileio.CommandInput;
+import main.globals.userenums.Role;
 import main.tickets.Ticket;
 import main.users.User;
 
@@ -35,21 +36,16 @@ public class ViewTicketsCommand extends Command {
 
     /**
      * Execute view tickets command and append the resulting tickets array.
-     * @param input  parsed command input
+     * @param commandInput  parsed command input
      * @param output JSON array to append results to
      */
     @Override
-    public void execute(final CommandInput input, final ArrayNode output) {
-
-        User user = db.getUserByUsername(input.getUsername());
-
-        if (db.getUserByUsername(input.getUsername()) == null) {
-            addErrorOutput(input, output,
-                    String.format(ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-                            input.getUsername()));
+    public void execute(final CommandInput commandInput, final ArrayNode output) {
+        if (!validateCommand(commandInput, output, Role.MANAGER, Role.DEVELOPER, Role.REPORTER)) {
             return;
         }
 
+        User user = db.getUserByUsername(commandInput.getUsername());
         TicketFilteringStrategy strategy = switch (user.getRole()) {
             case REPORTER -> new ReporterTicketViewStrategy();
             case DEVELOPER -> new DeveloperTicketViewStrategy();
@@ -87,7 +83,7 @@ public class ViewTicketsCommand extends Command {
 
             ticketsArray.add(ticketNode);
         }
-        addOutput(input, output, ticketsArray);
+        addOutput(commandInput, output, ticketsArray);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import main.command.Command;
 import main.engine.Engine;
 import main.fileio.CommandInput;
+import main.globals.userenums.Role;
 
 import static main.globals.WorkflowStage.BANKRUPT;
 
@@ -18,6 +19,10 @@ public class LostInvestorsCommand extends Command {
      */
     @Override
     public void execute(final CommandInput commandInput, final ArrayNode output) {
+        if (!validateCommand(commandInput, output, Role.MANAGER)) {
+            return;
+        }
+
         Engine.setCurrentStage(BANKRUPT);
     }
 }
