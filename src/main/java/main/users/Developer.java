@@ -14,11 +14,6 @@ import main.globals.userenums.Seniority;
 import java.util.ArrayList;
 import java.util.List;
 
-import static main.globals.userenums.ExpertiseArea.FRONTEND;
-import static main.globals.userenums.ExpertiseArea.BACKEND;
-import static main.globals.userenums.ExpertiseArea.DB;
-import static main.globals.userenums.ExpertiseArea.DESIGN;
-import static main.globals.userenums.ExpertiseArea.DEVOPS;
 import static main.globals.userenums.Role.DEVELOPER;
 
 /**
@@ -52,18 +47,17 @@ public final class Developer extends User implements Observer {
      * @return true if the developer has expertise in the area, false otherwise
      */
     public boolean hasExpertise(final ExpertiseArea ticketExpertiseArea) {
-        if (this.expertiseArea == FRONTEND) {
-            return ticketExpertiseArea == FRONTEND || ticketExpertiseArea == DESIGN;
-        } else if (this.expertiseArea == DESIGN) {
-            return ticketExpertiseArea == DESIGN || ticketExpertiseArea == FRONTEND;
-        } else if (this.expertiseArea == BACKEND) {
-            return ticketExpertiseArea == BACKEND || ticketExpertiseArea == DB;
-        } else if (this.expertiseArea == DB) {
-            return ticketExpertiseArea == DB;
-        } else if (this.expertiseArea == DEVOPS) {
-            return ticketExpertiseArea == DEVOPS;
-        }
-        return true;
+        if (this.expertiseArea == ExpertiseArea.FRONTEND) {
+            return ticketExpertiseArea == ExpertiseArea.FRONTEND || ticketExpertiseArea == ExpertiseArea.DESIGN;
+        } else if (this.expertiseArea == ExpertiseArea.DESIGN) {
+            return ticketExpertiseArea == ExpertiseArea.DESIGN || ticketExpertiseArea == ExpertiseArea.FRONTEND;
+        } else if (this.expertiseArea == ExpertiseArea.BACKEND) {
+            return ticketExpertiseArea == ExpertiseArea.BACKEND || ticketExpertiseArea == ExpertiseArea.DB;
+        } else if (this.expertiseArea == ExpertiseArea.DB) {
+            return ticketExpertiseArea == ExpertiseArea.DB;
+        } else if (this.expertiseArea == ExpertiseArea.DEVOPS) {
+            return ticketExpertiseArea == ExpertiseArea.DEVOPS;
+        } else return this.expertiseArea == ExpertiseArea.FULLSTACK;
     }
 
     /**
