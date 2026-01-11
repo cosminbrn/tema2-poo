@@ -1,28 +1,34 @@
 ﻿
-> *From simulations, fighting animal movement logic, to solving imaginary bug tickets, POO takes me everywhere*
+<p align="center">
+  <img src="https://i.redd.it/7pp55ytrrpy31.png" alt="Description of image">
+  <img src="https://flatlogic.com/blog/wp-content/uploads/2022/01/f250f68dfec6622f7d572c09171607c5-2.png">
+</p>
 
-# Project overview - Baroana Cosmin George 323CA Tema 2 POO
+> *I've never spent more time for only 2 points for a course*
 
-- Bug Tracker Ticket Pro Solver
+# Project Overview - Baroană Cosmin George 323CA Tema 2 POO
+
+- Bug Ticket Handler for companies that allow the employees to create and handle different bug tickets. Provides high-ranking employees with an overview of the company's statistics.
 
 ## Table of Contents:
-- High-level architecture and package responsibilities, explaining the design patterns used.
-- Class-by-class summaries for core entities.
-- Key method descriptions.
-- Runtime/workflow: initialization, command processing, day by day processing, outputs.
-- Important behaviors, special-cases and edge-case notes / assumptions.
+- [High-level architecture and package responsibilities](#high-level-architecture-and-package-resposibilities)
+- [Design Patterns](#design-patterns)
+- [Core classes and responsabilities](#core-classes-and-responsibilities)
+- [Runtime and workflow.](#runtime-and-workflow)
+- [Debugging](#debugging)
+- [Use of LLM](#use-of-llm)
 
 ## High-level architecture and package resposibilities
 
-- `main` — packet that includes everything logic-wise. `App` represents the entry point class for the aforementioned logic, initializes useful fields, loads Inputs, calls the Engine of the application.
+- `main` — packet that includes all the logic handling classes. `App` represents the entry point for the aforementioned logic, initializes useful fields, loads Inputs, calls the Engine of the application.
 - `fileio` — helpers and utilities for parsing input JSON and serializing output JSON nodes. Helps the App class to parse input.
 - `engine` - contains the `Engine` class (a singleton), responsible for iterating through our ticket manager simulator day by day, command by command.
-- `command` - houses all of the commands and the Command Pattern implementation, as well as the `Strategies` needed for some of the commands to work.
-- `database` - houses the `Database` class (a singleton), housing universal information about the different entites that are participating in the current ticket processing simulation.
-- `globals` - houses global interfaces and enums that are used all over the project, that are not packet specific.
-- `milestones` - contains the `Milestone` class, which defines a simple Milestone, as well as useful enums for it.
+- `command` - houses all the commands and the Command Pattern implementation, as well as the `Strategies` needed for some commands to work.
+- `database` - houses the `Database` class (a singleton), housing universal information about the different participating entities in the current ticket processing simulation.
+- `globals` - houses global interfaces and enums that are used all over the project, that are not packet-specific.
+- `milestones` - contains the `Milestone` class, which defines a simple Milestone.
 - `tickets` - contains the abstract `Ticket` class, the different types of tickets and helper classes that are useful for it. All tickets are built using a builder.
-- `users` - contains the models for the different types of Users, as well as useful Enums specific to them.
+- `users` - contains the models for the different types of Users.
 
 ## Design Patterns
 
@@ -32,11 +38,11 @@
 
 ### Builder
 
-- I've decided to use the Builder in the `Ticket` class becuase of the fact that tickets have optional fields. I've chose to disregard the Director because I didn't find it necessary at this moment in time. Same with `Milestone`, even though it is not as restrictive.
+- I've decided to use the Builder in the `Ticket` class because tickets have optional fields. I've chosen to disregard the Director because I did not find it necessary at this moment in time. Same with `Milestone`, even though it is not as restrictive.
 
 ### Observer
 
-- I've decided to use the Observer to implement the `Notification` logic for obvious reasons. I wanted each of the existing Developer's that were affected by the Notification system to have an ease to manage way of adding notifications to their "inbox".
+- I've decided to use the Observer to implement the `Notification` logic for obvious reasons. I wanted each of the existing Developers that were affected by the Notification system to have an easy way to manage notifications.
 
 ### Factory and Static Factory
 
@@ -44,15 +50,19 @@
 
 ### Strategy
 
-- Different `Commands` needed different `Strategies` depending on the type of User who called them. What better way to distinguish between `User` restrictions while mantaing the same overarching logic that the `Strategy` command pattern. For example, each `Generate` advance command comes with different types of formulas, for which I devised special classes that I choose depeding on the formula required using the `Strategy` Pattern. I plan to use it more wisely in the future submissions, but for now this is what I could come up with.
+- Different `Commands` needed different `Strategies` depending on the type of User who called them. What better way to distinguish between `User` restrictions while maintaining the same overarching logic than the `Strategy` command pattern. For example, each `Generate` advanced command comes with different types of formulas, for which I devised special classes that I choose depending on the formula required using the `Strategy` Pattern. I plan to use it more wisely in the future submissions, but for now this is what I could come up with.
 
 ### Command 
 
-- We have a lot of `Requests` coming in that contain a big enough logic behind them to prompt me to use this pattern. Through it, we create different stand-alone Objects to help us process the requests using the global `Singletons` to help us.
+- We have a lot of requests coming in that contain a big enough logic behind them to prompt me to use this pattern. Through it, we create different stand-alone Objects to help us process the requests using the global `Singletons`.
 
 ### Specification
 
 - The search command requires a lot of if checks, so I decided to implement the dad of the if condition for the search command.
+
+### Memento
+
+- Used to save snapshots of `Tickets` for different history-related commands.
 
 ## Core classes and responsibilities
 
@@ -64,13 +74,12 @@
   - Key methods:
     - `void run(String inputPath, String outputPath)` — main loop that processes commands sequentially.
     - `void reset()` — clear and reinitialize between simulations.
-  - Holds state for whether a simulation is active.
+  - Holds a state for whether a simulation is active.
 
 - `Database` (singleton)
   - Responsibilities: global registry of environment entities and convenience accessors. It contains the entire data given as an input.
   - Key methods:
     - `void reset()` — clear and reinitialize between simulations.
-
   - Holds authoritative state for cells and entities.
 
 ### Command / CommandFactory
@@ -80,20 +89,18 @@
   - Key method:
     - `void execute(CommandInput input, ArrayNode outputArray)` — performs the command's action, mutating state and appending results/errors to output.
 
-
 ### Ticket
-- `Ticket` (abstract Class). I'm really proud of this class, even though it is enourmous I challeged myself to use different concepts that I am not used to and I think that the end result is acceptable.
+- `Ticket` (abstract Class). I'm really proud of this class, even though it is enormous I challenged myself to use different concepts that I am not used to, and I think that the result is acceptable.
   - Responsibilities: encapsulates a ticket's properties and behaviors.
   - Key ideas:
     - Uses the Builder pattern to handle optional fields.
-    - Uses a record to define the comments structure.
+    - Uses a record to define the comment structure.
     - Uses a Static Factory to create actions associated with the ticket.
     - Uses generic types.
   - Key methods:
     - `<T> void executeAddAction()` — takes a dynamic input and creates a new action using the Action Factory.
-    - `void addAction()` — adds an action to the ticket's action list, overloaded for the differnet types of action inputs.
+    - `void addAction()` — adds an action to the ticket's action list, overloaded for the different types of action inputs.
   - Action classes implement deepCopying via constructors.
-
 
 ### User and subclasses
 
@@ -104,8 +111,7 @@
   - Key methods:
     - `void clearNotifications(Notification notification)` — Developer specific, uses the clear() method to clear the Developer's notifications list.
 
-
-## Runtime/workflow
+## Runtime and workflow
 
 1. Initialization
    - Input JSON describes the commands to run, parsed by `InputLoader`.
@@ -118,17 +124,17 @@
    - For each parsed command, `Command.execute(input, outputArray)` runs the appropriate handler.
    - Each handler validates preconditions and either mutates state or appends an error message.
 
-3. State updates & ticks
+3. State updates and ticks
    - Some commands prefer to defer state updates until the end of the day, which is handled by different reserve fields.
-   - Computed changes are ran from the `Database` at the `START` of each day.
-   - We ignore mistakes in the tests by running the commands in cronological order, and if they are not in cronological order, we just run them if they were supposed to be ran on a day before the current day.
+   - Computed changes are run from the `Database` at the start of each day.
+   - We ignore mistakes in the tests by running the commands in chronological order, and if they are not in chronological order, we just run them if they were supposed to be ran on a day before the current day.
 
 ## Debugging
 
-- ALL the debugging was done using the IntelliJ debugger because I love it and it is really fun. One of the main reasons I preferred Singletons in my project.
+- ALL the debugging was done using the IntelliJ debugger because I love it, and it is really fun. One of the main reasons I preferred Singletons in my project.
 
 ## Use of LLM
-- All the code inside this project and all the logic was thought out by me. All the LLM prompts used during the development of this homework were used for project structure opitmizations, understanding Intellij, learning new ways to solve problems more efficiently (for example learning to use Jackson or Lombok and other dependecies)(this README is NOT created by AI).
+- I thought out all the code inside this project and all the logic. All the LLM prompts used during the development of this homework were used for project structure optimizations, understanding Intellij, learning new ways to solve problems more efficiently (for example, learning to use Jackson or Lombok and other dependencies). This README is NOT created by AI.
 - Examples of prompts used:
   - "is lombok used in the industry java big projects? should I use the @Getter @Setter annotations in my homework?"
   - "in java, does Map.put() add the new entry in alphabetical order?"
