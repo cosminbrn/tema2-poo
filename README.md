@@ -4,28 +4,26 @@
   <img src="https://flatlogic.com/blog/wp-content/uploads/2022/01/f250f68dfec6622f7d572c09171607c5-2.png">
 </p>
 
-> *I've never spent more time for only 2 points for a course*
-
 # Project Overview - Baroană Cosmin George 323CA Tema 2 POO
 
 - Bug Ticket Handler for companies that allow the employees to create and handle different bug tickets. Provides high-ranking employees with an overview of the company's statistics.
 
 ## Table of Contents:
-- [High-level architecture and package responsibilities](#high-level-architecture-and-package-resposibilities)
+- [High-level architecture and package responsibilities](#high-level-architecture-and-package-responsibilities)
 - [Design Patterns](#design-patterns)
-- [Core classes and responsabilities](#core-classes-and-responsibilities)
+- [Core classes and responsibilities](#core-classes-and-responsibilities)
 - [Runtime and workflow.](#runtime-and-workflow)
 - [Debugging](#debugging)
 - [Use of LLM](#use-of-llm)
 
-## High-level architecture and package resposibilities
+## High-level architecture and package responsibilities
 
-- `main` — packet that includes all the logic handling classes. `App` represents the entry point for the aforementioned logic, initializes useful fields, loads Inputs, calls the Engine of the application.
+- `main` — package that includes all the logic handling classes. `App` represents the entry point for the aforementioned logic, initializes useful fields, loads Inputs, calls the Engine of the application.
 - `fileio` — helpers and utilities for parsing input JSON and serializing output JSON nodes. Helps the App class to parse input.
 - `engine` - contains the `Engine` class (a singleton), responsible for iterating through our ticket manager simulator day by day, command by command.
 - `command` - houses all the commands and the Command Pattern implementation, as well as the `Strategies` needed for some commands to work.
 - `database` - houses the `Database` class (a singleton), housing universal information about the different participating entities in the current ticket processing simulation.
-- `globals` - houses global interfaces and enums that are used all over the project, that are not packet-specific.
+- `globals` - houses global interfaces and enums that are used all over the project, that are not package-specific.
 - `milestones` - contains the `Milestone` class, which defines a simple Milestone.
 - `tickets` - contains the abstract `Ticket` class, the different types of tickets and helper classes that are useful for it. All tickets are built using a builder.
 - `users` - contains the models for the different types of Users.
@@ -34,7 +32,7 @@
 
 ### Singleton
 
-- I've used the singleton to implement the `Database` and the `Engine` classes because they are the brain and the heart of the whole project. I want there to be only one of each. However, the biggest reason that made me choose to use the Singleton Design Pattern for these 2 specific classes was because of the ease of debugging that this feature brings to the table. Being able to see all the entities inside the Project at any point inside the IntelliJ debugger is amazing.
+- I've used the singleton to implement the `Database` and the `Engine` classes because they are the brain and the heart of the whole project. I want there to be only one of each. However, the biggest reason that made me choose to use the Singleton Design Pattern for these 2 specific classes was because of the ease of debugging that this feature brings to the table. Being able to see all the entities inside the Project at any point inside the IntelliJ debugger is very useful for inspecting state during execution.
 
 ### Builder
 
@@ -42,7 +40,7 @@
 
 ### Observer
 
-- I've decided to use the Observer to implement the `Notification` logic for obvious reasons. I wanted each of the existing Developers that were affected by the Notification system to have an easy way to manage notifications.
+- I've decided to use the Observer to implement the `Notification` logic. I wanted each of the existing Developers that were affected by the Notification system to have an easy way to manage notifications.
 
 ### Factory and Static Factory
 
@@ -50,7 +48,7 @@
 
 ### Strategy
 
-- Different `Commands` needed different `Strategies` depending on the type of User who called them. What better way to distinguish between `User` restrictions while maintaining the same overarching logic than the `Strategy` command pattern. For example, each `Generate` advanced command comes with different types of formulas, for which I devised special classes that I choose depending on the formula required using the `Strategy` Pattern. I plan to use it more wisely in the future submissions, but for now this is what I could come up with.
+- Different `Commands` needed different `Strategies` depending on the type of User who called them. What better way to distinguish between `User` restrictions while maintaining the same overarching logic than the `Strategy` command pattern. For example, each `Generate` advanced command comes with different types of formulas, for which I devised special classes that I choose depending on the formula required using the `Strategy` Pattern.
 
 ### Command 
 
@@ -58,7 +56,7 @@
 
 ### Specification
 
-- The search command requires a lot of if checks, so I decided to implement the dad of the if condition for the search command.
+- The search command requires a lot of if checks.
 
 ### Memento
 
@@ -80,7 +78,7 @@
   - Responsibilities: global registry of environment entities and convenience accessors. It contains the entire data given as an input.
   - Key methods:
     - `void reset()` — clear and reinitialize between simulations.
-  - Holds authoritative state for cells and entities.
+  - Holds authoritative state for entities.
 
 ### Command / CommandFactory
 
@@ -90,7 +88,7 @@
     - `void execute(CommandInput input, ArrayNode outputArray)` — performs the command's action, mutating state and appending results/errors to output.
 
 ### Ticket
-- `Ticket` (abstract Class). I'm really proud of this class, even though it is enormous I challenged myself to use different concepts that I am not used to, and I think that the result is acceptable.
+- `Ticket` (abstract Class).
   - Responsibilities: encapsulates a ticket's properties and behaviors.
   - Key ideas:
     - Uses the Builder pattern to handle optional fields.
@@ -104,7 +102,7 @@
 
 ### User and subclasses
 
-- `User` (abstract Class) and subclasses (`Developer`, `Reporter, `Manager`):
+- `User` (abstract Class) and subclasses (`Developer`, `Reporter`, `Manager`):
   - Responsibilities: encapsulates user properties and behaviors.
   - Key ideas:
     - Uses a Factory to create users based on type.
@@ -131,15 +129,13 @@
 
 ## Debugging
 
-- ALL the debugging was done using the IntelliJ debugger because I love it, and it is really fun. One of the main reasons I preferred Singletons in my project.
+- All the debugging was done using the IntelliJ debugger. One of the main reasons I preferred Singletons in my project.
 
 ## Use of LLM
-- I thought out all the code inside this project and all the logic. All the LLM prompts used during the development of this homework were used for project structure optimizations, understanding Intellij, learning new ways to solve problems more efficiently (for example, learning to use Jackson or Lombok and other dependencies). This README is NOT created by AI.
+- I thought out all the code inside this project and all the logic. All the LLM prompts used during the development of this homework were used for project structure optimizations, understanding Intellij, learning new ways to solve problems more efficiently (for example, learning to use Jackson or Lombok and other dependencies).
 - Examples of prompts used:
   - "is lombok used in the industry java big projects? should I use the @Getter @Setter annotations in my homework?"
   - "in java, does Map.put() add the new entry in alphabetical order?"
-  - "intellij filled out my C DRIVE FULLY HOW DO I STOP IT ITS ZGOONA CRASH MY PC" (actual prompt used becuase my C drive got full because of intellij caches)
-  - "in the string formatting, what is the % for an int" (i forgor)
+  - "in the string formatting, what is the % for an int"
   - "can i somehow see all the TODOs in my project"
   - "how do i write good javadoc. give me some examples and site to read from"
-  - "how to get a double to have oly the fist 2 decimas"
